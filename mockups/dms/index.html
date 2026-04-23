@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMS — Designee Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue: #162e51;
+    --usa-blue-dark: #0b1f3f;
+    --usa-blue-light: #1a4480;
+    --usa-blue-hover: #2672de;
+    --usa-red: #b50909;
+    --usa-gold: #ffbe2e;
+    --usa-green: #00a91c;
+    --usa-orange: #c05500;
+    --usa-base: #1b1b1b;
+    --usa-base-darker: #3d4551;
+    --usa-base-dark: #565c65;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest: #f0f0f0;
+    --usa-white: #ffffff;
+    --usa-ink: #1b1b1b;
+    --focus-outline: #2491ff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3, h4 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; }
+  h1 { font-size: 1.75rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; font-weight: 700; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  p { margin: 0 0 0.75rem 0; }
+
+  .usa-banner {
+    background: #f0f0f0;
+    font-size: 0.8rem;
+    padding: 0.25rem 1rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .usa-banner strong { color: var(--usa-blue); }
+
+  header.faa-header {
+    background: var(--usa-blue);
+    color: white;
+    padding: 1rem 2rem;
+    border-bottom: 4px solid var(--usa-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .faa-logo { display: flex; align-items: center; gap: 0.75rem; }
+  .faa-seal {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--usa-gold) 0%, #c68a00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 0.7rem;
+    border: 2px solid white;
+  }
+  .faa-header h1 {
+    color: white;
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .faa-header .sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .user-info { font-size: 0.85rem; text-align: right; }
+  .user-info .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+  .user-info button {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .user-info button:hover { background: rgba(255,255,255,0.1); }
+
+  .breadcrumbs {
+    background: white;
+    padding: 0.6rem 2rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    color: var(--usa-base-dark);
+  }
+  .breadcrumbs span { margin: 0 0.3rem; color: var(--usa-base-lighter); }
+  .breadcrumbs a { color: var(--usa-blue-light); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .current { color: var(--usa-ink); font-weight: 600; }
+
+  main {
+    min-height: calc(100vh - 280px);
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.15s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card h2 { border-bottom: 2px solid var(--usa-blue); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--usa-base-darker);
+    font-size: 0.95rem;
+  }
+  label .req { color: var(--usa-red); margin-left: 2px; }
+  input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], input[type=tel], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    font-family: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--usa-base-dark);
+    border-radius: 3px;
+    background: white;
+    margin-bottom: 1rem;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--focus-outline);
+    outline-offset: 0;
+    border-color: var(--usa-blue-light);
+  }
+  input.invalid, select.invalid {
+    border: 2px solid var(--usa-red);
+    background: #fff4f4;
+  }
+  .field-error {
+    color: var(--usa-red);
+    font-size: 0.85rem;
+    margin-top: -0.75rem;
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+  .field-error.show { display: block; }
+  .help { font-size: 0.85rem; color: var(--usa-base-dark); margin-bottom: 0.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .form-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  @media (max-width: 700px) {
+    .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--usa-blue-light);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--usa-blue-hover); }
+  .btn:focus { outline: 3px solid var(--focus-outline); outline-offset: 2px; }
+  .btn.secondary {
+    background: white;
+    color: var(--usa-blue-light);
+    border: 1px solid var(--usa-blue-light);
+  }
+  .btn.secondary:hover { background: var(--usa-blue-light); color: white; }
+  .btn.danger { background: var(--usa-red); }
+  .btn.danger:hover { background: #8a0707; }
+  .btn.success { background: var(--usa-green); }
+  .btn.success:hover { background: #007f15; }
+  .btn.warning { background: var(--usa-orange); }
+  .btn.warning:hover { background: #8a3c00; }
+  .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.none       { background: #e5e5e5; color: #3d4551; border: 1px solid #8a8a8a; }
+  .badge.applicant  { background: #fff4d6; color: #7c5c00; border: 1px solid #c68a00; }
+  .badge.active     { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.suspended  { background: #fae0cd; color: #7a3b00; border: 1px solid var(--usa-orange); }
+  .badge.terminated { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+  .badge.submitted  { background: #d9e8f6; color: var(--usa-blue-light); border: 1px solid #005ea2; }
+  .badge.pending    { background: #fff4d6; color: #7c5c00; border: 1px solid #c68a00; }
+  .badge.approved   { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.canceled   { background: #e5e5e5; color: #3d4551; border: 1px solid #8a8a8a; }
+  .badge.overdue    { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+
+  /* Designee type badges */
+  .type-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .type-dpe  { background: #1a4480; }
+  .type-dme  { background: #005ea2; }
+  .type-tce  { background: #8a6e00; }
+  .type-apd  { background: #2e5b00; }
+  .type-dade { background: #7a0808; }
+  .type-dar  { background: #5c3b00; }
+
+  table.apps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  .apps-table th, .apps-table td {
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .apps-table th {
+    background: var(--usa-base-lightest);
+    font-weight: 700;
+    color: var(--usa-base-darker);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .apps-table tr:hover td { background: #fafafa; }
+  .apps-table .app-id {
+    font-family: monospace;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+  }
+  .apps-table .app-id:hover { text-decoration: underline; }
+
+  .wizard-steps {
+    display: flex;
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .wizard-step {
+    flex: 1;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+    border-right: 1px solid var(--usa-base-lighter);
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    position: relative;
+    background: white;
+    min-width: 110px;
+    cursor: pointer;
+  }
+  .wizard-step:last-child { border-right: none; }
+  .wizard-step.done { background: #f0f7f0; color: #1a6e1f; }
+  .wizard-step.active {
+    background: var(--usa-blue);
+    color: white;
+    font-weight: 600;
+  }
+  .wizard-step .num {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--usa-base-lighter);
+    color: var(--usa-base-darker);
+    line-height: 22px;
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+    font-weight: 700;
+  }
+  .wizard-step.active .num { background: var(--usa-gold); color: var(--usa-blue); }
+  .wizard-step.done .num { background: var(--usa-green); color: white; }
+
+  .login-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+  @media (max-width: 700px) { .login-page { grid-template-columns: 1fr; } }
+  .login-page .create-card {
+    background: linear-gradient(135deg, #f0f4f9 0%, #dfe7f2 100%);
+  }
+
+  .alert {
+    padding: 0.85rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+  .alert-info    { background: #e7f6ff; border-color: #005ea2; color: #00344f; }
+  .alert-success { background: #ecf3ec; border-color: var(--usa-green); color: #1a6e1f; }
+  .alert-warning { background: #faf3d1; border-color: var(--usa-gold); color: #5c4300; }
+  .alert-error   { background: #f8dadb; border-color: var(--usa-red); color: #7a0808; }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .summary-row .label { font-weight: 600; color: var(--usa-base-darker); }
+  .summary-row:last-child { border-bottom: none; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 6px;
+    max-width: 560px;
+    width: 100%;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .modal h2 { border: none; }
+
+  footer.faa-footer {
+    background: var(--usa-blue-dark);
+    color: white;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+  }
+  .faa-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 700px) { .faa-footer .container { grid-template-columns: 1fr; } }
+  .faa-footer a { color: #9fc7ff; }
+  .faa-footer .center-address { text-align: right; opacity: 0.9; }
+  @media (max-width: 700px) { .faa-footer .center-address { text-align: left; } }
+
+  .role-switcher {
+    background: #fffbea;
+    border: 1px dashed #c68a00;
+    padding: 0.5rem 0.85rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .role-switcher strong { color: #7c5c00; }
+  .role-switcher select {
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    width: auto;
+  }
+
+  .radio-group label, .checkbox-inline label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.25rem;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .radio-group input, .checkbox-inline input {
+    margin-right: 0.4rem;
+    width: auto;
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .link-btn:hover { color: var(--usa-blue-hover); }
+
+  .signature-box {
+    background: #f8f9fa;
+    border: 2px dashed var(--usa-base-dark);
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+
+  .status-tile {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+    transition: box-shadow 0.1s;
+  }
+  .status-tile .big { font-size: 1.6rem; font-weight: 700; color: var(--usa-blue); }
+  .status-tile .lbl { font-size: 0.8rem; color: var(--usa-base-dark); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .muted { color: var(--usa-base-dark); }
+  .mt-1 { margin-top: 0.5rem; }
+  .mt-2 { margin-top: 1rem; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .text-center { text-align: center; }
+
+  .upload-grid {
+    background: #fafafa;
+    border: 2px dashed var(--usa-base-dark);
+    border-radius: 4px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Deadline countdown */
+  .deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .deadline.ok { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .deadline.soon { background: #faf3d1; color: #5c4300; border: 1px solid var(--usa-gold); }
+  .deadline.overdue { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(181,9,9,0.4); } 50% { box-shadow: 0 0 0 6px rgba(181,9,9,0); } }
+
+  /* CLOA Certificate styling */
+  .cloa-certificate {
+    background:
+      linear-gradient(135deg, rgba(255,190,46,0.03) 0%, rgba(22,46,81,0.03) 100%),
+      white;
+    border: 6px double var(--usa-blue);
+    padding: 2rem 2.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    font-family: "Merriweather", Georgia, serif;
+    color: var(--usa-ink);
+  }
+  .cloa-certificate::before {
+    content: "OFFICIAL · FAA CERTIFICATE LETTER OF AUTHORITY";
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--usa-blue);
+    background: white;
+    padding: 0 0.6rem;
+  }
+  .cloa-header { text-align: center; margin: 0.75rem 0 1.25rem; }
+  .cloa-header h2 {
+    font-family: "Merriweather", Georgia, serif;
+    color: var(--usa-blue);
+    border: none;
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.02em;
+  }
+  .cloa-header .authority {
+    font-size: 0.85rem;
+    color: var(--usa-base-dark);
+    font-style: italic;
+  }
+  .cloa-seal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0 1.25rem;
+  }
+  .cloa-seal {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--usa-gold) 0%, #a96f00 100%);
+    border: 3px solid var(--usa-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--usa-blue);
+    font-weight: 700;
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.8rem;
+    text-align: center;
+    line-height: 1;
+  }
+  .cloa-designee-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 1rem;
+  }
+  .cloa-designee-block .desig-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-family: "Merriweather", Georgia, serif;
+  }
+  .cloa-designee-block .desig-num {
+    font-family: monospace;
+    font-size: 1.05rem;
+    background: var(--usa-base-lightest);
+    padding: 0.2rem 0.7rem;
+    border-radius: 3px;
+    display: inline-block;
+    margin-top: 0.35rem;
+  }
+  .cloa-dates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    background: #fafafa;
+    border: 1px solid var(--usa-base-lighter);
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0 1rem;
+    border-radius: 3px;
+  }
+  .cloa-dates .dt-block { text-align: center; }
+  .cloa-dates .dt-lbl {
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--usa-base-dark);
+  }
+  .cloa-dates .dt-val {
+    font-family: "Public Sans", sans-serif;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 1rem;
+  }
+  .cloa-section-title {
+    font-family: "Public Sans", sans-serif;
+    color: var(--usa-blue);
+    border-bottom: 1px solid var(--usa-blue);
+    padding-bottom: 0.25rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 1rem 0 0.5rem;
+  }
+  .cloa-auth-list {
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.95rem;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .cloa-auth-list li {
+    padding: 0.4rem 0;
+    border-bottom: 1px dotted var(--usa-base-lighter);
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0.75rem;
+  }
+  .cloa-auth-list li:last-child { border-bottom: none; }
+  .cloa-auth-list .code {
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--usa-blue);
+  }
+  .cloa-signature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--usa-blue);
+    font-family: "Public Sans", sans-serif;
+  }
+  .cloa-signature-row .sig-line {
+    border-bottom: 1px solid var(--usa-ink);
+    padding-bottom: 0.25rem;
+    font-family: "Merriweather", Georgia, serif;
+    font-style: italic;
+    font-size: 1.05rem;
+  }
+  .cloa-signature-row .sig-title {
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    margin-top: 0.25rem;
+  }
+
+  .auth-checkbox-card {
+    border: 1px solid var(--usa-base-lighter);
+    background: white;
+    padding: 0.6rem 0.85rem;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .auth-checkbox-card label {
+    display: flex; align-items: flex-start;
+    gap: 0.5rem;
+    font-weight: 500;
+    margin: 0;
+    cursor: pointer;
+  }
+  .auth-checkbox-card input { width: auto; margin: 0.2rem 0 0; }
+  .auth-checkbox-card .code-inline {
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--usa-blue);
+    margin-right: 0.25rem;
+  }
+
+  .action-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .action-list li {
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lightest);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-list .action-title { font-weight: 600; color: var(--usa-blue); }
+  .action-list .action-sub { font-size: 0.85rem; color: var(--usa-base-dark); }
+
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--usa-base-lighter);
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .tabs button {
+    background: transparent;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--usa-base-dark);
+    font-family: inherit;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+  }
+  .tabs button.active {
+    color: var(--usa-blue);
+    border-bottom-color: var(--usa-blue);
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .locator-filter {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (max-width: 700px) { .locator-filter { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="usa-banner">
+  <strong>An official website of the United States government</strong>
+  <span class="muted">· Mockup / Illustrative Only</span>
+</div>
+
+<header class="faa-header">
+  <div class="faa-logo">
+    <div class="faa-seal">FAA</div>
+    <div>
+      <h1>DMS — Designee Management System</h1>
+      <div class="sub">Designee lifecycle, CLOA, and oversight · 14 CFR Part 183</div>
+    </div>
+  </div>
+  <div class="user-info" id="userInfoArea">
+    <span id="userGreeting">Not signed in</span>
+    <button onclick="signOut()" id="signOutBtn" style="display:none;">Sign out</button>
+  </div>
+</header>
+
+<nav class="breadcrumbs" id="breadcrumbs">
+  <a href="#" onclick="showScreen('login'); return false;">Home</a>
+</nav>
+
+<main>
+
+  <div class="role-switcher">
+    <strong>Demo mode:</strong>
+    <span class="muted">Jump to:</span>
+    <select id="jumpSel" onchange="jumpScreen()">
+      <option value="">— screen —</option>
+      <option value="login">1. Login</option>
+      <option value="register">2. Registration</option>
+      <option value="dashboard">3. Applicant / Designee Dashboard</option>
+      <option value="wizard">4. Designee Application Wizard (8 tabs)</option>
+      <option value="cloa">5. CLOA View</option>
+      <option value="preapproval">6. Pre-Approval Request</option>
+      <option value="postactivity">7. Post-Activity Report</option>
+      <option value="corrective">8. Corrective Action Response</option>
+      <option value="locator">9. Designee Locator (public)</option>
+    </select>
+    <span class="muted">· Not authoritative UI — mockup only.</span>
+  </div>
+
+  <!-- ========= SCREEN: LOGIN ========= -->
+  <section class="screen active" id="screen-login">
+    <div class="alert alert-info" style="max-width: 900px; margin: 0 auto 1rem;">
+      <strong>Privacy Act Statement.</strong> Records in DMS are maintained under SORN DOT/FAA 830 and used to administer designee authority under 14 CFR Part 183 and FAA Order 8000.95D. DMS is migrating external-user authentication to <strong>Login.gov</strong>; local username/password remains available during the transition.
+    </div>
+
+    <div class="login-page">
+      <div class="card">
+        <h2>Sign in</h2>
+        <p class="help">Applicants, designees, and FAA-internal staff can sign in below. External users should use Login.gov when available.</p>
+
+        <button class="btn secondary" style="width: 100%; margin-bottom: 0.75rem;" onclick="doLogin()">
+          Continue with Login.gov
+        </button>
+
+        <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--usa-base-lighter);" />
+
+        <label>Username <span class="req">*</span></label>
+        <input type="text" id="loginUser" value="m.thompson" />
+        <label>Password <span class="req">*</span></label>
+        <input type="password" id="loginPass" value="••••••••" />
+
+        <div class="btn-group">
+          <button class="btn" onclick="doLogin()">Sign in</button>
+          <button class="btn secondary" onclick="alert('Demo: password reset answers your security question.')">Forgot password?</button>
+        </div>
+
+        <p class="help mt-2">
+          <a href="#" onclick="showScreen('locator'); return false;"><strong>Find Designees</strong></a>
+          — public designee locator (no sign-in required).
+        </p>
+      </div>
+
+      <div class="card create-card">
+        <h2>Create an account</h2>
+        <p class="help">Prospective designees self-register to start an application. Existing designees should use their appointed credentials.</p>
+        <button class="btn success" style="width: 100%;" onclick="showScreen('register')">Create Account</button>
+
+        <hr style="margin: 1.25rem 0; border: none; border-top: 1px solid rgba(22,46,81,0.15);" />
+
+        <h3>What you'll need</h3>
+        <ul style="padding-left: 1.1rem; font-size: 0.9rem; color: var(--usa-base-darker);">
+          <li>FAA Tracking Number (FTN) — look up in IACRA</li>
+          <li>Current airman certificate and ratings</li>
+          <li>Supporting documents (resume, certificates, licenses)</li>
+          <li>Character and technical references</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: REGISTRATION ========= -->
+  <section class="screen" id="screen-register">
+    <h1>Create Account</h1>
+    <p class="muted">Self-registration is the first step for prospective designees. After your account is created, you will sign in and complete a designee application.</p>
+
+    <div class="card">
+      <h2>Account Information</h2>
+      <div class="form-row">
+        <div><label>First name <span class="req">*</span></label><input type="text" value="Michael" /></div>
+        <div><label>Last name <span class="req">*</span></label><input type="text" value="Thompson" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Email <span class="req">*</span></label><input type="email" value="m.thompson@example.com" /></div>
+        <div><label>Chosen username <span class="req">*</span></label><input type="text" value="m.thompson" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Password <span class="req">*</span></label><input type="password" value="••••••••••" /></div>
+        <div><label>Confirm password <span class="req">*</span></label><input type="password" value="••••••••••" /></div>
+      </div>
+      <p class="help">Minimum 12 characters; mix of letters, numbers, and symbols. Password recovery transitions to Login.gov — legacy security question is retained for this enrollment.</p>
+
+      <h3 style="margin-top: 1rem;">Security question</h3>
+      <label>Question <span class="req">*</span></label>
+      <select>
+        <option>What city were you born in?</option>
+        <option>Name of your first flight instructor?</option>
+        <option>First aircraft you soloed?</option>
+      </select>
+      <label>Answer <span class="req">*</span></label>
+      <input type="text" />
+
+      <div class="alert alert-info">
+        Email, name, and password changes will eventually route to <strong>MyAccess → ManageMyAccessAccount</strong> — not editable directly in DMS.
+      </div>
+
+      <div class="checkbox-inline" style="margin-top: 0.75rem;">
+        <label>
+          <input type="checkbox" id="termsAccept" />
+          I accept the <a href="#" onclick="return false;">DMS Terms of Use</a> and the <a href="#" onclick="return false;">Privacy Act Statement</a> (SORN DOT/FAA 830).
+        </label>
+      </div>
+      <div class="field-error" id="termsAcceptErr">You must accept the terms to continue.</div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('login')">Cancel</button>
+        <button class="btn success" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DASHBOARD ========= -->
+  <section class="screen" id="screen-dashboard">
+    <h1>My DMS Home</h1>
+    <p class="muted">Welcome, <strong>Michael Thompson</strong>. Designee Number <span class="pill" style="background:var(--usa-base-lightest); padding:0.15rem 0.5rem; border-radius:3px; font-family:monospace;">DPE-237488119</span> · Managing Specialist: <strong>Rebecca Alvarez, FSDO-DEN</strong></p>
+
+    <div class="form-row-4 mb-2" style="margin-top: 1rem;">
+      <div class="status-tile">
+        <div class="big"><span class="badge active">Active</span></div>
+        <div class="lbl">Designation Status</div>
+      </div>
+      <div class="status-tile">
+        <div class="big"><span class="type-badge type-dpe">DPE</span></div>
+        <div class="lbl">Designation Type</div>
+      </div>
+      <div class="status-tile">
+        <div class="big">2026-11-30</div>
+        <div class="lbl">CLOA Expires</div>
+      </div>
+      <div class="status-tile">
+        <div class="big" style="color: var(--usa-red); font-size: 1.2rem;">2 overdue</div>
+        <div class="lbl">Action Items</div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <strong>Action required:</strong> You have a <strong>Post-Activity Report overdue by 3 days</strong> for pre-approval PA-2026-04188. DMS will block new pre-approval requests until this report is submitted.
+      <button class="link-btn" onclick="showScreen('postactivity')" style="margin-left: 0.5rem;">Complete report →</button>
+    </div>
+
+    <div class="form-row">
+      <div class="card">
+        <h2>Action Required Items</h2>
+        <ul class="action-list">
+          <li>
+            <div>
+              <div class="action-title">Post-Activity Report overdue</div>
+              <div class="action-sub">Pre-approval <strong>PA-2026-04188</strong> · test completed 2026-04-13</div>
+            </div>
+            <span class="deadline overdue">3 days overdue</span>
+          </li>
+          <li>
+            <div>
+              <div class="action-title">Corrective Action Response</div>
+              <div class="action-sub">Assigned by MS on 2026-04-19 · response due 2026-05-04</div>
+            </div>
+            <span class="deadline soon">11 days</span>
+          </li>
+          <li>
+            <div>
+              <div class="action-title">Annual Extension of Expiration</div>
+              <div class="action-sub">Auto-generated 60 days before CLOA expires</div>
+            </div>
+            <span class="deadline ok">~220 days</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Activity Links</h2>
+        <ul class="action-list">
+          <li>
+            <div><div class="action-title">Create Pre-Approval Request</div><div class="action-sub">Practical test / proficiency check</div></div>
+            <button class="btn secondary" onclick="showScreen('preapproval')" style="padding: 0.35rem 0.85rem; font-size:0.85rem;">Start</button>
+          </li>
+          <li>
+            <div><div class="action-title">View Pre-Approvals / Post-Activity</div><div class="action-sub">Default: past 1 year</div></div>
+            <button class="btn secondary" onclick="showScreen('postactivity')" style="padding: 0.35rem 0.85rem; font-size:0.85rem;">Open</button>
+          </li>
+          <li>
+            <div><div class="action-title">Request Additional Authorizations</div><div class="action-sub">One open request at a time</div></div>
+            <button class="btn secondary" onclick="showModal('Additional Authorizations','Form would open here — up to 4000 chars justification plus Supplemental Information Sheet upload.')" style="padding: 0.35rem 0.85rem; font-size:0.85rem;">Request</button>
+          </li>
+          <li>
+            <div><div class="action-title">Request Voluntary Surrender</div><div class="action-sub">Reinstatement available within 1 year</div></div>
+            <button class="btn secondary" onclick="showModal('Voluntary Surrender','Yes/No questionnaire — MS approval required. Reinstatement available within 1 year of surrender.')" style="padding: 0.35rem 0.85rem; font-size:0.85rem;">Start</button>
+          </li>
+          <li>
+            <div><div class="action-title">View CLOA</div><div class="action-sub">Certificate Letter of Authority</div></div>
+            <button class="btn" onclick="showScreen('cloa')" style="padding: 0.35rem 0.85rem; font-size:0.85rem;">View</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>My Applications</h2>
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Submission Date</th>
+            <th>Expiration Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="app-id">APP-2024-08831</span></td>
+            <td><span class="type-badge type-dpe">DPE</span> Designated Pilot Examiner</td>
+            <td><span class="badge approved">Approved</span></td>
+            <td>2024-09-12</td>
+            <td>—</td>
+            <td><button class="link-btn" onclick="showScreen('cloa')">View CLOA</button></td>
+          </tr>
+          <tr>
+            <td><span class="app-id">APP-2026-01188</span></td>
+            <td>Additional Authorizations</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td>2026-02-04</td>
+            <td>2026-08-04</td>
+            <td><button class="link-btn">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Activity History</h2>
+      <table class="apps-table">
+        <thead>
+          <tr><th>Date</th><th>Activity</th><th>Reference</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-04-13</td><td>Private Pilot — ASEL Practical Test</td><td>PA-2026-04188</td><td><span class="badge overdue">PAR Overdue</span></td></tr>
+          <tr><td>2026-03-22</td><td>Instrument Airplane Practical Test</td><td>PA-2026-03091</td><td><span class="badge approved">Completed</span></td></tr>
+          <tr><td>2026-02-09</td><td>Commercial — ASEL Practical Test</td><td>PA-2026-02044</td><td><span class="badge approved">Completed</span></td></tr>
+          <tr><td>2025-11-30</td><td>CLOA Annual Extension</td><td>EXT-2025-11</td><td><span class="badge approved">Approved (+12mo)</span></td></tr>
+          <tr><td>2024-09-28</td><td>Appointed DPE — CLOA Issued</td><td>DPE-237488119</td><td><span class="badge active">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DESIGNEE APPLICATION WIZARD ========= -->
+  <section class="screen" id="screen-wizard">
+    <h1>Designee Application</h1>
+
+    <div class="alert alert-info">
+      Every tab has a <strong>Save</strong> button — you can resume later. Fields marked <span class="req">*</span> are required. Submission does not imply selection or appointment.
+    </div>
+
+    <div class="wizard-steps" id="wizSteps">
+      <div class="wizard-step active" data-step="1"><span class="num">1</span> Designee Type</div>
+      <div class="wizard-step" data-step="2"><span class="num">2</span> Personal Info</div>
+      <div class="wizard-step" data-step="3"><span class="num">3</span> Qualifications</div>
+      <div class="wizard-step" data-step="4"><span class="num">4</span> Background</div>
+      <div class="wizard-step" data-step="5"><span class="num">5</span> References</div>
+      <div class="wizard-step" data-step="6"><span class="num">6</span> Documents</div>
+      <div class="wizard-step" data-step="7"><span class="num">7</span> Review</div>
+      <div class="wizard-step" data-step="8"><span class="num">8</span> Sign &amp; Submit</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="card wiz-panel" data-panel="1">
+      <h2>Tab 1 — Designee Type</h2>
+
+      <label>Select the designee type you are applying for <span class="req">*</span></label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+        <label class="auth-checkbox-card"><input type="radio" name="dType" checked /> <span><span class="type-badge type-dpe">DPE</span> &nbsp; Designated Pilot Examiner</span></label>
+        <label class="auth-checkbox-card"><input type="radio" name="dType" /> <span><span class="type-badge type-dme">DME</span> &nbsp; Designated Mechanic Examiner</span></label>
+        <label class="auth-checkbox-card"><input type="radio" name="dType" /> <span><span class="type-badge type-tce">TCE</span> &nbsp; Training Center Evaluator</span></label>
+        <label class="auth-checkbox-card"><input type="radio" name="dType" /> <span><span class="type-badge type-apd">APD</span> &nbsp; Aircrew Program Designee</span></label>
+        <label class="auth-checkbox-card"><input type="radio" name="dType" /> <span><span class="type-badge type-dade">DADE</span> &nbsp; Designated Aircraft Dispatcher Examiner</span></label>
+        <label class="auth-checkbox-card"><input type="radio" name="dType" /> <span><span class="type-badge type-dar">DAR</span> &nbsp; Designated Airworthiness Representative</span></label>
+      </div>
+
+      <h3>Screening Questions</h3>
+      <label>Are you an existing DPE, SAE, or Admin PE in DMS? <span class="req">*</span></label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="existing" checked /> No</label>
+        <label><input type="radio" name="existing" onclick="showModal('Blocked — existing designee','You already hold a DPE / SAE / Admin PE designation in DMS. A new application is not permitted. Please exit.')" /> Yes</label>
+      </div>
+
+      <label>Do you currently hold a valid FAA pilot certification with ratings appropriate to the authorization sought? <span class="req">*</span></label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="validCert" checked /> Yes</label>
+        <label><input type="radio" name="validCert" onclick="showModal('Qualifications not met','Current valid pilot certification is required. Please review the DPE qualifications guide.')" /> No</label>
+      </div>
+
+      <label>FAA Tracking Number (FTN) <span class="req">*</span></label>
+      <input type="text" value="A1234567" />
+      <p class="help">Source of truth: IACRA. Log into IACRA if you need to look up your FTN.</p>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card wiz-panel" data-panel="2" style="display:none;">
+      <h2>Tab 2 — Personal Information</h2>
+      <div class="form-row">
+        <div><label>Legal first name <span class="req">*</span></label><input type="text" value="Michael" /></div>
+        <div><label>Legal last name <span class="req">*</span></label><input type="text" value="Thompson" /></div>
+      </div>
+      <div class="form-row-3">
+        <div><label>Middle</label><input type="text" value="R" /></div>
+        <div><label>Suffix</label><input type="text" placeholder="Jr., II, …" /></div>
+        <div><label>Date of birth <span class="req">*</span></label><input type="date" value="1978-03-22" /></div>
+      </div>
+
+      <div class="form-row-3">
+        <div><label>FTN <span class="req">*</span></label><input type="text" value="A1234567" readonly style="background:#f5f5f5" /></div>
+        <div><label>Airman certificate # <span class="req">*</span></label><input type="text" value="3872910" /></div>
+        <div><label>Gender</label><select><option>Male</option><option>Female</option><option>Unspecified</option></select></div>
+      </div>
+
+      <div class="form-row">
+        <div><label>Country of citizenship <span class="req">*</span></label>
+          <select><option>United States</option><option>Canada</option><option>Mexico</option><option>United Kingdom</option><option>Other</option></select>
+        </div>
+        <div><label>Phone <span class="req">*</span></label><input type="tel" value="(303) 555-0119" /></div>
+      </div>
+
+      <label>Email <span class="req">*</span></label>
+      <input type="email" value="m.thompson@example.com" />
+
+      <label>Home address <span class="req">*</span></label>
+      <input type="text" value="4412 Mountain Ridge Dr" />
+      <div class="form-row-3">
+        <div><label>City <span class="req">*</span></label><input type="text" value="Denver" /></div>
+        <div><label>State <span class="req">*</span></label><input type="text" value="CO" /></div>
+        <div><label>ZIP <span class="req">*</span></label><input type="text" value="80202" /></div>
+      </div>
+
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" checked /> Mailing address same as home address</label>
+      </div>
+
+      <h3>Designation Location (public directory)</h3>
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" onclick="toggleLocAddr(this)" /> Same as personal profile address</label>
+      </div>
+      <div class="alert alert-warning" id="locWarn" style="display:none;">
+        This location will be <strong>published in the FAA online Designee Locator</strong>. If unintended, uncheck the box and enter a separate facility address below.
+      </div>
+      <label>Facility address (if different)</label>
+      <input type="text" placeholder="e.g., Rocky Mountain Flight Center, 7890 Airport Rd, Broomfield CO 80023" />
+      <label>FAA office of application <span class="req">*</span></label>
+      <select>
+        <option>FSDO — Denver (FSDO-DEN)</option>
+        <option>FSDO — Salt Lake City</option>
+        <option>FSDO — Phoenix</option>
+        <option>FSDO — Seattle</option>
+      </select>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card wiz-panel" data-panel="3" style="display:none;">
+      <h2>Tab 3 — Qualifications</h2>
+      <p class="help">Enter currently held certificates, ratings, and relevant experience.</p>
+
+      <h3>Certificates Held</h3>
+      <div class="form-row">
+        <div><label>Highest pilot certificate <span class="req">*</span></label>
+          <select><option>Airline Transport Pilot (ATP)</option><option>Commercial Pilot</option><option>Flight Instructor (CFI)</option></select>
+        </div>
+        <div><label>Date issued</label><input type="date" value="1999-06-14" /></div>
+      </div>
+
+      <label>Ratings (check all that apply)</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.25rem; margin-bottom: 1rem;">
+        <label class="auth-checkbox-card"><input type="checkbox" checked /> ASEL</label>
+        <label class="auth-checkbox-card"><input type="checkbox" checked /> AMEL</label>
+        <label class="auth-checkbox-card"><input type="checkbox" /> ASES</label>
+        <label class="auth-checkbox-card"><input type="checkbox" /> AMES</label>
+        <label class="auth-checkbox-card"><input type="checkbox" checked /> Instrument Airplane</label>
+        <label class="auth-checkbox-card"><input type="checkbox" /> Rotorcraft - Helicopter</label>
+        <label class="auth-checkbox-card"><input type="checkbox" checked /> CFI</label>
+        <label class="auth-checkbox-card"><input type="checkbox" checked /> CFII</label>
+        <label class="auth-checkbox-card"><input type="checkbox" /> MEI</label>
+      </div>
+
+      <h3>Experience Summary</h3>
+      <div class="form-row-3">
+        <div><label>Total flight hours <span class="req">*</span></label><input type="number" value="7820" /></div>
+        <div><label>PIC hours</label><input type="number" value="6210" /></div>
+        <div><label>Instructor-given hours</label><input type="number" value="3140" /></div>
+      </div>
+      <div class="form-row-3">
+        <div><label>Multi-engine hours</label><input type="number" value="2300" /></div>
+        <div><label>Instrument hours</label><input type="number" value="1150" /></div>
+        <div><label>Hours in last 12 months</label><input type="number" value="340" /></div>
+      </div>
+
+      <label>Current employer &amp; position</label>
+      <input type="text" value="Rocky Mountain Flight Center — Chief Instructor" />
+
+      <label>Years as flight instructor <span class="req">*</span></label>
+      <input type="number" value="18" />
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="card wiz-panel" data-panel="4" style="display:none;">
+      <h2>Tab 4 — Background Questions</h2>
+      <p class="help">All questions must be answered before continuing. "Yes" answers may require supplemental information.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>1. Military service.</strong> Have you served in, or are you currently serving in, the U.S. military?</div>
+        <div class="radio-group"><label><input type="radio" name="bq1" checked /> Yes</label><label><input type="radio" name="bq1" /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>2. Legal actions.</strong> Are you currently a party to any administrative or legal action against the FAA?</div>
+        <div class="radio-group"><label><input type="radio" name="bq2" /> Yes</label><label><input type="radio" name="bq2" checked /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>3. Felony.</strong> Have you ever been convicted of, or pleaded guilty/no contest to, a felony?</div>
+        <div class="radio-group"><label><input type="radio" name="bq3" /> Yes</label><label><input type="radio" name="bq3" checked /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>4. Probation.</strong> Are you currently on probation, parole, or deferred adjudication?</div>
+        <div class="radio-group"><label><input type="radio" name="bq4" /> Yes</label><label><input type="radio" name="bq4" checked /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>5. Imprisonment.</strong> Have you been incarcerated in the past 7 years?</div>
+        <div class="radio-group"><label><input type="radio" name="bq5" /> Yes</label><label><input type="radio" name="bq5" checked /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>6. Certificate revocation.</strong> Has an airman certificate of yours ever been revoked, suspended, or surrendered?</div>
+        <div class="radio-group"><label><input type="radio" name="bq6" /> Yes</label><label><input type="radio" name="bq6" checked /> No</label></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1.5rem; align-items: center; padding: 0.35rem 0; border-bottom: 1px dotted #eee;">
+        <div><strong>7. English proficiency.</strong> Are you able to read, speak, write, and understand English?</div>
+        <div class="radio-group"><label><input type="radio" name="bq7" checked /> Yes</label><label><input type="radio" name="bq7" /> No</label></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="card wiz-panel" data-panel="5" style="display:none;">
+      <h2>Tab 5 — References</h2>
+      <p class="help">Provide at least one character reference and one technical reference. References may be contacted during evaluation.</p>
+
+      <h3>Character Reference</h3>
+      <div class="form-row">
+        <div><label>Name <span class="req">*</span></label><input type="text" value="Ellen Foster" /></div>
+        <div><label>Phone <span class="req">*</span></label><input type="tel" value="(303) 555-0141" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Relationship</label><input type="text" value="Neighbor / community leader, 12 yrs" /></div>
+        <div><label>Email</label><input type="email" value="ellen.f@example.com" /></div>
+      </div>
+
+      <h3 style="margin-top: 1rem;">Technical Reference</h3>
+      <div class="form-row">
+        <div><label>Name <span class="req">*</span></label><input type="text" value="Captain James Winslow" /></div>
+        <div><label>Phone <span class="req">*</span></label><input type="tel" value="(720) 555-0187" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Relationship</label><input type="text" value="Chief Pilot, Frontier — former colleague" /></div>
+        <div><label>Email</label><input type="email" value="jwinslow@example.com" /></div>
+      </div>
+
+      <button class="btn secondary" onclick="showModal('Add reference','Additional references may be added (name/phone/email)')">+ Add another reference</button>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="card wiz-panel" data-panel="6" style="display:none;">
+      <h2>Tab 6 — Supporting Documents</h2>
+      <p class="help">Upload required supporting documents. Max 25 files, 3 MB per file. Supplemental Information Sheet (DPE.doc) must be downloaded, completed, and uploaded.</p>
+
+      <div class="alert alert-info">
+        <strong>Download first:</strong> <a href="#" onclick="return false;">Supplemental Information Sheet (DPE.doc)</a> — fill in, save as PDF or DOCX, and upload below.
+      </div>
+
+      <div class="upload-grid">
+        <p><strong>Drag files here or click to browse</strong></p>
+        <p class="muted">PDF · DOC · DOCX · JPG · JPEG · PNG — max 3 MB per file</p>
+        <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+      </div>
+
+      <table class="apps-table">
+        <thead>
+          <tr><th>Document</th><th>Type</th><th>Uploaded</th><th>Size</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Thompson-Resume.pdf</td>
+            <td>Resume</td>
+            <td>2026-04-20</td>
+            <td>0.6 MB</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>ATP-Certificate.pdf</td>
+            <td>Airman Certificate (ATP)</td>
+            <td>2026-04-20</td>
+            <td>0.4 MB</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>CFI-Certificate.pdf</td>
+            <td>Flight Instructor Certificate</td>
+            <td>2026-04-20</td>
+            <td>0.3 MB</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>DPE-SupplementalInfoSheet.pdf</td>
+            <td>Supplemental Information Sheet</td>
+            <td>2026-04-21</td>
+            <td>0.5 MB</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>Photo.jpg</td>
+            <td>Applicant Photo (optional)</td>
+            <td>2026-04-21</td>
+            <td>1.2 MB</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="card wiz-panel" data-panel="7" style="display:none;">
+      <h2>Tab 7 — Review</h2>
+      <p class="help">Verify the summary below. Click any tab in the progress bar to edit a section.</p>
+
+      <h3>Designee Type</h3>
+      <div class="summary-row"><span class="label">Type:</span><span><span class="type-badge type-dpe">DPE</span> Designated Pilot Examiner</span></div>
+      <div class="summary-row"><span class="label">FTN:</span><span>A1234567</span></div>
+
+      <h3 style="margin-top: 1rem;">Personal</h3>
+      <div class="summary-row"><span class="label">Name:</span><span>Michael R. Thompson</span></div>
+      <div class="summary-row"><span class="label">DOB:</span><span>1978-03-22</span></div>
+      <div class="summary-row"><span class="label">Airman Cert #:</span><span>3872910</span></div>
+      <div class="summary-row"><span class="label">Citizenship:</span><span>United States</span></div>
+      <div class="summary-row"><span class="label">Phone / Email:</span><span>(303) 555-0119 · m.thompson@example.com</span></div>
+      <div class="summary-row"><span class="label">Home:</span><span>4412 Mountain Ridge Dr, Denver CO 80202</span></div>
+      <div class="summary-row"><span class="label">FAA Office:</span><span>FSDO-DEN</span></div>
+
+      <h3 style="margin-top: 1rem;">Qualifications</h3>
+      <div class="summary-row"><span class="label">Highest cert:</span><span>ATP</span></div>
+      <div class="summary-row"><span class="label">Ratings:</span><span>ASEL, AMEL, IA, CFI, CFII</span></div>
+      <div class="summary-row"><span class="label">Total hours:</span><span>7,820 (PIC 6,210)</span></div>
+      <div class="summary-row"><span class="label">Instructor years:</span><span>18</span></div>
+
+      <h3 style="margin-top: 1rem;">Background</h3>
+      <div class="summary-row"><span class="label">Military:</span><span>Yes</span></div>
+      <div class="summary-row"><span class="label">Legal/Felony/Probation/Imprisonment/Revocation:</span><span>All No</span></div>
+      <div class="summary-row"><span class="label">English proficient:</span><span>Yes</span></div>
+
+      <h3 style="margin-top: 1rem;">References &amp; Documents</h3>
+      <div class="summary-row"><span class="label">References:</span><span>Ellen Foster (character) · Capt. James Winslow (technical)</span></div>
+      <div class="summary-row"><span class="label">Documents:</span><span>5 files uploaded (2.9 MB)</span></div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Continue to Sign &amp; Submit →</button>
+      </div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="card wiz-panel" data-panel="8" style="display:none;">
+      <h2>Tab 8 — Applicant Signature</h2>
+
+      <div class="alert alert-warning">
+        Submission does <strong>not</strong> imply qualification or guarantee selection/appointment. Applications are reviewed by the responsible office.
+      </div>
+
+      <h3>Release of Information</h3>
+      <p class="help">I authorize the FAA to contact listed references, verify certificates and ratings, and obtain information needed to evaluate this application.</p>
+      <div class="checkbox-inline mb-2"><label><input type="checkbox" id="sigR1" /> I Agree — Release of Information</label></div>
+
+      <h3>Certification Statement</h3>
+      <p class="help">I certify under penalty of perjury that all statements made in this application are true, complete, and correct to the best of my knowledge.</p>
+      <div class="checkbox-inline mb-2"><label><input type="checkbox" id="sigR2" /> I Agree — Certification Statement</label></div>
+
+      <div class="signature-box">
+        <strong>Electronic Signature</strong>
+        <p class="help">Type your full legal name as your electronic signature.</p>
+        <div class="form-row">
+          <div><label>Full legal name <span class="req">*</span></label><input type="text" id="sigName" placeholder="Michael R. Thompson" /></div>
+          <div><label>Date <span class="req">*</span></label><input type="date" id="sigDate" /></div>
+        </div>
+        <div class="checkbox-inline"><label><input type="checkbox" id="sigBox" /> I affirm this is my electronic signature.</label></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn success" onclick="submitApplication()">Submit Application</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: CLOA VIEW ========= -->
+  <section class="screen" id="screen-cloa">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+      <h1>Certificate Letter of Authority</h1>
+      <div class="btn-group" style="margin: 0;">
+        <button class="btn secondary" onclick="window.print()">🖨 Print</button>
+        <button class="btn secondary" onclick="alert('Demo: PDF download.')">⬇ Download PDF</button>
+      </div>
+    </div>
+
+    <div class="cloa-certificate">
+      <div class="cloa-header">
+        <h2>Federal Aviation Administration</h2>
+        <div class="authority">Issued under authority of 14 CFR Part 183 and FAA Order 8000.95D</div>
+      </div>
+
+      <div class="cloa-seal-row">
+        <div class="cloa-seal">FAA<br/>SEAL</div>
+        <div class="cloa-designee-block">
+          <div style="font-size: 0.8rem; color: var(--usa-base-dark); letter-spacing: 0.08em; text-transform: uppercase;">This is to certify that</div>
+          <div class="desig-name">MICHAEL R. THOMPSON</div>
+          <div style="font-size: 0.85rem; margin-top: 0.35rem; color: var(--usa-base-dark);">is appointed as a</div>
+          <div style="margin-top: 0.35rem;"><span class="type-badge type-dpe" style="font-size: 1rem; padding: 0.3rem 0.8rem;">DESIGNATED PILOT EXAMINER</span></div>
+          <div class="desig-num">Designee Number: DPE-237488119</div>
+        </div>
+        <div class="cloa-seal">FAA<br/>SEAL</div>
+      </div>
+
+      <div class="cloa-dates">
+        <div class="dt-block"><div class="dt-lbl">Effective</div><div class="dt-val">2024-09-28</div></div>
+        <div class="dt-block"><div class="dt-lbl">Current Expiration</div><div class="dt-val">2026-11-30</div></div>
+        <div class="dt-block"><div class="dt-lbl">Managing Specialist</div><div class="dt-val">R. Alvarez · FSDO-DEN</div></div>
+      </div>
+
+      <div class="cloa-section-title">Authorizations (Function Codes)</div>
+      <ul class="cloa-auth-list">
+        <li><span class="code">PE-61.19</span><span>Practical tests for Private Pilot — Airplane Single-Engine Land (ASEL)</span></li>
+        <li><span class="code">PE-61.23</span><span>Practical tests for Commercial Pilot — ASEL and AMEL</span></li>
+        <li><span class="code">PE-61.31</span><span>Practical tests for Instrument Rating — Airplane</span></li>
+        <li><span class="code">PE-61.41</span><span>Practical tests for Flight Instructor — Airplane Single-Engine</span></li>
+        <li><span class="code">PE-61.43</span><span>Proficiency checks for Recreational and Sport Pilot — ASEL</span></li>
+      </ul>
+
+      <div class="cloa-section-title">Limitations</div>
+      <ul class="cloa-auth-list">
+        <li><span class="code">L-01</span><span>Authorized to administer tests <strong>only within the geographic district of FSDO-DEN</strong> and adjacent districts with MS concurrence.</span></li>
+        <li><span class="code">L-02</span><span>Not authorized to conduct Multi-Engine Instructor (MEI) practical tests.</span></li>
+        <li><span class="code">L-03</span><span>All tests must be pre-approved in DMS. Post-activity reports required within <strong>7 days</strong> of test completion.</span></li>
+        <li><span class="code">L-04</span><span>Authority is non-transferable and subject to suspension, termination, or voluntary surrender per 14 CFR 183.15.</span></li>
+      </ul>
+
+      <div class="cloa-signature-row">
+        <div>
+          <div class="sig-line">Rebecca E. Alvarez</div>
+          <div class="sig-title">Managing Specialist, FSDO-DEN</div>
+        </div>
+        <div>
+          <div class="sig-line">Thomas J. Moreno</div>
+          <div class="sig-title">Appointing Official, Flight Standards</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--usa-base-dark); text-align: center; font-family: 'Public Sans', sans-serif;">
+        CLOA v3 · Last updated 2025-11-30 (Annual Extension +12 months). Authoritative copy maintained in DMS.
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: PRE-APPROVAL ========= -->
+  <section class="screen" id="screen-preapproval">
+    <h1>Practical Test / Proficiency Check Pre-Approval</h1>
+
+    <div class="alert alert-warning">
+      <strong>Constraint:</strong> Only <strong>one authorization per pre-approval request</strong>. Pre-approval dates must be <strong>current or future</strong> — past dates are not allowed. If you have overdue post-activity reports, you cannot create a new pre-approval until they are submitted.
+    </div>
+
+    <div class="tabs">
+      <button class="active" onclick="switchTab(event, 'pa-test')">Test / Check</button>
+      <button onclick="switchTab(event, 'pa-loc')">Location</button>
+      <button onclick="switchTab(event, 'pa-app')">Applicant</button>
+      <button onclick="switchTab(event, 'pa-doc')">Documents</button>
+      <button onclick="switchTab(event, 'pa-sum')">Summary</button>
+    </div>
+
+    <div class="card tab-content active" id="pa-test">
+      <h2>Test / Check Details</h2>
+      <label>Authorization source <span class="req">*</span></label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="authSrc" checked /> Select from my CLOA authorizations</label>
+        <label><input type="radio" name="authSrc" /> Temporary Authorization (not on CLOA — requires manual MS approval)</label>
+      </div>
+
+      <label>Authorization <span class="req">*</span></label>
+      <select>
+        <option>PE-61.19 — Private Pilot ASEL Practical Test</option>
+        <option>PE-61.23 — Commercial Pilot ASEL/AMEL Practical Test</option>
+        <option>PE-61.31 — Instrument Airplane Rating</option>
+        <option>PE-61.41 — Flight Instructor Airplane SE</option>
+        <option>PE-61.43 — Recreational/Sport Pilot ASEL</option>
+      </select>
+
+      <div class="form-row">
+        <div><label>Test type <span class="req">*</span></label>
+          <select><option>Practical Test (Initial)</option><option>Practical Test (Retest)</option><option>Proficiency Check</option></select>
+        </div>
+        <div><label>Scheduled date <span class="req">*</span></label><input type="date" id="paDate" value="2026-05-02" /></div>
+      </div>
+      <p class="help" id="paDateWarn" style="display:none; color: var(--usa-red);">Pre-approval date cannot be in the past. Select a current or future date.</p>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+        <button class="btn" onclick="switchTabById('pa-loc')">Next →</button>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="pa-loc">
+      <h2>Location</h2>
+      <label>Location selection <span class="req">*</span></label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="locOpt" checked /> Facility on Record</label>
+        <label><input type="radio" name="locOpt" /> Other Facility (manual entry)</label>
+      </div>
+
+      <label>Facility on Record</label>
+      <select>
+        <option>Rocky Mountain Flight Center — 7890 Airport Rd, Broomfield CO 80023</option>
+        <option>Front Range Airport — Watkins CO 80137</option>
+      </select>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="switchTabById('pa-test')">← Back</button>
+        <button class="btn" onclick="switchTabById('pa-app')">Next →</button>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="pa-app">
+      <h2>Applicant / Application</h2>
+      <div class="form-row">
+        <div><label>Applicant first name <span class="req">*</span></label><input type="text" value="Sarah" /></div>
+        <div><label>Applicant last name <span class="req">*</span></label><input type="text" value="Patel" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Applicant FTN <span class="req">*</span></label><input type="text" value="B9988776" /></div>
+        <div><label>IACRA Application ID</label><input type="text" value="12349876" /></div>
+      </div>
+
+      <label>Basis for applicant's eligibility <span class="req">*</span></label>
+      <select id="basisSel" onchange="renderBasisField()">
+        <option value="none">— Select —</option>
+        <option value="course">Graduate of Approved Course</option>
+        <option value="foreign">Holder of Foreign License</option>
+        <option value="carrier">Air Carrier Training Program</option>
+        <option value="standard">Standard 14 CFR Part 61 (no basis-specific info)</option>
+      </select>
+      <div id="basisDynamic"></div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="switchTabById('pa-loc')">← Back</button>
+        <button class="btn" onclick="switchTabById('pa-doc')">Next →</button>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="pa-doc">
+      <h2>Documents &amp; Comments</h2>
+      <label>Comments (optional)</label>
+      <textarea rows="3" placeholder="Anything the MS should know about this pre-approval."></textarea>
+
+      <div class="upload-grid">
+        <p><strong>Drag files here or click to browse</strong></p>
+        <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="switchTabById('pa-app')">← Back</button>
+        <button class="btn" onclick="switchTabById('pa-sum')">Next →</button>
+      </div>
+    </div>
+
+    <div class="card tab-content" id="pa-sum">
+      <h2>Summary</h2>
+      <div class="summary-row"><span class="label">Authorization:</span><span>PE-61.19 — Private Pilot ASEL Practical Test</span></div>
+      <div class="summary-row"><span class="label">Date:</span><span>2026-05-02</span></div>
+      <div class="summary-row"><span class="label">Location:</span><span>Rocky Mountain Flight Center, Broomfield CO</span></div>
+      <div class="summary-row"><span class="label">Applicant:</span><span>Sarah Patel · FTN B9988776 · IACRA 12349876</span></div>
+      <div class="summary-row"><span class="label">Basis:</span><span>Standard 14 CFR Part 61</span></div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="switchTabById('pa-doc')">← Back</button>
+        <button class="btn secondary" onclick="window.print()">🖨 Print</button>
+        <button class="btn secondary" onclick="showModal('Copied','Pre-approval entries copied — a new pre-approval request has been seeded.')">📄 Copy</button>
+        <button class="btn success" onclick="submitPreApproval()">Submit</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: POST-ACTIVITY REPORT ========= -->
+  <section class="screen" id="screen-postactivity">
+    <h1>Post-Activity Report</h1>
+
+    <div class="alert alert-error" style="display:flex; align-items:center; justify-content: space-between; gap: 1rem;">
+      <div><strong>Overdue.</strong> Test completed 2026-04-13 · report was due 2026-04-20. New pre-approvals are blocked until this report is submitted.</div>
+      <span class="deadline overdue">3 days overdue</span>
+    </div>
+
+    <div class="card">
+      <h2>Pre-Approval Reference</h2>
+      <div class="summary-row"><span class="label">Pre-Approval ID:</span><span>PA-2026-04188</span></div>
+      <div class="summary-row"><span class="label">Authorization:</span><span>PE-61.19 — Private Pilot ASEL Practical Test</span></div>
+      <div class="summary-row"><span class="label">Applicant (from Pre-Approval):</span><span>Sarah Patel · FTN B9988776</span></div>
+
+      <div class="alert alert-info mt-2">
+        <strong>IACRA pre-populate:</strong> Enter FTN + Application ID below to auto-populate this report. All fields remain editable.
+        <div class="form-row" style="margin-top: 0.5rem;">
+          <div><label>Applicant FTN</label><input type="text" value="B9988776" /></div>
+          <div><label>IACRA Application ID</label><input type="text" value="12349876" /></div>
+        </div>
+        <button class="btn secondary" onclick="showModal('Populated','Applicant data from IACRA has been populated. Edit any fields that differ from what actually happened.')">Populate IACRA Data</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Test Details</h2>
+      <div class="form-row-3">
+        <div><label>Actual test date <span class="req">*</span></label><input type="date" value="2026-04-13" /></div>
+        <div><label>Start time</label><input type="text" value="09:00 MDT" /></div>
+        <div><label>End time</label><input type="text" value="12:45 MDT" /></div>
+      </div>
+
+      <div class="form-row-3">
+        <div><label>Result <span class="req">*</span></label>
+          <select><option>Pass — Satisfactory</option><option>Fail — Notice of Disapproval</option><option>Discontinued</option></select>
+        </div>
+        <div><label>Areas unsatisfactory (if fail)</label><input type="text" placeholder="e.g., Emergency Operations" /></div>
+        <div><label>Next retest date</label><input type="date" /></div>
+      </div>
+
+      <h3>Aircraft Used</h3>
+      <div class="form-row-3">
+        <div><label>Make/Model <span class="req">*</span></label><input type="text" value="Cessna 172S" /></div>
+        <div><label>Registration (N-number)</label><input type="text" value="N7342K" /></div>
+        <div><label>Category/Class</label><input type="text" value="Airplane — Single Engine Land" /></div>
+      </div>
+
+      <h3>Applicant (editable)</h3>
+      <div class="form-row-3">
+        <div><label>First name</label><input type="text" value="Sarah" /></div>
+        <div><label>Last name</label><input type="text" value="Patel" /></div>
+        <div><label>Airman cert #</label><input type="text" value="4400118" /></div>
+      </div>
+
+      <label>Comments / notes</label>
+      <textarea rows="3">Strong performance in maneuvers; minor rough spot on diversion task but met ACS standards. Recommending issuance.</textarea>
+
+      <div class="upload-grid">
+        <p><strong>Optional attachments</strong></p>
+        <button class="btn secondary" onclick="alert('Demo')">Select files</button>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Save &amp; exit</button>
+        <button class="btn success" onclick="submitPostActivity()">Submit Post-Activity Report</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: CORRECTIVE ACTION RESPONSE ========= -->
+  <section class="screen" id="screen-corrective">
+    <h1>Corrective Action Response</h1>
+
+    <div class="alert alert-error">
+      <strong>Due-process deadline:</strong> You have <span class="deadline overdue" style="background:rgba(255,217,217,0.5);">11 days remaining</span> to respond. If this is a <strong>Termination for Cause</strong> proceeding, failure to respond within the <strong>15-day</strong> window will remove access to this form and the MS/AO decision will proceed without your input.
+    </div>
+
+    <div class="card">
+      <h2>Assigned Action (read-only)</h2>
+      <div class="summary-row"><span class="label">Corrective Action ID:</span><span>CA-2026-00472</span></div>
+      <div class="summary-row"><span class="label">Assigned by:</span><span>Rebecca Alvarez, MS · FSDO-DEN</span></div>
+      <div class="summary-row"><span class="label">Assigned on:</span><span>2026-04-19</span></div>
+      <div class="summary-row"><span class="label">Response due:</span><span>2026-05-04 <span class="deadline soon" style="margin-left: 0.5rem;">11 days</span></span></div>
+
+      <h3 style="margin-top: 1rem;">Designee Information (read-only)</h3>
+      <div class="summary-row"><span class="label">Designee:</span><span>Michael R. Thompson · DPE-237488119</span></div>
+
+      <h3>Corrective Activity Information (read-only)</h3>
+      <p style="background: #fafafa; border-left: 4px solid var(--usa-orange); padding: 0.75rem 1rem; border-radius: 3px;">
+        <strong>Nature:</strong> Late Post-Activity Report (PA-2026-04188) — submitted 3 days after the 7-day reporting window.<br/>
+        <strong>Finding:</strong> Pattern of late reports in Q1 2026 (2 of 3 reports late). Not a Termination-for-Cause action.<br/>
+        <strong>Required action:</strong> Submit a written response describing corrective steps to ensure timely post-activity reporting going forward.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Your Response</h2>
+      <label>Corrective Action Taken <span class="req">*</span></label>
+      <textarea rows="6" placeholder="Describe the corrective actions you have taken or will take..."></textarea>
+
+      <label>Supporting Evidence (optional)</label>
+      <textarea rows="3" placeholder="Reference any documentation, calendars, process changes, etc."></textarea>
+
+      <label>Attachments (optional)</label>
+      <div class="upload-grid">
+        <p><strong>Drag files or click to browse</strong></p>
+        <button class="btn secondary" onclick="alert('Demo')">Select files</button>
+      </div>
+
+      <div class="alert alert-warning">
+        MS will either (1) accept your response, (2) return for more information, or (3) decline — decision posted to your Message Center.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Save &amp; exit</button>
+        <button class="btn success" onclick="submitCorrective()">Submit Response</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DESIGNEE LOCATOR (PUBLIC) ========= -->
+  <section class="screen" id="screen-locator">
+    <h1>Designee Locator</h1>
+    <p class="muted">Public search of FAA designees. No sign-in required. Only designees whose designation location has been published are included.</p>
+
+    <div class="card">
+      <h2>Search</h2>
+
+      <div class="tabs">
+        <button class="active" onclick="switchTab(event, 'loc-loc')">Location Search</button>
+        <button onclick="switchTab(event, 'loc-name')">Designee Search</button>
+      </div>
+
+      <div class="tab-content active" id="loc-loc">
+        <label>Designee Type <span class="req">*</span></label>
+        <select>
+          <option>Designated Pilot Examiner (DPE)</option>
+          <option>Designated Mechanic Examiner (DME)</option>
+          <option>Training Center Evaluator (TCE)</option>
+          <option>Aircrew Program Designee (APD)</option>
+          <option>Designated Aircraft Dispatcher Examiner (DADE)</option>
+          <option>Designated Airworthiness Representative (DAR)</option>
+        </select>
+
+        <div class="locator-filter">
+          <div><label>City</label><input type="text" placeholder="e.g., Denver" /></div>
+          <div><label>State</label>
+            <select><option>—</option><option>CO</option><option>CA</option><option>TX</option><option>FL</option></select>
+          </div>
+          <div><label>ZIP</label><input type="text" placeholder="80202" /></div>
+          <div><label>Managing Office</label>
+            <select><option>Any</option><option>FSDO-DEN</option><option>FSDO-SLC</option><option>FSDO-PHX</option></select>
+          </div>
+        </div>
+        <button class="btn" onclick="document.getElementById('locResults').style.display=''">Search</button>
+      </div>
+
+      <div class="tab-content" id="loc-name">
+        <div class="form-row">
+          <div><label>First name</label><input type="text" placeholder="Michael" /></div>
+          <div><label>Last name</label><input type="text" placeholder="Thompson" /></div>
+        </div>
+        <button class="btn" onclick="document.getElementById('locResults').style.display=''">Search</button>
+      </div>
+    </div>
+
+    <div class="card" id="locResults" style="display:none;">
+      <h2>Search Results (4)</h2>
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Managing Office</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Michael R. Thompson</strong></td>
+            <td><span class="type-badge type-dpe">DPE</span></td>
+            <td>Rocky Mountain Flight Center, 7890 Airport Rd, Broomfield CO 80023</td>
+            <td>(303) 555-0119</td>
+            <td>FSDO-DEN</td>
+          </tr>
+          <tr>
+            <td><strong>Jennifer Chen</strong></td>
+            <td><span class="type-badge type-dpe">DPE</span></td>
+            <td>Front Range Flyers, 4502 Airport Way, Watkins CO 80137</td>
+            <td>(303) 555-0277</td>
+            <td>FSDO-DEN</td>
+          </tr>
+          <tr>
+            <td><strong>Robert Kowalski</strong></td>
+            <td><span class="type-badge type-dpe">DPE</span></td>
+            <td>APA Executive Terminal, Centennial CO 80112</td>
+            <td>(720) 555-0834</td>
+            <td>FSDO-DEN</td>
+          </tr>
+          <tr>
+            <td><strong>Maria Delgado</strong></td>
+            <td><span class="type-badge type-dpe">DPE</span></td>
+            <td>Colorado Springs Airport, Colorado Springs CO 80916</td>
+            <td>(719) 555-0412</td>
+            <td>FSDO-DEN</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="help mt-2">
+        Fields published per SORN DOT/FAA 830: name, address, city, state, ZIP, phone, designee type, responsible office. Individual designees may opt to suppress optional fields per FAA policy.
+      </p>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn secondary" onclick="showScreen('login')">← Back to sign in</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========= MODAL ========= -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2 id="modalTitle">Notice</h2>
+    <p id="modalBody"></p>
+    <div class="btn-group">
+      <button class="btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<footer class="faa-footer">
+  <div class="container">
+    <div>
+      <strong>Federal Aviation Administration</strong><br/>
+      Designee Management System · Flight Standards Service<br/>
+      <a href="#" onclick="return false;">About DMS</a> · <a href="#" onclick="return false;">Accessibility</a> · <a href="#" onclick="return false;">Privacy Policy</a> · <a href="#" onclick="return false;">Contact</a>
+    </div>
+    <div class="center-address">
+      designee.faa.gov · 14 CFR Part 183 · FAA Order 8000.95D<br/>
+      Records: SORN DOT/FAA 830 · OMB 2120-0033<br/>
+      Retention: 25 years (NARA DAA-0237-2020-0013)
+    </div>
+  </div>
+</footer>
+
+<script>
+  let currentStep = 1;
+  const TOTAL_STEPS = 8;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + id);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+    updateBreadcrumbs(id);
+    const jump = document.getElementById('jumpSel');
+    if (jump) jump.value = '';
+  }
+
+  function updateBreadcrumbs(id) {
+    const bc = document.getElementById('breadcrumbs');
+    const labels = {
+      login: 'Sign in',
+      register: 'Create Account',
+      dashboard: 'My DMS Home',
+      wizard: 'Designee Application',
+      cloa: 'Certificate Letter of Authority',
+      preapproval: 'Pre-Approval Request',
+      postactivity: 'Post-Activity Report',
+      corrective: 'Corrective Action Response',
+      locator: 'Designee Locator (Public)'
+    };
+    const home = (id === 'login' || id === 'register' || id === 'locator') ? 'login' : 'dashboard';
+    bc.innerHTML = '<a href="#" onclick="showScreen(\'' + home + '\'); return false;">Home</a><span>›</span><span class="current">' + (labels[id] || '') + '</span>';
+  }
+
+  function jumpScreen() {
+    const v = document.getElementById('jumpSel').value;
+    if (v) showScreen(v);
+  }
+
+  function doLogin() {
+    document.getElementById('userGreeting').innerHTML = 'Michael Thompson · <span class="pill">DPE-237488119</span>';
+    document.getElementById('signOutBtn').style.display = 'inline-block';
+    showScreen('dashboard');
+  }
+  function doRegister() {
+    const ok = document.getElementById('termsAccept').checked;
+    const err = document.getElementById('termsAcceptErr');
+    if (!ok) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    showModal('Account Created', 'Your DMS account has been created. You can now sign in and start a designee application.');
+    setTimeout(() => { closeModal(); doLogin(); }, 800);
+  }
+  function signOut() {
+    document.getElementById('userGreeting').textContent = 'Not signed in';
+    document.getElementById('signOutBtn').style.display = 'none';
+    showScreen('login');
+  }
+
+  // Wizard
+  function startWizard() {
+    currentStep = 1;
+    renderWizard();
+    showScreen('wizard');
+  }
+  function nextStep() {
+    if (currentStep < TOTAL_STEPS) { currentStep++; renderWizard(); }
+  }
+  function prevStep() {
+    if (currentStep > 1) { currentStep--; renderWizard(); }
+  }
+  function renderWizard() {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      const n = parseInt(s.dataset.step, 10);
+      s.classList.remove('active', 'done');
+      if (n < currentStep) s.classList.add('done');
+      if (n === currentStep) s.classList.add('active');
+    });
+    document.querySelectorAll('.wiz-panel').forEach(p => {
+      p.style.display = (parseInt(p.dataset.panel, 10) === currentStep) ? '' : 'none';
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      s.addEventListener('click', () => {
+        const n = parseInt(s.dataset.step, 10);
+        currentStep = n;
+        renderWizard();
+      });
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    const sigD = document.getElementById('sigDate');
+    if (sigD) sigD.value = today;
+    // Pre-approval date validation
+    const paDate = document.getElementById('paDate');
+    if (paDate) {
+      paDate.addEventListener('change', () => {
+        const v = paDate.value;
+        const warn = document.getElementById('paDateWarn');
+        if (v && v < today) { warn.style.display = 'block'; paDate.classList.add('invalid'); }
+        else { warn.style.display = 'none'; paDate.classList.remove('invalid'); }
+      });
+    }
+  });
+
+  function exitWizard() { showScreen('dashboard'); }
+
+  function submitApplication() {
+    const sig = (document.getElementById('sigName').value || '').trim();
+    const r1 = document.getElementById('sigR1').checked;
+    const r2 = document.getElementById('sigR2').checked;
+    const box = document.getElementById('sigBox').checked;
+    if (!r1 || !r2 || !box) {
+      showModal('Agreements required', 'Please check both I Agree boxes and affirm the electronic signature.');
+      return;
+    }
+    if (!sig) { showModal('Signature required', 'Please type your full legal name as your electronic signature.'); return; }
+    showModal('Application submitted', 'DPE application is submitted successfully. This message does not imply the applicant is qualified nor guarantee selection and/or appointment.');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 900);
+  }
+
+  function submitPreApproval() {
+    showModal('Pre-Approval Submitted', 'Pre-Approval has been successfully submitted. PA-2026-05022 — awaiting Managing Specialist review.');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 900);
+  }
+
+  function submitPostActivity() {
+    showModal('Post-Activity Report Submitted', 'Report for PA-2026-04188 submitted. Your overdue block has been lifted — you may now create new pre-approval requests.');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 900);
+  }
+
+  function submitCorrective() {
+    showModal('Response Submitted', 'Your corrective action response has been routed to Managing Specialist Rebecca Alvarez. You will receive a Message Center notification with the outcome.');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 900);
+  }
+
+  function renderBasisField() {
+    const v = document.getElementById('basisSel').value;
+    const dyn = document.getElementById('basisDynamic');
+    if (v === 'course') {
+      dyn.innerHTML = '<label>Name and designation number of FAA-approved school <span class="req">*</span></label>' +
+        '<input type="text" placeholder="Type to filter schools…" />';
+    } else if (v === 'foreign') {
+      dyn.innerHTML = '<label>Country that issued the foreign pilot license <span class="req">*</span></label>' +
+        '<select><option>Canada</option><option>United Kingdom</option><option>Australia</option><option>Germany</option></select>';
+    } else if (v === 'carrier') {
+      dyn.innerHTML = '<label>Name of Air Carrier <span class="req">*</span></label>' +
+        '<input type="text" placeholder="Type to filter carriers…" />';
+    } else {
+      dyn.innerHTML = '';
+    }
+  }
+
+  function toggleLocAddr(el) {
+    document.getElementById('locWarn').style.display = el.checked ? 'block' : 'none';
+  }
+
+  // Tabs
+  function switchTab(e, tabId) {
+    e.target.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    const scope = e.target.closest('.screen') || document;
+    scope.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('active');
+  }
+  function switchTabById(tabId) {
+    // Activate tab-content by ID and sync the sibling buttons.
+    const content = document.getElementById(tabId);
+    if (!content) return;
+    const screen = content.closest('.screen');
+    screen.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    content.classList.add('active');
+    // Rebuild tab-button active state by ordering
+    const tabsNav = screen.querySelector('.tabs');
+    const contents = Array.from(screen.querySelectorAll('.tab-content'));
+    const idx = contents.indexOf(content);
+    const buttons = tabsNav.querySelectorAll('button');
+    buttons.forEach(b => b.classList.remove('active'));
+    if (buttons[idx]) buttons[idx].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Modal
+  function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalBackdrop').classList.add('show');
+  }
+  function closeModal() { document.getElementById('modalBackdrop').classList.remove('show'); }
+</script>
+</body>
+</html>
