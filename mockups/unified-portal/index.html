@@ -1,0 +1,3826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATLAS — Unified FAA Aviation Certification Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue: #162e51;
+    --usa-blue-dark: #0b1f3f;
+    --usa-blue-deep: #071532;
+    --usa-blue-light: #1a4480;
+    --usa-blue-hover: #2672de;
+    --usa-blue-bright: #005ea2;
+    --usa-red: #b50909;
+    --usa-gold: #ffbe2e;
+    --usa-gold-dark: #c68a00;
+    --usa-green: #00a91c;
+    --usa-green-dark: #1a6e1f;
+    --usa-orange: #c05500;
+    --usa-teal: #00b0a8;
+    --usa-purple: #553199;
+    --usa-cyan: #009ec1;
+    --usa-base: #1b1b1b;
+    --usa-base-darker: #3d4551;
+    --usa-base-dark: #565c65;
+    --usa-base-light: #a9aeb1;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest: #f0f0f0;
+    --usa-white: #ffffff;
+    --usa-ink: #1b1b1b;
+    --focus-outline: #2491ff;
+    --grad-hero: linear-gradient(135deg, #071532 0%, #162e51 50%, #1a4480 100%);
+    --grad-gold: linear-gradient(135deg, #ffbe2e 0%, #c68a00 100%);
+    --grad-card: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+    --grad-ai: linear-gradient(135deg, #553199 0%, #2672de 100%);
+    --shadow-sm: 0 1px 3px rgba(11,31,63,0.05), 0 1px 2px rgba(11,31,63,0.03);
+    --shadow-md: 0 4px 14px rgba(11,31,63,0.08), 0 2px 4px rgba(11,31,63,0.04);
+    --shadow-lg: 0 12px 40px rgba(11,31,63,0.12), 0 4px 10px rgba(11,31,63,0.06);
+    --shadow-xl: 0 24px 80px rgba(11,31,63,0.18), 0 8px 24px rgba(11,31,63,0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3, h4 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; letter-spacing: -0.01em; }
+  h1 { font-size: 1.85rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; font-weight: 700; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  p { margin: 0 0 0.75rem 0; }
+  code, .mono { font-family: "JetBrains Mono", monospace; }
+
+  .usa-banner {
+    background: #f0f0f0;
+    font-size: 0.8rem;
+    padding: 0.3rem 1rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .usa-banner strong { color: var(--usa-blue); }
+
+  header.faa-header {
+    background: var(--grad-hero);
+    color: white;
+    padding: 1rem 2rem;
+    border-bottom: 4px solid var(--usa-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header.faa-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px circle at 20% 50%, rgba(255,190,46,0.08), transparent 60%),
+                radial-gradient(400px circle at 80% 80%, rgba(38,114,222,0.12), transparent 60%);
+    pointer-events: none;
+  }
+  .faa-logo { display: flex; align-items: center; gap: 0.85rem; position: relative; z-index: 1; }
+  .atlas-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--usa-gold) 0%, #c68a00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--usa-blue);
+    font-size: 0.7rem;
+    border: 2px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(255,190,46,0.4);
+    letter-spacing: 0.08em;
+    position: relative;
+  }
+  .atlas-mark::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+    pointer-events: none;
+  }
+  .faa-header h1 {
+    color: white;
+    font-size: 1.4rem;
+    margin: 0;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .faa-header .sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 400;
+    margin-top: 0.15rem;
+  }
+  .user-info { font-size: 0.85rem; text-align: right; position: relative; z-index: 1; }
+  .user-info .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .user-info button {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 0.3rem 0.85rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+  .user-info button:hover { background: rgba(255,255,255,0.12); }
+
+  .breadcrumbs {
+    background: white;
+    padding: 0.65rem 2rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    color: var(--usa-base-dark);
+  }
+  .breadcrumbs span { margin: 0 0.3rem; color: var(--usa-base-light); }
+  .breadcrumbs a { color: var(--usa-blue-light); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .current { color: var(--usa-ink); font-weight: 600; }
+
+  main {
+    min-height: calc(100vh - 280px);
+    padding: 1.75rem 2rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: calc(200px + 100%) 0; } }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(0,169,28,0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(0,169,28,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,169,28,0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .card {
+    background: var(--grad-card);
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .card.hoverable:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .card h2 {
+    border-bottom: 2px solid var(--usa-blue);
+    padding-bottom: 0.55rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card.elevated {
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(22,46,81,0.08);
+  }
+  .card.accent {
+    background: linear-gradient(135deg, #f5f8fc 0%, #e8eff8 100%);
+    border: 1px solid #bcd1ee;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--usa-base-darker);
+    font-size: 0.92rem;
+  }
+  label .req { color: var(--usa-red); margin-left: 2px; }
+  input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], input[type=tel], input[type=search], select, textarea {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    font-family: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--usa-base-dark);
+    border-radius: 4px;
+    background: white;
+    margin-bottom: 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--focus-outline);
+    outline-offset: 0;
+    border-color: var(--usa-blue-light);
+  }
+  .help { font-size: 0.85rem; color: var(--usa-base-dark); margin-bottom: 0.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .form-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  @media (max-width: 800px) {
+    .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: var(--usa-blue-light);
+    color: white;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    transition: all 0.15s;
+    box-shadow: 0 1px 2px rgba(11,31,63,0.08);
+  }
+  .btn:hover { background: var(--usa-blue-hover); transform: translateY(-1px); box-shadow: 0 2px 6px rgba(11,31,63,0.12); }
+  .btn:focus { outline: 3px solid var(--focus-outline); outline-offset: 2px; }
+  .btn.secondary {
+    background: white;
+    color: var(--usa-blue-light);
+    border: 1px solid var(--usa-blue-light);
+  }
+  .btn.secondary:hover { background: var(--usa-blue-light); color: white; }
+  .btn.danger { background: var(--usa-red); }
+  .btn.danger:hover { background: #8a0707; }
+  .btn.success { background: var(--usa-green); }
+  .btn.success:hover { background: #007f15; }
+  .btn.warning { background: var(--usa-orange); }
+  .btn.warning:hover { background: #8a3c00; }
+  .btn.ghost {
+    background: transparent;
+    color: var(--usa-blue-light);
+    box-shadow: none;
+  }
+  .btn.ghost:hover { background: #eef3fa; box-shadow: none; }
+  .btn.large { padding: 0.85rem 1.75rem; font-size: 1rem; }
+  .btn.xl { padding: 1rem 2.25rem; font-size: 1.05rem; }
+  .btn.ai {
+    background: var(--grad-ai);
+    color: white;
+    box-shadow: 0 4px 14px rgba(85,49,153,0.3);
+  }
+  .btn.ai:hover { box-shadow: 0 6px 20px rgba(85,49,153,0.4); }
+  .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.active     { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.pending    { background: #fff4d6; color: #7c5c00; border: 1px solid var(--usa-gold-dark); }
+  .badge.approved   { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.info       { background: #d9e8f6; color: var(--usa-blue-light); border: 1px solid #005ea2; }
+  .badge.warning    { background: #fae0cd; color: #7a3b00; border: 1px solid var(--usa-orange); }
+  .badge.danger     { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+  .badge.neutral    { background: #e5e5e5; color: #3d4551; border: 1px solid var(--usa-base-light); }
+  .badge.ai         { background: linear-gradient(135deg, #f0e9ff 0%, #e1ecff 100%); color: #3e2070; border: 1px solid #9888d1; }
+  .badge.digital    { background: linear-gradient(135deg, #dcf7f5 0%, #d0f0ed 100%); color: #004a46; border: 1px solid #00b0a8; }
+
+  .role-switcher {
+    background: linear-gradient(90deg, #fffbea 0%, #fff7d6 100%);
+    border: 1px dashed var(--usa-gold-dark);
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .role-switcher strong { color: #7c5c00; }
+  .role-switcher select {
+    margin: 0;
+    padding: 0.3rem 0.55rem;
+    width: auto;
+    min-width: 280px;
+  }
+
+  /* ========== HERO / LOGIN ========== */
+  .hero {
+    background: var(--grad-hero);
+    color: white;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,190,46,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -40%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(38,114,222,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .hero-content { grid-template-columns: 1fr; } }
+  .hero h1 {
+    color: white;
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .hero .tagline {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 0.85rem;
+    backdrop-filter: blur(10px);
+  }
+  .hero-stat .big {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--usa-gold);
+    line-height: 1;
+  }
+  .hero-stat .lbl {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+    margin-top: 0.3rem;
+  }
+
+  .login-card {
+    background: rgba(255,255,255,0.98);
+    color: var(--usa-ink);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255,255,255,0.3);
+    position: relative;
+  }
+  .login-card h2 {
+    color: var(--usa-blue);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.35rem;
+  }
+  .login-gov-btn {
+    width: 100%;
+    background: #1b1b1b;
+    color: white;
+    padding: 0.95rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    transition: all 0.15s;
+    margin-bottom: 0.75rem;
+  }
+  .login-gov-btn:hover { background: #000; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .login-gov-btn .lg-mark {
+    background: white;
+    color: #1b1b1b;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .piv-btn {
+    width: 100%;
+    background: white;
+    color: var(--usa-blue);
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--usa-blue);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .piv-btn:hover { background: var(--usa-blue); color: white; }
+
+  .divider-or {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--usa-base-dark);
+    font-size: 0.8rem;
+    margin: 0.75rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .divider-or::before, .divider-or::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--usa-base-lighter);
+  }
+  .divider-or::before { margin-right: 0.75rem; }
+  .divider-or::after { margin-left: 0.75rem; }
+
+  .trust-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--usa-base-lighter);
+    font-size: 0.78rem;
+    color: var(--usa-base-dark);
+  }
+  .trust-bar .tb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .trust-bar .tb-item .check {
+    color: var(--usa-green);
+    font-weight: 700;
+  }
+
+  /* ========== IDENTITY RESOLVER ========== */
+  .id-resolver {
+    background: linear-gradient(135deg, #f0f6ff 0%, #e4ecf8 100%);
+    border: 1px solid #bcd1ee;
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .id-resolver::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(38,114,222,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .faa-id-card {
+    background: var(--grad-hero);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--usa-gold);
+  }
+  .faa-id-card::before {
+    content: "";
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,190,46,0.3), transparent 60%);
+    pointer-events: none;
+  }
+  .faa-id-card .id-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.8;
+    margin-bottom: 0.35rem;
+  }
+  .faa-id-card .id-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--usa-gold);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+  .faa-id-card .id-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .faa-id-card .id-roles {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .faa-id-card .role-chip {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .alias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+  }
+  .alias-card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    position: relative;
+  }
+  .alias-card .alias-sys {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--usa-base-dark);
+    font-weight: 700;
+  }
+  .alias-card .alias-val {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--usa-blue);
+    margin-top: 0.2rem;
+  }
+  .alias-card .alias-note {
+    font-size: 0.75rem;
+    color: var(--usa-base-dark);
+    margin-top: 0.3rem;
+  }
+  .alias-card::after {
+    content: "→";
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--usa-blue-light);
+    font-size: 1.1rem;
+    font-weight: 700;
+    opacity: 0.4;
+  }
+
+  /* ========== ROLE PICKER ========== */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .role-card {
+    background: var(--grad-card);
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .role-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--usa-blue-light);
+  }
+  .role-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+  .role-card.pilot::before { background: linear-gradient(90deg, #005ea2, #2672de); }
+  .role-card.ame::before { background: linear-gradient(90deg, #b50909, #c05500); }
+  .role-card.dpe::before { background: linear-gradient(90deg, #1a6e1f, #00a91c); }
+  .role-card.inspector::before { background: linear-gradient(90deg, #553199, #2672de); }
+  .role-card .role-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.85rem;
+    letter-spacing: 0.03em;
+  }
+  .role-card.pilot .role-icon { background: linear-gradient(135deg, #005ea2, #2672de); }
+  .role-card.ame .role-icon { background: linear-gradient(135deg, #b50909, #c05500); }
+  .role-card.dpe .role-icon { background: linear-gradient(135deg, #1a6e1f, #00a91c); }
+  .role-card.inspector .role-icon { background: linear-gradient(135deg, #553199, #2672de); }
+  .role-card h3 {
+    margin-bottom: 0.35rem;
+    font-size: 1.15rem;
+  }
+  .role-card .role-sub {
+    font-size: 0.85rem;
+    color: var(--usa-base-dark);
+    margin-bottom: 0.85rem;
+  }
+  .role-card .role-caps {
+    font-size: 0.8rem;
+    color: var(--usa-base-darker);
+    border-top: 1px dashed var(--usa-base-lighter);
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .role-card .role-caps ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  .role-card .role-caps li { margin-bottom: 0.15rem; }
+
+  /* ========== DASHBOARD TILES ========== */
+  .tile-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+  .tile {
+    background: var(--grad-card);
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 10px;
+    padding: 1.1rem 1.15rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.15s;
+  }
+  .tile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .tile .tile-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #eaf2fb;
+    color: var(--usa-blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.55rem;
+  }
+  .tile .tile-val {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--usa-blue);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+  .tile .tile-lbl {
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .tile .tile-sub {
+    font-size: 0.82rem;
+    color: var(--usa-base-darker);
+    margin-top: 0.35rem;
+  }
+  .tile.green .tile-icon { background: #dff5df; color: var(--usa-green-dark); }
+  .tile.green .tile-val { color: var(--usa-green-dark); }
+  .tile.gold .tile-icon { background: #fff4d6; color: #7c5c00; }
+  .tile.gold .tile-val { color: #7c5c00; }
+  .tile.red .tile-icon { background: #ffe5e5; color: var(--usa-red); }
+  .tile.red .tile-val { color: var(--usa-red); }
+  .tile.purple .tile-icon { background: #eee5ff; color: var(--usa-purple); }
+  .tile.purple .tile-val { color: var(--usa-purple); }
+
+  /* ========== CERT WALLET ========== */
+  .wallet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    background: linear-gradient(135deg, #162e51 0%, #1a4480 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.4rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .cert-card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255,190,46,0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .cert-card.medical { background: linear-gradient(135deg, #7a0808 0%, #b50909 100%); }
+  .cert-card.aircraft { background: linear-gradient(135deg, #1a6e1f 0%, #00a91c 100%); }
+  .cert-card.designee { background: linear-gradient(135deg, #3e2070 0%, #553199 100%); }
+  .cert-card .cert-type {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.85;
+    margin-bottom: 0.3rem;
+  }
+  .cert-card .cert-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .cert-card .cert-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+  }
+  .cert-card .cert-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 0.65rem;
+  }
+  .cert-card .cert-meta .lbl {
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.68rem;
+  }
+  .cert-card .digital-chip {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  /* ========== PATH / JOURNEY ========== */
+  .journey-track {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+  .journey-steps {
+    display: flex;
+    gap: 0;
+    min-width: 900px;
+    position: relative;
+  }
+  .journey-step {
+    flex: 1;
+    text-align: center;
+    padding: 0 0.5rem;
+    position: relative;
+  }
+  .journey-step::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: var(--usa-base-lighter);
+    z-index: 0;
+  }
+  .journey-step:last-child::after { display: none; }
+  .journey-step.done::after { background: var(--usa-green); }
+  .journey-step.active::after { background: linear-gradient(90deg, var(--usa-green), var(--usa-base-lighter)); }
+  .journey-step .step-dot {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--usa-base-lighter);
+    color: var(--usa-base-darker);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin: 0 auto 0.55rem;
+    position: relative;
+    z-index: 1;
+    border: 3px solid white;
+    transition: all 0.2s;
+  }
+  .journey-step.done .step-dot {
+    background: var(--usa-green);
+    color: white;
+  }
+  .journey-step.active .step-dot {
+    background: var(--usa-blue);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(22,46,81,0.15);
+    animation: pulse-ring 2s infinite;
+  }
+  .journey-step .step-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--usa-ink);
+    margin-bottom: 0.2rem;
+  }
+  .journey-step .step-meta {
+    font-size: 0.72rem;
+    color: var(--usa-base-dark);
+  }
+  .journey-step.active .step-title { color: var(--usa-blue); }
+  .journey-step.done .step-title { color: var(--usa-green-dark); }
+
+  /* ========== ACTION LIST ========== */
+  .action-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .action-list li {
+    padding: 0.85rem 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lightest);
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    justify-content: space-between;
+    transition: background 0.12s;
+  }
+  .action-list li:hover { background: #fafbfd; }
+  .action-list li:last-child { border-bottom: none; }
+  .action-list .action-title { font-weight: 600; color: var(--usa-blue); font-size: 0.95rem; }
+  .action-list .action-sub { font-size: 0.83rem; color: var(--usa-base-dark); margin-top: 0.15rem; }
+  .action-list .action-icon {
+    width: 36px; height: 36px;
+    background: #eaf2fb;
+    color: var(--usa-blue-light);
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .action-list .action-body { flex: 1; display: flex; gap: 0.75rem; align-items: center; }
+
+  /* ========== AI FEATURES ========== */
+  .ai-banner {
+    background: var(--grad-ai);
+    color: white;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(400px circle at 0% 100%, rgba(255,190,46,0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .ai-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.3);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .ai-banner .ai-text { position: relative; z-index: 1; flex: 1; }
+  .ai-banner .ai-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.15rem; }
+  .ai-banner .ai-sub { font-size: 0.85rem; opacity: 0.9; }
+  .ai-banner .ai-cta {
+    position: relative;
+    z-index: 1;
+    background: white;
+    color: var(--usa-purple);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .ai-banner .ai-cta:hover { background: #f5f0ff; }
+
+  .ai-suggest {
+    background: linear-gradient(90deg, #f6f0ff 0%, #eef2ff 100%);
+    border: 1px solid #c3b3e8;
+    border-radius: 8px;
+    padding: 0.75rem 0.95rem;
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+  }
+  .ai-suggest .ai-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--grad-ai);
+    color: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .ai-suggest .ai-label { font-weight: 700; color: #3e2070; }
+  .ai-suggest .apply-btn {
+    background: transparent;
+    color: var(--usa-purple);
+    border: 1px solid var(--usa-purple);
+    padding: 0.25rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ai-suggest .apply-btn:hover { background: var(--usa-purple); color: white; }
+
+  /* ========== NLP SEARCH ========== */
+  .nlp-search {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+    margin-bottom: 0.85rem;
+  }
+  .nlp-search:focus-within { border-color: var(--usa-purple); }
+  .nlp-search .ai-mark-sm {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--grad-ai);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .nlp-search input {
+    flex: 1;
+    border: none;
+    padding: 0.55rem 0;
+    margin: 0;
+    font-size: 1rem;
+    background: transparent;
+  }
+  .nlp-search input:focus { outline: none; }
+  .nlp-search button {
+    background: var(--grad-ai);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .nlp-examples {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--usa-base-dark);
+    margin-bottom: 1rem;
+  }
+  .nlp-examples span {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .nlp-examples span:hover { border-color: var(--usa-purple); color: var(--usa-purple); }
+
+  /* ========== DOCUMENT HUB ========== */
+  .doc-hub {
+    background: linear-gradient(135deg, #f0f9fa 0%, #e0f2f4 100%);
+    border: 1px solid #99dde0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .doc-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .doc-stat {
+    background: white;
+    border-radius: 8px;
+    padding: 0.85rem;
+    border: 1px solid rgba(0,176,168,0.2);
+  }
+  .doc-stat .ds-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #004a46;
+    line-height: 1;
+  }
+  .doc-stat .ds-lbl {
+    font-size: 0.78rem;
+    color: var(--usa-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+  }
+  .doc-stat .ds-strike {
+    text-decoration: line-through;
+    color: var(--usa-base-light);
+    font-size: 0.72rem;
+    margin-left: 0.4rem;
+  }
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .doc-table th, .doc-table td {
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lightest);
+    font-size: 0.9rem;
+  }
+  .doc-table th {
+    background: #f0f6f7;
+    font-weight: 700;
+    color: var(--usa-base-darker);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .doc-table tr:hover td { background: #fafafa; }
+  .doc-table .doc-icon {
+    display: inline-block;
+    width: 28px; height: 34px;
+    background: linear-gradient(135deg, #c05500, #8a3c00);
+    color: white;
+    border-radius: 3px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-align: center;
+    line-height: 34px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  .doc-table .doc-icon.pdf { background: linear-gradient(135deg, #b50909, #7a0808); }
+
+  /* ========== SHARED SERVICES BUS ========== */
+  .services-bus {
+    background: var(--grad-hero);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .services-bus h2 {
+    color: white;
+    border-bottom-color: rgba(255,190,46,0.6);
+    margin-bottom: 1.25rem;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+  }
+  .service-pill {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .service-pill:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+    border-color: var(--usa-gold);
+  }
+  .service-pill .sp-icon {
+    width: 30px; height: 30px;
+    background: var(--usa-gold);
+    color: var(--usa-blue);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+  .service-pill .sp-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+  }
+  .service-pill .sp-sub {
+    font-size: 0.72rem;
+    opacity: 0.75;
+  }
+
+  /* ========== BEFORE/AFTER ========== */
+  .compare-section {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .compare-header {
+    background: var(--grad-hero);
+    color: white;
+    padding: 1.5rem 1.75rem;
+    text-align: center;
+  }
+  .compare-header h2 {
+    color: white;
+    border: none;
+    padding: 0;
+    margin: 0 0 0.3rem;
+    font-size: 1.65rem;
+    display: block;
+  }
+  .compare-header p {
+    opacity: 0.9;
+    margin: 0;
+  }
+  .compare-impact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0;
+  }
+  .impact-item {
+    padding: 1.5rem;
+    text-align: center;
+    border-right: 1px solid var(--usa-base-lighter);
+    border-bottom: 1px solid var(--usa-base-lighter);
+  }
+  .impact-item:last-child { border-right: none; }
+  .impact-item .impact-big {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--usa-green-dark);
+    line-height: 1;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.02em;
+  }
+  .impact-item .impact-lbl {
+    font-size: 0.85rem;
+    color: var(--usa-base-darker);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .impact-item .impact-sub {
+    font-size: 0.78rem;
+    color: var(--usa-base-dark);
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compare-table th, .compare-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    font-size: 0.93rem;
+    vertical-align: top;
+  }
+  .compare-table th {
+    background: #f5f7fa;
+    font-weight: 700;
+    color: var(--usa-blue);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .compare-table .metric-col {
+    width: 30%;
+    font-weight: 600;
+    color: var(--usa-base-darker);
+  }
+  .compare-table .before-col {
+    color: var(--usa-base-darker);
+    background: #fff8f8;
+  }
+  .compare-table .after-col {
+    color: var(--usa-green-dark);
+    background: #f3faf3;
+    font-weight: 500;
+  }
+  .compare-table .delta-col {
+    font-weight: 700;
+    color: var(--usa-green-dark);
+    white-space: nowrap;
+  }
+
+  /* ========== WORKFLOW DIAGRAM ========== */
+  .workflow {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .wf-before, .wf-after {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+  }
+  .wf-before {
+    background: #fff5f5;
+    border: 1px dashed var(--usa-red);
+  }
+  .wf-after {
+    background: #f3faf3;
+    border: 1px solid var(--usa-green);
+  }
+  .wf-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .wf-before .wf-label { color: var(--usa-red); }
+  .wf-after .wf-label { color: var(--usa-green-dark); }
+  .wf-chain {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .wf-node {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--usa-ink);
+  }
+  .wf-before .wf-node.sys {
+    border-color: var(--usa-red);
+    color: var(--usa-red);
+  }
+  .wf-node.atlas {
+    background: var(--grad-hero);
+    color: white;
+    border-color: var(--usa-blue);
+  }
+  .wf-arrow {
+    color: var(--usa-base-light);
+    font-weight: 700;
+  }
+  .wf-before .wf-arrow.legacy {
+    color: var(--usa-red);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+  }
+
+  /* ========== STATUS PILLS ========== */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .status-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-pill.live { background: #e4f6e4; color: #1a6e1f; }
+  .status-pill.live .dot { background: #00a91c; animation: pulse-ring 2s infinite; }
+  .status-pill.queued { background: #fff4d6; color: #7c5c00; }
+  .status-pill.queued .dot { background: #ffbe2e; }
+
+  /* ========== QUEUE TABLE ========== */
+  .apps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  .apps-table th, .apps-table td {
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lightest);
+    font-size: 0.92rem;
+  }
+  .apps-table th {
+    background: #f5f7fa;
+    font-weight: 700;
+    color: var(--usa-base-darker);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .apps-table tr:hover td { background: #fafbfd; }
+  .apps-table .app-id {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--usa-blue-light);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .apps-table .app-id:hover { text-decoration: underline; }
+
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a4480, #2672de);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+
+  /* ========== ALERTS ========== */
+  .alert {
+    padding: 0.9rem 1.1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+    font-size: 0.92rem;
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+  }
+  .alert .alert-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.72rem;
+    color: white;
+  }
+  .alert-info    { background: #e7f4ff; border-color: #005ea2; color: #00344f; }
+  .alert-info .alert-icon { background: #005ea2; }
+  .alert-success { background: #ecf6ec; border-color: var(--usa-green); color: #1a6e1f; }
+  .alert-success .alert-icon { background: var(--usa-green); }
+  .alert-warning { background: #fdf5dc; border-color: var(--usa-gold); color: #5c4300; }
+  .alert-warning .alert-icon { background: var(--usa-gold-dark); }
+  .alert-error   { background: #fceaea; border-color: var(--usa-red); color: #7a0808; }
+  .alert-error .alert-icon { background: var(--usa-red); }
+  .alert-ai {
+    background: linear-gradient(90deg, #f3efff 0%, #eef3ff 100%);
+    border-color: var(--usa-purple);
+    color: #3e2070;
+  }
+  .alert-ai .alert-icon { background: var(--grad-ai); }
+
+  /* ========== MODAL ========== */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(11,31,63,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.show { display: flex; animation: fadeIn 0.15s; }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 560px;
+    width: 100%;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-xl);
+    animation: slideUp 0.25s;
+  }
+  .modal h2 { border: none; margin-top: 0; padding-bottom: 0; }
+
+  /* ========== FOOTER ========== */
+  footer.faa-footer {
+    background: var(--usa-blue-deep);
+    color: white;
+    padding: 2rem;
+    margin-top: 3rem;
+    font-size: 0.85rem;
+    position: relative;
+    overflow: hidden;
+  }
+  footer.faa-footer::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--grad-gold);
+  }
+  .faa-footer .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 800px) { .faa-footer .container { grid-template-columns: 1fr; } }
+  .faa-footer a { color: #9fc7ff; text-decoration: none; }
+  .faa-footer a:hover { text-decoration: underline; }
+  .faa-footer h4 { color: var(--usa-gold); margin: 0 0 0.65rem; font-size: 0.95rem; }
+  .faa-footer ul { list-style: none; padding: 0; margin: 0; }
+  .faa-footer li { padding: 0.2rem 0; }
+
+  /* ========== TABS ========== */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--usa-base-lighter);
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .tabs button {
+    background: transparent;
+    border: none;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--usa-base-dark);
+    font-family: inherit;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .tabs button:hover { color: var(--usa-blue); }
+  .tabs button.active {
+    color: var(--usa-blue);
+    border-bottom-color: var(--usa-blue);
+    font-weight: 700;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.2s; }
+
+  /* ========== UTILITY ========== */
+  .muted { color: var(--usa-base-dark); }
+  .text-center { text-align: center; }
+  .mt-1 { margin-top: 0.5rem; }
+  .mt-2 { margin-top: 1rem; }
+  .mt-3 { margin-top: 1.5rem; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .mb-3 { margin-bottom: 1.5rem; }
+  .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 1.25rem; }
+  @media (max-width: 900px) { .grid-1-2 { grid-template-columns: 1fr; } }
+  .grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media (max-width: 900px) { .grid-equal { grid-template-columns: 1fr; } }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .section-title h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    border: none;
+    padding: 0;
+    display: block;
+  }
+  .section-title .subtitle {
+    color: var(--usa-base-dark);
+    font-size: 0.9rem;
+  }
+
+  .persona-banner {
+    background: var(--grad-hero);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .persona-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(500px circle at 100% 50%, rgba(255,190,46,0.12), transparent 60%);
+    pointer-events: none;
+  }
+  .persona-avatar {
+    width: 58px; height: 58px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+    letter-spacing: 0.05em;
+    position: relative; z-index: 1;
+  }
+  .persona-avatar.pilot { background: linear-gradient(135deg, #005ea2, #2672de); }
+  .persona-avatar.ame { background: linear-gradient(135deg, #b50909, #c05500); }
+  .persona-avatar.dpe { background: linear-gradient(135deg, #1a6e1f, #00a91c); }
+  .persona-avatar.inspector { background: linear-gradient(135deg, #553199, #2672de); }
+  .persona-info { flex: 1; position: relative; z-index: 1; }
+  .persona-info h2 {
+    color: white;
+    border: none;
+    margin: 0 0 0.15rem;
+    padding: 0;
+    font-size: 1.25rem;
+    display: block;
+  }
+  .persona-info .persona-meta {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .persona-info .persona-meta .pill {
+    background: rgba(255,255,255,0.12);
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .persona-actions { position: relative; z-index: 1; display: flex; gap: 0.5rem; }
+  .persona-actions button {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .persona-actions button:hover { background: rgba(255,255,255,0.2); }
+
+  .radio-group label, .checkbox-inline label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.25rem;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .radio-group input, .checkbox-inline input {
+    margin-right: 0.4rem;
+    width: auto;
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  .link-btn:hover { color: var(--usa-blue-hover); }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--usa-base-lighter);
+    font-size: 0.92rem;
+  }
+  .summary-row .label { font-weight: 600; color: var(--usa-base-darker); }
+  .summary-row:last-child { border-bottom: none; }
+
+  .timeline {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 0.55rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--usa-base-lighter);
+  }
+  .tl-event {
+    position: relative;
+    padding: 0.5rem 0 0.85rem;
+  }
+  .tl-event::before {
+    content: "";
+    position: absolute;
+    left: -1.75rem;
+    top: 0.8rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--usa-blue-light);
+    box-shadow: 0 0 0 3px white;
+  }
+  .tl-event.done::before { background: var(--usa-green); border-color: var(--usa-green); }
+  .tl-event.active::before { background: var(--usa-gold); border-color: var(--usa-gold); animation: pulse-ring 2s infinite; }
+  .tl-event .tl-time {
+    font-size: 0.78rem;
+    color: var(--usa-base-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .tl-event .tl-title {
+    font-weight: 600;
+    color: var(--usa-ink);
+    margin: 0.1rem 0 0.25rem;
+  }
+  .tl-event .tl-body {
+    font-size: 0.85rem;
+    color: var(--usa-base-darker);
+  }
+</style>
+</head>
+<body>
+
+<div class="usa-banner">
+  <strong>An official website of the United States government</strong>
+  <span class="muted">· Mockup / Illustrative Only · Future-State Vision</span>
+</div>
+
+<header class="faa-header">
+  <div class="faa-logo">
+    <div class="atlas-mark">ATLAS</div>
+    <div>
+      <h1>ATLAS — Unified Aviation Certification Portal</h1>
+      <div class="sub">One login · One identity · One platform for FAA airmen, medical, designee, and aircraft services</div>
+    </div>
+  </div>
+  <div class="user-info" id="userInfoArea">
+    <span id="userGreeting">Not signed in</span>
+    <button onclick="signOut()" id="signOutBtn" style="display:none;">Sign out</button>
+  </div>
+</header>
+
+<nav class="breadcrumbs" id="breadcrumbs">
+  <a href="#" onclick="showScreen('login'); return false;">Home</a>
+  <span>›</span>
+  <span class="current" id="crumbCurrent">Sign in</span>
+</nav>
+
+<main>
+
+  <div class="role-switcher">
+    <strong>Demo mode:</strong>
+    <span class="muted">Jump to any screen —</span>
+    <select id="jumpSel" onchange="jumpScreen()">
+      <option value="">— select screen —</option>
+      <option value="login">1. Login.gov SSO</option>
+      <option value="resolver">2. Unified FAA ID — Identity Resolver</option>
+      <option value="rolepicker">3. Role Picker — 4 Personas</option>
+      <option value="pilot">4. Pilot Dashboard</option>
+      <option value="pilotrating">5. Integrated Workflow — Pilot Rating</option>
+      <option value="ame">6. AME Dashboard + Integrated Exam</option>
+      <option value="dpe">7. DPE Dashboard + Checkride Flow</option>
+      <option value="inspector">8. FAA Inspector — Unified Case View</option>
+      <option value="docs">9. Document Management Hub</option>
+      <option value="services">10. Shared Services Bus</option>
+      <option value="ai">11. AI Features Showcase</option>
+      <option value="compare">12. Before vs After Comparison</option>
+    </select>
+    <span class="muted">· This is a concept mockup — not authoritative UI.</span>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 1: LOGIN                                              -->
+  <!-- ============================================================ -->
+  <section class="screen active" id="screen-login">
+    <div class="hero">
+      <div class="hero-content">
+        <div>
+          <h1>One portal. Every FAA service.</h1>
+          <p class="tagline">ATLAS replaces IACRA, MedXPress, DMS, and RMS with a single identity-backed platform — airmen, medical, designee, and aircraft services in one place.</p>
+
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="big">−75%</div>
+              <div class="lbl">Fewer systems</div>
+            </div>
+            <div class="hero-stat">
+              <div class="big">−67%</div>
+              <div class="lbl">Fewer accounts</div>
+            </div>
+            <div class="hero-stat">
+              <div class="big">0</div>
+              <div class="lbl">Handoffs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-card">
+          <h2>Sign in to ATLAS</h2>
+          <p class="help">Use your Login.gov account — the same one you use for other federal services. No more separate FAA passwords.</p>
+
+          <button class="login-gov-btn" onclick="doLoginGov()">
+            Sign in with <span class="lg-mark">LOGIN.GOV</span>
+          </button>
+
+          <div class="divider-or">or FAA internal</div>
+
+          <button class="piv-btn" onclick="doLoginPIV()">
+            PIV / CAC Card (FAA staff)
+          </button>
+
+          <p class="help mt-2" style="font-size: 0.82rem;">
+            New to FAA? <a href="#" onclick="return false;">Create a Login.gov account →</a><br>
+            <a href="#" onclick="showScreen('inspector'); return false;">Find an airman, aircraft, or designee</a> (no sign-in required)
+          </p>
+
+          <div class="trust-bar">
+            <span class="tb-item"><span class="check">✓</span> NIST 800-63 AAL2</span>
+            <span class="tb-item"><span class="check">✓</span> FIPS-HIGH ready</span>
+            <span class="tb-item"><span class="check">✓</span> PIV / phishing-resistant MFA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>What ATLAS replaces</h2>
+        <div class="wf-before">
+          <div class="wf-label">Today — 4 separate systems, 2–3 accounts, TIFF-over-FTP</div>
+          <div class="wf-chain">
+            <span class="wf-node sys">MedXPress</span>
+            <span class="wf-arrow legacy">TIFF/FTP</span>
+            <span class="wf-node sys">IACRA</span>
+            <span class="wf-arrow legacy">SQL-link</span>
+            <span class="wf-node sys">DMS</span>
+            <span class="wf-arrow legacy">batch</span>
+            <span class="wf-node sys">RMS/CAIS</span>
+          </div>
+        </div>
+        <div class="wf-after">
+          <div class="wf-label">With ATLAS — one platform, event-driven, real-time</div>
+          <div class="wf-chain">
+            <span class="wf-node atlas">ATLAS · Unified Portal</span>
+          </div>
+          <div class="mt-2 muted" style="font-size: 0.85rem;">
+            Login.gov identity · Person Master Record · Shared document service · Unified workflow engine
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Who uses ATLAS</h2>
+        <ul class="action-list">
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #d9e8f6; color: #005ea2;">PL</div>
+              <div>
+                <div class="action-title">Pilots &amp; Applicants</div>
+                <div class="action-sub">Certificates, medicals, aircraft ownership, all in one wallet</div>
+              </div>
+            </div>
+            <span class="badge info">4.2M</span>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #ffe5e5; color: #b50909;">AME</div>
+              <div>
+                <div class="action-title">Aviation Medical Examiners</div>
+                <div class="action-sub">Continuous session · Decision support · No 20-min timeouts</div>
+              </div>
+            </div>
+            <span class="badge info">3,200</span>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">DPE</div>
+              <div>
+                <div class="action-title">Designated Examiners</div>
+                <div class="action-sub">Pre-approval → checkride → post-activity in one flow</div>
+              </div>
+            </div>
+            <span class="badge info">18,500</span>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #eee5ff; color: #553199;">ASI</div>
+              <div>
+                <div class="action-title">FAA Inspectors &amp; Staff</div>
+                <div class="action-sub">Unified case view across all four legacy domains</div>
+              </div>
+            </div>
+            <span class="badge info">12,000</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 2: IDENTITY RESOLVER                                  -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-resolver">
+    <h1>Your Unified FAA Identity</h1>
+    <p class="muted">One canonical ID resolves every legacy identifier across IACRA, MedXPress/MSS, DMS, RMS/CAIS, and CARES. Your profile propagates automatically — no more re-keying.</p>
+
+    <div class="id-resolver">
+      <div class="grid-1-2">
+        <div class="faa-id-card">
+          <div class="digital-chip">Verified · Login.gov AAL2</div>
+          <div>
+            <div class="id-label">Unified FAA ID</div>
+            <div class="id-num">FAA-A8F2-7K19-Q3</div>
+            <div class="id-name">Sarah M. Martinez</div>
+          </div>
+          <div class="id-roles">
+            <span class="role-chip">Airman</span>
+            <span class="role-chip">Aircraft Owner</span>
+            <span class="role-chip">CFI</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="margin-top: 0;">Legacy identifiers resolved to your Unified FAA ID</h3>
+          <p class="help">The Person Master Record ("Golden Record") links every identifier the FAA has ever issued to you. Search by any of them.</p>
+
+          <div class="alias-grid">
+            <div class="alias-card">
+              <div class="alias-sys">IACRA / Airmen</div>
+              <div class="alias-val">FTN: 4823917</div>
+              <div class="alias-note">FAA Tracking Number · keystone</div>
+            </div>
+            <div class="alias-card">
+              <div class="alias-sys">RMS / CAIS</div>
+              <div class="alias-val">3819442</div>
+              <div class="alias-note">Airman Certificate #</div>
+            </div>
+            <div class="alias-card">
+              <div class="alias-sys">MedXPress / MSS</div>
+              <div class="alias-val">MID-09712438</div>
+              <div class="alias-note">Medical ID + Applicant ID</div>
+            </div>
+            <div class="alias-card">
+              <div class="alias-sys">DMS</div>
+              <div class="alias-val">CFI-844712003</div>
+              <div class="alias-note">Designee Number (9-digit)</div>
+            </div>
+            <div class="alias-card">
+              <div class="alias-sys">CARES</div>
+              <div class="alias-val">N-number: N4287K</div>
+              <div class="alias-note">Aircraft Registration</div>
+            </div>
+            <div class="alias-card">
+              <div class="alias-sys">Login.gov</div>
+              <div class="alias-val mono">sub: a8f2...</div>
+              <div class="alias-note">Federated identity subject</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-equal">
+      <div class="card elevated">
+        <h2>Profile — single source of truth</h2>
+        <p class="help">Edit once. Propagates to every FAA domain within seconds.</p>
+
+        <div class="ai-suggest">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <span class="ai-label">Smart check:</span> Your address in CARES (N4287K registration) differs from your airman record. Consolidate now?
+          </div>
+          <button class="apply-btn">Consolidate</button>
+        </div>
+
+        <div class="summary-row"><div class="label">Full legal name</div><div>Sarah M. Martinez</div></div>
+        <div class="summary-row"><div class="label">Date of birth</div><div>1987-03-15 <span class="badge digital" style="margin-left: 0.5rem;">Locked · ID-proofed</span></div></div>
+        <div class="summary-row"><div class="label">Mailing address</div><div>1247 Skyline Dr, Boulder CO 80302 <button class="link-btn" style="margin-left: 0.5rem;">Edit</button></div></div>
+        <div class="summary-row"><div class="label">Phone</div><div>(303) 555-0198</div></div>
+        <div class="summary-row"><div class="label">Email</div><div>s.martinez@example.com <span class="badge digital" style="margin-left: 0.5rem;">Login.gov</span></div></div>
+        <div class="summary-row"><div class="label">Citizenship</div><div>United States</div></div>
+        <div class="summary-row"><div class="label">Physical descriptors</div><div>5'6" · Brown hair · Brown eyes</div></div>
+
+        <div class="alert alert-info mt-2">
+          <div class="alert-icon">§</div>
+          <div><strong>§61.60 address change</strong> — one action propagates to IACRA, MedXPress, DMS, and CARES. No separate forms.</div>
+        </div>
+      </div>
+
+      <div class="card elevated">
+        <h2>Active roles &amp; capabilities</h2>
+        <p class="help">Your ATLAS identity carries every role the FAA has granted you. Switch dashboards based on what you're doing.</p>
+
+        <ul class="action-list">
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #d9e8f6; color: #005ea2;">PL</div>
+              <div>
+                <div class="action-title">Commercial Pilot · ASEL/ASES · Instrument</div>
+                <div class="action-sub">Cert #3819442 · Medical Class III · aircraft N4287K</div>
+              </div>
+            </div>
+            <button class="btn secondary" onclick="showScreen('pilot')" style="padding: 0.35rem 0.8rem; font-size: 0.82rem;">Open</button>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">CFI</div>
+              <div>
+                <div class="action-title">Certified Flight Instructor · ASEL</div>
+                <div class="action-sub">Expires 2027-04-30 · ready to recommend for check rides</div>
+              </div>
+            </div>
+            <button class="btn secondary" onclick="showScreen('dpe')" style="padding: 0.35rem 0.8rem; font-size: 0.82rem;">Open</button>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #fff4d6; color: #7c5c00;">AO</div>
+              <div>
+                <div class="action-title">Aircraft Owner · N4287K</div>
+                <div class="action-sub">Cessna 172S · Renewal 2027-08-15</div>
+              </div>
+            </div>
+            <button class="btn secondary" onclick="showModal('Aircraft record','Full N4287K registration view — currently mocked.')" style="padding: 0.35rem 0.8rem; font-size: 0.82rem;">Open</button>
+          </li>
+        </ul>
+
+        <div class="btn-group">
+          <button class="btn" onclick="showScreen('rolepicker')">View all roles →</button>
+          <button class="btn secondary" onclick="showModal('Add a role','Designee application, AME appointment, and Remote Pilot certification are available. Pick a path on the next screen.')">Add a role</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 3: ROLE PICKER                                        -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-rolepicker">
+    <h1>Pick a dashboard</h1>
+    <p class="muted">Your ATLAS identity carries every role you hold. Role-aware dashboards tailor what you see and what you can do.</p>
+
+    <div class="role-grid">
+      <div class="role-card pilot" onclick="showScreen('pilot')">
+        <div class="role-icon">PL</div>
+        <h3>Pilot / Applicant</h3>
+        <div class="role-sub">Airmen · Medical · Aircraft owner</div>
+        <div class="role-caps">
+          <ul>
+            <li>Certificates + ratings + medical in one wallet</li>
+            <li>Start a new rating or renewal in one flow</li>
+            <li>Aircraft registration &amp; renewal</li>
+            <li>Proactive expiration reminders</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card ame" onclick="showScreen('ame')">
+        <div class="role-icon">AME</div>
+        <h3>Aviation Medical Examiner</h3>
+        <div class="role-sub">Physician · Designee oversight</div>
+        <div class="role-caps">
+          <ul>
+            <li>Exam queue with embedded decision support</li>
+            <li>Continuous session · no 20-min timeouts</li>
+            <li>Expanded document limits (PDF/A native)</li>
+            <li>Real-time DMS oversight feed</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card dpe" onclick="showScreen('dpe')">
+        <div class="role-icon">DPE</div>
+        <h3>Designated Pilot Examiner</h3>
+        <div class="role-sub">Checkrides · Practical tests</div>
+        <div class="role-caps">
+          <ul>
+            <li>Pre-approval → checkride → post-activity, one flow</li>
+            <li>Structured CLOA (queryable, not PDF)</li>
+            <li>Pre-populated post-activity reports</li>
+            <li>Timeline widgets for every deadline</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role-card inspector" onclick="showScreen('inspector')">
+        <div class="role-icon">ASI</div>
+        <h3>FAA Inspector / Staff</h3>
+        <div class="role-sub">Oversight · Adjudication · Enforcement</div>
+        <div class="role-caps">
+          <ul>
+            <li>Unified case queue across 4 legacy domains</li>
+            <li>Single PIV · no multi-system login</li>
+            <li>Cross-domain person/aircraft view</li>
+            <li>NLP search + AI-assisted triage</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-banner mt-3">
+      <div class="ai-mark">AI</div>
+      <div class="ai-text">
+        <div class="ai-title">Not sure which dashboard?</div>
+        <div class="ai-sub">Tell us what you need to do and ATLAS will route you. Example: "I need to renew my medical and add an instrument rating."</div>
+      </div>
+      <button class="ai-cta" onclick="showScreen('ai')">Ask ATLAS AI</button>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 4: PILOT DASHBOARD                                    -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-pilot">
+    <div class="persona-banner">
+      <div class="persona-avatar pilot">SM</div>
+      <div class="persona-info">
+        <h2>Sarah M. Martinez · Pilot Dashboard</h2>
+        <div class="persona-meta">
+          <span class="pill">FAA-A8F2-7K19-Q3</span>
+          <span>Commercial Pilot · ASEL/ASES · Instrument</span>
+          <span>Medical Class III</span>
+          <span>Owner · N4287K</span>
+        </div>
+      </div>
+      <div class="persona-actions">
+        <button onclick="showScreen('rolepicker')">Switch role</button>
+      </div>
+    </div>
+
+    <div class="tile-row">
+      <div class="tile green">
+        <div class="tile-icon">✓</div>
+        <div class="tile-val">3</div>
+        <div class="tile-lbl">Active certificates</div>
+        <div class="tile-sub">All valid</div>
+      </div>
+      <div class="tile gold">
+        <div class="tile-icon">⏱</div>
+        <div class="tile-val">47d</div>
+        <div class="tile-lbl">Medical renewal</div>
+        <div class="tile-sub">Expires 2026-06-10</div>
+      </div>
+      <div class="tile">
+        <div class="tile-icon">▶</div>
+        <div class="tile-val">1</div>
+        <div class="tile-lbl">In progress</div>
+        <div class="tile-sub">Instrument rating</div>
+      </div>
+      <div class="tile purple">
+        <div class="tile-icon">AI</div>
+        <div class="tile-val">3</div>
+        <div class="tile-lbl">Suggestions</div>
+        <div class="tile-sub">From ATLAS AI</div>
+      </div>
+    </div>
+
+    <div class="ai-banner">
+      <div class="ai-mark">AI</div>
+      <div class="ai-text">
+        <div class="ai-title">Your medical expires in 47 days — AMEs near Boulder, CO have openings this week.</div>
+        <div class="ai-sub">Based on your location + calendar, Dr. Patel (3.2 mi) has slots Tue 2pm &amp; Fri 10am. Form 8500-8 is pre-filled from your last exam.</div>
+      </div>
+      <button class="ai-cta" onclick="showModal('Schedule AME','One-click booking — 8500-8 is 94% pre-filled by ATLAS AI. Review and sign in 2 minutes.')">Schedule now</button>
+    </div>
+
+    <div class="section-title">
+      <h2>Certificate Wallet</h2>
+      <span class="subtitle">· All credentials in one place — scan-ready, digital-first</span>
+    </div>
+
+    <div class="wallet-grid mb-2">
+      <div class="cert-card">
+        <div class="digital-chip">Digital · ATLAS Wallet</div>
+        <div>
+          <div class="cert-type">Airman Certificate</div>
+          <div class="cert-title">Commercial Pilot</div>
+          <div class="cert-num">3819442 · ASEL/ASES · INSTRUMENT</div>
+        </div>
+        <div class="cert-meta">
+          <div><div class="lbl">Issued</div>2021-08-14</div>
+          <div><div class="lbl">Status</div>Active</div>
+          <div><div class="lbl">Expires</div>None</div>
+        </div>
+      </div>
+
+      <div class="cert-card medical">
+        <div class="digital-chip">Digital · ATLAS Wallet</div>
+        <div>
+          <div class="cert-type">Medical Certificate</div>
+          <div class="cert-title">Third Class</div>
+          <div class="cert-num">MID-09712438 · No limitations</div>
+        </div>
+        <div class="cert-meta">
+          <div><div class="lbl">Issued</div>2024-06-10</div>
+          <div><div class="lbl">AME</div>Dr. K. Patel</div>
+          <div><div class="lbl">Expires</div>2026-06-10</div>
+        </div>
+      </div>
+
+      <div class="cert-card aircraft">
+        <div class="digital-chip">Digital · ATLAS Wallet</div>
+        <div>
+          <div class="cert-type">Aircraft Registration</div>
+          <div class="cert-title">N4287K · Cessna 172S</div>
+          <div class="cert-num">S/N 172S-10487 · 2003</div>
+        </div>
+        <div class="cert-meta">
+          <div><div class="lbl">Registered</div>2021-08-15</div>
+          <div><div class="lbl">Owner</div>Individual</div>
+          <div><div class="lbl">Renewal</div>2027-08-15</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card elevated">
+          <h2>Active certification paths</h2>
+
+          <div class="mb-2">
+            <div class="flex-between mb-1">
+              <strong>Instrument Rating · ASEL</strong>
+              <span class="badge pending">Step 4 of 6 · Knowledge test complete</span>
+            </div>
+            <div class="journey-track" style="padding: 1rem; margin-top: 0.5rem;">
+              <div class="journey-steps" style="min-width: unset;">
+                <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Application</div><div class="step-meta">Form 8710-1</div></div>
+                <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Medical</div><div class="step-meta">Class III on file</div></div>
+                <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Knowledge</div><div class="step-meta">IRA · 87%</div></div>
+                <div class="journey-step active"><div class="step-dot">4</div><div class="step-title">Training</div><div class="step-meta">~12 hrs remaining</div></div>
+                <div class="journey-step"><div class="step-dot">5</div><div class="step-title">Checkride</div><div class="step-meta">DPE TBD</div></div>
+                <div class="journey-step"><div class="step-dot">6</div><div class="step-title">Cert issued</div><div class="step-meta">Digital + plastic</div></div>
+              </div>
+            </div>
+            <div class="btn-group">
+              <button class="btn" onclick="showScreen('pilotrating')">Continue path →</button>
+              <button class="btn secondary" onclick="showModal('Find DPE','AI-ranked DPE list in your area — with real-time availability, based on your pre-approval.')">Find a DPE</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card elevated">
+          <h2>Recent activity</h2>
+          <div class="timeline">
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-21 · 14:22</div>
+              <div class="tl-title">Knowledge test result received</div>
+              <div class="tl-body">IRA — Instrument Rating Airplane · Score 87% · via Atlas Aviation event stream (no SQL-link)</div>
+            </div>
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-18 · 09:10</div>
+              <div class="tl-title">CFI endorsement signed</div>
+              <div class="tl-body">Michael Chen (CFI-832901) endorsed knowledge test readiness · shared signature service</div>
+            </div>
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-02 · 11:45</div>
+              <div class="tl-title">Form 8710-1 submitted</div>
+              <div class="tl-body">Pre-filled from Person Master Record · 100% identity fields · 2 min to submit</div>
+            </div>
+            <div class="tl-event done">
+              <div class="tl-time">2024-06-10 · 10:00</div>
+              <div class="tl-title">Medical Class III renewed</div>
+              <div class="tl-body">Dr. K. Patel · no deferral · certificate issued digitally the same day</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card elevated">
+          <h2>Quick actions</h2>
+          <ul class="action-list">
+            <li>
+              <div class="action-body">
+                <div class="action-icon">Rx</div>
+                <div>
+                  <div class="action-title">Renew medical</div>
+                  <div class="action-sub">Class III · due 47 days · 8500-8 pre-filled</div>
+                </div>
+              </div>
+              <button class="btn secondary" onclick="showScreen('ame')" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Start</button>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon">✚</div>
+                <div>
+                  <div class="action-title">Add a rating</div>
+                  <div class="action-sub">Multi-engine · ATP · CFI</div>
+                </div>
+              </div>
+              <button class="btn secondary" onclick="showScreen('pilotrating')" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Start</button>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon">§</div>
+                <div>
+                  <div class="action-title">§61.60 Address change</div>
+                  <div class="action-sub">One form, all domains</div>
+                </div>
+              </div>
+              <button class="btn secondary" onclick="showScreen('resolver')" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Open</button>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon">✈</div>
+                <div>
+                  <div class="action-title">Register an aircraft</div>
+                  <div class="action-sub">CARES-backed · 3-year term</div>
+                </div>
+              </div>
+              <button class="btn secondary" onclick="showModal('Aircraft registration','Full CARES-backed aircraft registration flow would open here — with DocuSign + Pay.gov integrated.')" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Start</button>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon">📄</div>
+                <div>
+                  <div class="action-title">Download cert</div>
+                  <div class="action-sub">PDF/A · digitally signed</div>
+                </div>
+              </div>
+              <button class="btn secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Get</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card elevated">
+          <h2>Push notifications</h2>
+          <ul class="action-list">
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">✓</div>
+                <div>
+                  <div class="action-title">Knowledge test posted</div>
+                  <div class="action-sub">2 hours ago · IRA 87%</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #fff4d6; color: #7c5c00;">⏱</div>
+                <div>
+                  <div class="action-title">Medical renewal approaching</div>
+                  <div class="action-sub">47 days · schedule AME</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #d9e8f6; color: #005ea2;">ℹ</div>
+                <div>
+                  <div class="action-title">Aircraft renewal notice</div>
+                  <div class="action-sub">N4287K · 480 days remaining</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 5: PILOT RATING — INTEGRATED WORKFLOW                 -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-pilotrating">
+    <div class="persona-banner">
+      <div class="persona-avatar pilot">SM</div>
+      <div class="persona-info">
+        <h2>Instrument Rating · Integrated Workflow</h2>
+        <div class="persona-meta">
+          <span class="pill">FTN: 4823917</span>
+          <span>Form 8710-1 + Knowledge + Checkride</span>
+          <span>All domains · One flow</span>
+        </div>
+      </div>
+      <div class="persona-actions">
+        <button onclick="showScreen('pilot')">Back to dashboard</button>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <div class="alert-icon">✓</div>
+      <div>
+        <strong>One workflow spans all four legacy systems.</strong> MedXPress, IACRA, Atlas Aviation, and DMS no longer need separate logins, forms, or context switches. You see a single timeline.
+      </div>
+    </div>
+
+    <div class="journey-track">
+      <div class="journey-steps">
+        <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Eligibility</div><div class="step-meta">Cert + medical checked</div></div>
+        <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Application</div><div class="step-meta">Form 8710-1</div></div>
+        <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Knowledge</div><div class="step-meta">IRA · 87%</div></div>
+        <div class="journey-step active"><div class="step-dot">4</div><div class="step-title">Training</div><div class="step-meta">CFI sign-off</div></div>
+        <div class="journey-step"><div class="step-dot">5</div><div class="step-title">Pre-approval</div><div class="step-meta">DPE request</div></div>
+        <div class="journey-step"><div class="step-dot">6</div><div class="step-title">Checkride</div><div class="step-meta">Oral + flight</div></div>
+        <div class="journey-step"><div class="step-dot">7</div><div class="step-title">Cert issued</div><div class="step-meta">Digital wallet</div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card elevated">
+        <h2>Step 4 · Training sign-off (CFI)</h2>
+
+        <div class="ai-suggest">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <span class="ai-label">ATLAS detected</span> — your CFI (Michael Chen) has already logged 18.4 hrs instrument training in your shared logbook. 12 hrs remain per §61.65. You'll hit minimums around May 5.
+          </div>
+        </div>
+
+        <div class="summary-row"><div class="label">Pre-filled from Master Record</div><div>Name, address, DOB, FTN, citizenship, certificate #, ratings, medical class</div></div>
+        <div class="summary-row"><div class="label">Fields needing input</div><div>Total instrument time (auto-pulled from logbook) · Endorsement text</div></div>
+        <div class="summary-row"><div class="label">CFI endorser</div><div><span class="avatar">MC</span> Michael Chen · CFI-832901 · ready to sign</div></div>
+        <div class="summary-row"><div class="label">Signature method</div><div>Shared DocuSign adapter · mobile-friendly</div></div>
+
+        <div class="btn-group">
+          <button class="btn success" onclick="showModal('Endorsement sent','Endorsement request sent to Michael Chen. You will be notified when signed (usually within minutes).')">Request CFI endorsement</button>
+          <button class="btn secondary">Review 8710-1</button>
+        </div>
+      </div>
+
+      <div class="card accent">
+        <h2>How this used to work</h2>
+        <p class="muted" style="font-size: 0.9rem;">For comparison — the current-state (AS-IS) journey for this exact step:</p>
+
+        <div class="wf-before">
+          <div class="wf-label">Today (7+ handoffs)</div>
+          <div class="wf-chain">
+            <span class="wf-node sys">MedXPress login</span>
+            <span class="wf-arrow legacy">print</span>
+            <span class="wf-node sys">Hand-carry paper</span>
+            <span class="wf-arrow legacy">→</span>
+            <span class="wf-node sys">AMCS (AME)</span>
+            <span class="wf-arrow legacy">batch</span>
+            <span class="wf-node sys">DIWS</span>
+            <span class="wf-arrow legacy">wait</span>
+            <span class="wf-node sys">IACRA login #2</span>
+            <span class="wf-arrow legacy">SQL-link</span>
+            <span class="wf-node sys">Atlas Aviation</span>
+            <span class="wf-arrow legacy">→</span>
+            <span class="wf-node sys">DMS login #3</span>
+            <span class="wf-arrow legacy">swap</span>
+            <span class="wf-node sys">Back to IACRA</span>
+            <span class="wf-arrow legacy">TIFF/FTP</span>
+            <span class="wf-node sys">CAIS</span>
+          </div>
+          <div class="mt-2 muted" style="font-size: 0.82rem;">
+            Elapsed: 12–26 weeks. Duplicate data entry 3x. 3 paper-mail steps. 1 SQL-linked-server. 1 TIFF-over-FTP.
+          </div>
+        </div>
+
+        <div class="wf-after">
+          <div class="wf-label">With ATLAS (0 handoffs)</div>
+          <div class="wf-chain">
+            <span class="wf-node atlas">ATLAS</span>
+          </div>
+          <div class="mt-2 muted" style="font-size: 0.82rem;">
+            Elapsed: 3–8 weeks (gated by training, not system latency). Zero duplicate entry. Event-driven updates.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 6: AME DASHBOARD                                      -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-ame">
+    <div class="persona-banner">
+      <div class="persona-avatar ame">KP</div>
+      <div class="persona-info">
+        <h2>Dr. Krishna Patel · AME Dashboard</h2>
+        <div class="persona-meta">
+          <span class="pill">AME-SN: 18847</span>
+          <span>Senior AME · Senior Class I/II/III</span>
+          <span>Boulder, CO · FSDO-DEN</span>
+          <span class="status-pill live"><span class="dot"></span>Continuous session</span>
+        </div>
+      </div>
+      <div class="persona-actions">
+        <button onclick="showScreen('rolepicker')">Switch role</button>
+      </div>
+    </div>
+
+    <div class="tile-row">
+      <div class="tile green">
+        <div class="tile-icon">✓</div>
+        <div class="tile-val">14</div>
+        <div class="tile-lbl">Exams today</div>
+        <div class="tile-sub">4 remaining</div>
+      </div>
+      <div class="tile">
+        <div class="tile-icon">📋</div>
+        <div class="tile-val">32</div>
+        <div class="tile-lbl">Month-to-date</div>
+        <div class="tile-sub">Apr 2026</div>
+      </div>
+      <div class="tile gold">
+        <div class="tile-icon">⏱</div>
+        <div class="tile-val">2</div>
+        <div class="tile-lbl">Deferrals</div>
+        <div class="tile-sub">Pending AAM review</div>
+      </div>
+      <div class="tile purple">
+        <div class="tile-icon">AI</div>
+        <div class="tile-val">OK</div>
+        <div class="tile-lbl">Oversight metrics</div>
+        <div class="tile-sub">Real-time DMS feed</div>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <div class="alert-icon">✓</div>
+      <div>
+        <strong>No session timeouts.</strong> ATLAS auto-saves as you type and uses risk-based re-auth for sensitive fields only. Staff validation is reminder-based, not the rigid 90-day block.
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card elevated">
+        <h2>Today's queue</h2>
+        <table class="apps-table">
+          <thead>
+            <tr><th>Time</th><th>Applicant</th><th>Class</th><th>Type</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10:00</td>
+              <td><span class="avatar">SM</span>Sarah Martinez</td>
+              <td>III</td>
+              <td>Renewal</td>
+              <td><span class="badge info">In exam</span></td>
+              <td><button class="btn secondary" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="showModal('Exam in progress','Patient exam view with decision support panels, continuous auto-save, PDF/A document uploads — all inline.')">Open</button></td>
+            </tr>
+            <tr>
+              <td>10:30</td>
+              <td><span class="avatar">RJ</span>Robert Johnson</td>
+              <td>I</td>
+              <td>Renewal</td>
+              <td><span class="badge pending">Checked in</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td>11:00</td>
+              <td><span class="avatar">AT</span>Alex Tran</td>
+              <td>II</td>
+              <td>Initial</td>
+              <td><span class="badge neutral">Scheduled</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td>13:30</td>
+              <td><span class="avatar">EB</span>Elena Braxton</td>
+              <td>III</td>
+              <td>SI renewal</td>
+              <td><span class="badge warning">Prep needed</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ai-suggest mt-2">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <span class="ai-label">Case prep:</span> Elena Braxton has a prior Special Issuance for hypertension. ATLAS has surfaced the relevant AME Guide disposition table (Ch. 8 §3.2) and her last ECG for review.
+          </div>
+          <button class="apply-btn">Open prep</button>
+        </div>
+      </div>
+
+      <div class="card elevated">
+        <h2>Integrated exam workflow</h2>
+        <p class="help">The exam screen replaces AMCS entirely. No separate MedXPress import step; no DIWS handoff. Everything is one ATLAS session.</p>
+
+        <div class="timeline">
+          <div class="tl-event done">
+            <div class="tl-time">10:00:04</div>
+            <div class="tl-title">Patient checked in · 8500-8 pulled</div>
+            <div class="tl-body">Applicant submitted 8500-8 yesterday via ATLAS · identity verified · no confirmation-number hand-off needed</div>
+          </div>
+          <div class="tl-event active">
+            <div class="tl-time">10:07 (now)</div>
+            <div class="tl-title">Vision + BP entered</div>
+            <div class="tl-body">Auto-saved · decision-support panel confirms "Issue — no limitations" per §67.103 disposition table</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-time">next</div>
+            <div class="tl-title">Cardiovascular, substance, mental</div>
+            <div class="tl-body">Embedded disposition tables · document upload (PDF/A · unified taxonomy)</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-time">last</div>
+            <div class="tl-title">Digital signature → applicant wallet</div>
+            <div class="tl-body">Shared signature service · instant wallet delivery · push notification</div>
+          </div>
+        </div>
+
+        <div class="alert alert-ai mt-2">
+          <div class="alert-icon">AI</div>
+          <div>
+            <strong>Decision support active.</strong> AME Guide (882 pages) is embedded — no separate tab. When you log a finding, ATLAS shows the matching disposition row inline.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 7: DPE DASHBOARD                                      -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-dpe">
+    <div class="persona-banner">
+      <div class="persona-avatar dpe">MT</div>
+      <div class="persona-info">
+        <h2>Michael Thompson · DPE Dashboard</h2>
+        <div class="persona-meta">
+          <span class="pill">DPE-237488119</span>
+          <span>Designated Pilot Examiner</span>
+          <span>MS: Rebecca Alvarez · FSDO-DEN</span>
+          <span class="status-pill live"><span class="dot"></span>CLOA active · structured</span>
+        </div>
+      </div>
+      <div class="persona-actions">
+        <button onclick="showScreen('rolepicker')">Switch role</button>
+      </div>
+    </div>
+
+    <div class="tile-row">
+      <div class="tile green">
+        <div class="tile-icon">▶</div>
+        <div class="tile-val">3</div>
+        <div class="tile-lbl">Today's checkrides</div>
+        <div class="tile-sub">Pre-approved</div>
+      </div>
+      <div class="tile">
+        <div class="tile-icon">📋</div>
+        <div class="tile-val">28</div>
+        <div class="tile-lbl">MTD completed</div>
+        <div class="tile-sub">All PARs filed</div>
+      </div>
+      <div class="tile gold">
+        <div class="tile-icon">⏱</div>
+        <div class="tile-val">220d</div>
+        <div class="tile-lbl">Annual extension</div>
+        <div class="tile-sub">Auto-reminder ready</div>
+      </div>
+      <div class="tile purple">
+        <div class="tile-icon">CLO</div>
+        <div class="tile-val">12</div>
+        <div class="tile-lbl">Authorizations</div>
+        <div class="tile-sub">Queryable · not PDF</div>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <div class="alert-icon">✓</div>
+      <div>
+        <strong>Pre-approval → checkride → post-activity is now one linear flow.</strong> No more DMS↔IACRA system swap. No TIFF generation. No manual PAR re-entry.
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card elevated">
+          <h2>Integrated checkride workflow · today 10:00</h2>
+          <div class="flex-between mb-2">
+            <div><strong>Applicant:</strong> Elena Braxton · Instrument Rating ASEL</div>
+            <span class="badge digital">Linear flow</span>
+          </div>
+
+          <div class="journey-track" style="padding: 1rem;">
+            <div class="journey-steps" style="min-width: unset;">
+              <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Pre-approval</div><div class="step-meta">MS approved</div></div>
+              <div class="journey-step done"><div class="step-dot">✓</div><div class="step-title">Eligibility check</div><div class="step-meta">Auto · all green</div></div>
+              <div class="journey-step active"><div class="step-dot">3</div><div class="step-title">Oral + Flight</div><div class="step-meta">In progress</div></div>
+              <div class="journey-step"><div class="step-dot">4</div><div class="step-title">Result entry</div><div class="step-meta">Digital cert issue</div></div>
+              <div class="journey-step"><div class="step-dot">5</div><div class="step-title">Post-activity</div><div class="step-meta">Auto-populated</div></div>
+            </div>
+          </div>
+
+          <div class="summary-row"><div class="label">Eligibility</div><div><span class="badge approved">All checks passed</span> · Cert, medical, knowledge, endorsements — verified in real time</div></div>
+          <div class="summary-row"><div class="label">Pre-approval</div><div>PA-2026-04812 · approved by Rebecca Alvarez on 2026-04-19</div></div>
+          <div class="summary-row"><div class="label">CLOA authorization</div><div><code>IR-ASEL-001</code> · Instrument Rating, Airplane Single-Engine Land · Queryable</div></div>
+          <div class="summary-row"><div class="label">Post-activity report</div><div>Auto-populated from practical test record · 0 fields to re-enter</div></div>
+
+          <div class="btn-group">
+            <button class="btn success" onclick="showModal('Record result','Pass/fail entry · digital cert issuance · auto-populated PAR — all inline in one screen.')">Record result</button>
+            <button class="btn secondary">View applicant 8710-1</button>
+          </div>
+        </div>
+
+        <div class="card elevated">
+          <h2>Structured CLOA (replaces PDF)</h2>
+          <p class="help">Your authorizations are queryable data — not a 10-page PDF. Function codes and limitations are first-class objects the UI validates against every time.</p>
+
+          <table class="apps-table">
+            <thead>
+              <tr><th>Code</th><th>Authorization</th><th>Limitations</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>PRI-ASEL-001</code></td><td>Private Pilot · ASEL Practical</td><td>None</td><td><span class="badge active">Active</span></td></tr>
+              <tr><td><code>PRI-ASES-001</code></td><td>Private Pilot · ASES Practical</td><td>None</td><td><span class="badge active">Active</span></td></tr>
+              <tr><td><code>IR-ASEL-001</code></td><td>Instrument Rating · Airplane</td><td>None</td><td><span class="badge active">Active</span></td></tr>
+              <tr><td><code>COM-ASEL-001</code></td><td>Commercial · ASEL Practical</td><td>Single-engine only</td><td><span class="badge active">Active</span></td></tr>
+              <tr><td><code>CFI-ASEL-001</code></td><td>CFI Initial · ASEL</td><td>Not authorized yet</td><td><span class="badge pending">Requested</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="card elevated">
+          <h2>Timeline widgets</h2>
+          <p class="help">Proactive countdown for every critical date — no more manual tickler files.</p>
+
+          <ul class="action-list">
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">CE</div>
+                <div>
+                  <div class="action-title">CE · Recurrent training</div>
+                  <div class="action-sub">Due 2026-09-14 · auto-reminder 60 days out</div>
+                </div>
+              </div>
+              <span class="badge approved">On track</span>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #fff4d6; color: #7c5c00;">EXT</div>
+                <div>
+                  <div class="action-title">Annual extension window</div>
+                  <div class="action-sub">Opens 2026-10-01 (~170d)</div>
+                </div>
+              </div>
+              <span class="badge pending">Queued</span>
+            </li>
+            <li>
+              <div class="action-body">
+                <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">AUD</div>
+                <div>
+                  <div class="action-title">MS annual oversight visit</div>
+                  <div class="action-sub">Q2 visit completed · next Q4</div>
+                </div>
+              </div>
+              <span class="badge approved">Done</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card elevated">
+          <h2>Oversight signals · real-time</h2>
+          <p class="help">Replaces MSS → DMS batch sync. Pass-rate and discrepancy metrics update from the same event stream as your checkrides.</p>
+
+          <div class="summary-row"><div class="label">Pass rate (rolling 90 days)</div><div><strong>94.2%</strong> <span class="muted">(peer avg 91.5%)</span></div></div>
+          <div class="summary-row"><div class="label">Average oral duration</div><div>1h 48m <span class="muted">(peer avg 1h 52m)</span></div></div>
+          <div class="summary-row"><div class="label">Discrepancy flags</div><div><span class="badge approved">0 open</span></div></div>
+          <div class="summary-row"><div class="label">Last MS note</div><div>"On track · no findings" — Rebecca Alvarez · 2026-04-02</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 8: FAA INSPECTOR                                      -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-inspector">
+    <div class="persona-banner">
+      <div class="persona-avatar inspector">RA</div>
+      <div class="persona-info">
+        <h2>Rebecca Alvarez · FAA Inspector (ASI)</h2>
+        <div class="persona-meta">
+          <span class="pill">PIV · FSDO-DEN</span>
+          <span>Aviation Safety Inspector · Flight Standards</span>
+          <span>Managing Specialist · 34 designees</span>
+          <span class="status-pill live"><span class="dot"></span>Single sign-on · MyAccess</span>
+        </div>
+      </div>
+      <div class="persona-actions">
+        <button onclick="showScreen('rolepicker')">Switch role</button>
+      </div>
+    </div>
+
+    <div class="nlp-search">
+      <div class="ai-mark-sm">AI</div>
+      <input type="search" placeholder='Natural-language search — e.g. "find all DPEs with pending LOIs in CO issued this quarter"' value='show me Sarah Martinez&apos;s full record across all domains' />
+      <button>Search</button>
+    </div>
+    <div class="nlp-examples">
+      <span>pilots with expired medicals in N4287K's hangar</span>
+      <span>DPE pass rates below 85% last 90 days</span>
+      <span>aircraft with liens &gt; $100k Colorado</span>
+      <span>open corrective actions my FSDO</span>
+    </div>
+
+    <div class="tile-row">
+      <div class="tile">
+        <div class="tile-icon">📋</div>
+        <div class="tile-val">47</div>
+        <div class="tile-lbl">Open cases</div>
+        <div class="tile-sub">Cross-domain queue</div>
+      </div>
+      <div class="tile gold">
+        <div class="tile-icon">!</div>
+        <div class="tile-val">6</div>
+        <div class="tile-lbl">Awaiting action</div>
+        <div class="tile-sub">Designee LOIs, reviews</div>
+      </div>
+      <div class="tile green">
+        <div class="tile-icon">✓</div>
+        <div class="tile-val">34</div>
+        <div class="tile-lbl">Designees</div>
+        <div class="tile-sub">All CLOAs active</div>
+      </div>
+      <div class="tile purple">
+        <div class="tile-icon">AI</div>
+        <div class="tile-val">3</div>
+        <div class="tile-lbl">Risk flags</div>
+        <div class="tile-sub">AI-triaged</div>
+      </div>
+    </div>
+
+    <div class="alert alert-ai">
+      <div class="alert-icon">AI</div>
+      <div>
+        <strong>AI triage:</strong> 3 cases flagged for your attention — Applicant Thomas Reyes has conflicting medical (MSS) and airman (CAIS) addresses; DPE Janet Yu's pass rate dropped to 78%; Aircraft N832PK has a pending lien release deadline in 6 days.
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card elevated">
+        <h2>Unified case queue · all domains</h2>
+        <div class="tabs">
+          <button class="active">All (47)</button>
+          <button>Airmen (18)</button>
+          <button>Medical (9)</button>
+          <button>Designee (14)</button>
+          <button>Aircraft (6)</button>
+        </div>
+
+        <table class="apps-table">
+          <thead>
+            <tr><th>Case</th><th>Domain</th><th>Subject</th><th>State</th><th>SLA</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="app-id">CASE-26-04812</span></td>
+              <td><span class="badge info">Airmen</span></td>
+              <td>Thomas Reyes · FTN 2019445</td>
+              <td><span class="badge pending">Address mismatch</span></td>
+              <td><span class="badge warning">3d</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td><span class="app-id">CASE-26-04807</span></td>
+              <td><span class="badge danger">Medical</span></td>
+              <td>Elena Braxton · MID-08773</td>
+              <td><span class="badge warning">SI renewal deferred</span></td>
+              <td><span class="badge approved">10d</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td><span class="app-id">CASE-26-04799</span></td>
+              <td><span class="badge approved">Designee</span></td>
+              <td>Janet Yu · DPE-183402</td>
+              <td><span class="badge danger">LOI issued</span></td>
+              <td><span class="badge danger">Overdue</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td><span class="app-id">CASE-26-04784</span></td>
+              <td><span class="badge neutral">Aircraft</span></td>
+              <td>N832PK · Bell 407</td>
+              <td><span class="badge pending">Lien release pending</span></td>
+              <td><span class="badge warning">6d</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+            <tr>
+              <td><span class="app-id">CASE-26-04771</span></td>
+              <td><span class="badge info">Airmen</span></td>
+              <td>Alex Tran · FTN 8812043</td>
+              <td><span class="badge info">Initial cert review</span></td>
+              <td><span class="badge approved">14d</span></td>
+              <td><button class="link-btn">Open</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card elevated">
+        <h2>Cross-domain person view</h2>
+        <p class="help">Click any subject above and see their full FAA relationship — one stitched narrative, no context-switching between IACRA, MedXPress, DMS, RMS.</p>
+
+        <div class="faa-id-card mb-2" style="min-height: unset; padding: 1.1rem 1.25rem;">
+          <div>
+            <div class="id-label">Resolved subject</div>
+            <div class="id-num" style="font-size: 1.3rem; margin-bottom: 0.25rem;">Sarah Martinez</div>
+            <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">FAA-A8F2-7K19-Q3</div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-event done">
+            <div class="tl-time">Airmen</div>
+            <div class="tl-title">Commercial Pilot (Cert #3819442)</div>
+            <div class="tl-body">Active · 2 ratings · CFI endorsement authority</div>
+          </div>
+          <div class="tl-event done">
+            <div class="tl-time">Medical</div>
+            <div class="tl-title">Class III (MID-09712438)</div>
+            <div class="tl-body">Valid thru 2026-06-10 · Dr. K. Patel AME · no limitations</div>
+          </div>
+          <div class="tl-event done">
+            <div class="tl-time">Aircraft</div>
+            <div class="tl-title">Owner · N4287K · Cessna 172S</div>
+            <div class="tl-body">Registered 2021-08-15 · 3-yr renewal due 2027-08-15 · no liens</div>
+          </div>
+          <div class="tl-event active">
+            <div class="tl-time">In progress</div>
+            <div class="tl-title">Instrument Rating application</div>
+            <div class="tl-body">Step 4/7 · knowledge complete · DPE TBD</div>
+          </div>
+          <div class="tl-event">
+            <div class="tl-time">Enforcement</div>
+            <div class="tl-title">None</div>
+            <div class="tl-body">No SORN/847 actions · no LEAP inquiries on file</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 9: DOCUMENT HUB                                       -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-docs">
+    <h1>Document Management Hub</h1>
+    <p class="muted">One shared document service — PDF/A native, unified taxonomy, DocuSign-integrated, NARA-aligned retention. Replaces the <strong>174M TIFF images</strong> scattered across RMS, MedXPress/DIWS, and IACRA.</p>
+
+    <div class="doc-hub">
+      <div class="doc-stats">
+        <div class="doc-stat">
+          <div class="ds-val">174M <span class="ds-strike">TIFF</span></div>
+          <div class="ds-lbl">Replaced by PDF/A</div>
+        </div>
+        <div class="doc-stat">
+          <div class="ds-val">0</div>
+          <div class="ds-lbl">FTP transfers</div>
+        </div>
+        <div class="doc-stat">
+          <div class="ds-val">500MB</div>
+          <div class="ds-lbl">Max per file</div>
+          <div class="ds-lbl"><span class="ds-strike">was 3MB</span></div>
+        </div>
+        <div class="doc-stat">
+          <div class="ds-val">∞</div>
+          <div class="ds-lbl">Docs per record</div>
+          <div class="ds-lbl"><span class="ds-strike">was 25</span></div>
+        </div>
+        <div class="doc-stat">
+          <div class="ds-val">30+</div>
+          <div class="ds-lbl">Unified taxonomy</div>
+        </div>
+        <div class="doc-stat">
+          <div class="ds-val">NARA</div>
+          <div class="ds-lbl">Auto-retention</div>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-icon">✓</div>
+        <div>
+          <strong>Two defining legacy patterns retired:</strong> TIFF-over-FTP (IACRA→CAIS, AVS eForms→RMS) and AME 25-doc/3MB ceilings. All uploads are PDF/A with structured metadata, OCR'd for search, and signed via shared DocuSign adapter.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card elevated">
+        <h2>Your document vault</h2>
+        <table class="doc-table">
+          <thead>
+            <tr><th>Document</th><th>Domain</th><th>Signed</th><th>Retained</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>8500-8 Medical App · 2024-06</td>
+              <td><span class="badge danger">Medical</span></td>
+              <td><span class="badge digital">DocuSign</span></td>
+              <td>50 yr (MSS)</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>Form 8710-1 Pilot App · 2026-04</td>
+              <td><span class="badge info">Airmen</span></td>
+              <td><span class="badge digital">DocuSign</span></td>
+              <td>60 yr</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>Knowledge Test Result IRA · 2026-04</td>
+              <td><span class="badge info">Airmen</span></td>
+              <td>—</td>
+              <td>60 yr</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>N4287K Bill of Sale · 2021-08</td>
+              <td><span class="badge approved">Aircraft</span></td>
+              <td><span class="badge digital">DocuSign</span></td>
+              <td>Permanent</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>Commercial Pilot Cert · 2021-08</td>
+              <td><span class="badge info">Airmen</span></td>
+              <td><span class="badge digital">FAA-signed</span></td>
+              <td>60 yr</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="doc-icon pdf">PDF</span>CFI Endorsement · 2026-04</td>
+              <td><span class="badge approved">Designee</span></td>
+              <td><span class="badge digital">DocuSign</span></td>
+              <td>60 yr</td>
+              <td><button class="link-btn">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="btn-group">
+          <button class="btn">Upload new document</button>
+          <button class="btn secondary">Download all (ZIP)</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card elevated">
+          <h2>What changed</h2>
+
+          <div class="wf-before">
+            <div class="wf-label">Before</div>
+            <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.88rem;">
+              <li>TIFF over FTP (IACRA → CAIS)</li>
+              <li>3 MB per doc, 25 docs max (MSS/AMCS)</li>
+              <li>Lossy image re-rendering (plastic TIFF)</li>
+              <li>30+ taxonomies, each domain separate</li>
+              <li>Retention ranged 6mo–Permanent, enforced manually</li>
+              <li>174M TIFF images in storage</li>
+            </ul>
+          </div>
+
+          <div class="wf-after">
+            <div class="wf-label">After</div>
+            <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.88rem;">
+              <li>Authenticated REST + structured metadata</li>
+              <li>PDF/A-native, 500 MB per file</li>
+              <li>OCR-indexed, searchable body text</li>
+              <li>Unified taxonomy across all domains</li>
+              <li>NARA auto-retention engine</li>
+              <li>DocuSign-signed with audit chain</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card accent">
+          <h2>Chain of custody</h2>
+          <p class="help">Every document in ATLAS has a tamper-evident audit trail — who uploaded, who read, who signed.</p>
+          <div class="timeline">
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-18 09:12</div>
+              <div class="tl-title">CFI endorsement uploaded</div>
+              <div class="tl-body">Michael Chen (CFI-832901) · PDF/A · hash verified</div>
+            </div>
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-18 09:14</div>
+              <div class="tl-title">DocuSign signature applied</div>
+              <div class="tl-body">Signed via shared signature service</div>
+            </div>
+            <div class="tl-event done">
+              <div class="tl-time">2026-04-18 09:15</div>
+              <div class="tl-title">Propagated to airman record</div>
+              <div class="tl-body">Event: document.endorsement.signed · consumers notified</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 10: SHARED SERVICES BUS                               -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-services">
+    <h1>Shared Services Platform</h1>
+    <p class="muted">ATLAS is built on 11 shared platform services. Each one replaces functionality today implemented 2–5 times across IACRA, MedXPress, DMS, RMS, and CARES.</p>
+
+    <div class="services-bus">
+      <h2>Platform services</h2>
+      <div class="services-grid">
+        <div class="service-pill">
+          <div class="sp-icon">ID</div>
+          <div class="sp-name">Unified Identity</div>
+          <div class="sp-sub">Login.gov + MyAccess</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">PM</div>
+          <div class="sp-name">Person Master Record</div>
+          <div class="sp-sub">FTN keystone</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">$</div>
+          <div class="sp-name">Pay.gov Broker</div>
+          <div class="sp-sub">CARES-hosted</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">DOC</div>
+          <div class="sp-name">Document Service</div>
+          <div class="sp-sub">PDF/A · NARA retention</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">WF</div>
+          <div class="sp-name">Workflow Engine</div>
+          <div class="sp-sub">Form plug-ins, queues</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">TST</div>
+          <div class="sp-name">Test Results API</div>
+          <div class="sp-sub">Real-time, FTN-keyed</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">NOT</div>
+          <div class="sp-name">Notifications</div>
+          <div class="sp-sub">Email · SMS · push</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">COR</div>
+          <div class="sp-name">Correspondence</div>
+          <div class="sp-sub">Letters, LOIs, notices</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">AUD</div>
+          <div class="sp-name">Audit / Compliance</div>
+          <div class="sp-sub">Tamper-evident · SORN-aware</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">SIG</div>
+          <div class="sp-name">Digital Signature</div>
+          <div class="sp-sub">DocuSign adapter</div>
+        </div>
+        <div class="service-pill">
+          <div class="sp-icon">INQ</div>
+          <div class="sp-name">Public Inquiry API</div>
+          <div class="sp-sub">Airmen, aircraft, designee</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card elevated">
+        <h2>Pay.gov broker — one Treasury integration</h2>
+        <p class="help">Three parallel Pay.gov integrations (RMS, DMS, CARES) collapse into a single CARES-hosted broker. Any ATLAS domain submits payments through the same adapter.</p>
+
+        <table class="apps-table">
+          <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Tx ID</th></tr></thead>
+          <tbody>
+            <tr><td>2026-04-02</td><td>Instrument Rating application fee</td><td>$150.00</td><td><code>PG-8472193</code></td></tr>
+            <tr><td>2024-08-15</td><td>N4287K 3-yr registration renewal</td><td>$5.00</td><td><code>PG-8128844</code></td></tr>
+            <tr><td>2024-06-10</td><td>Medical Class III exam (AME)</td><td>$150.00</td><td><code>PG-8102871</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card elevated">
+        <h2>Shared notifications · multi-channel</h2>
+        <p class="help">Renewal notices (RMS), approval/denial letters (MSS), corrective actions (DMS), and status updates (IACRA) all run through one service — email, SMS, push, and letter.</p>
+
+        <ul class="action-list">
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">✉</div>
+              <div>
+                <div class="action-title">Email · 18 sent this month</div>
+                <div class="action-sub">Templated · tracked · audit-logged</div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #d9e8f6; color: #005ea2;">📱</div>
+              <div>
+                <div class="action-title">Push · 42 delivered</div>
+                <div class="action-sub">Mobile app · browser web-push</div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #fff4d6; color: #7c5c00;">💬</div>
+              <div>
+                <div class="action-title">SMS · 12 sent</div>
+                <div class="action-sub">Opt-in · time-critical only</div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #ffe5e5; color: #b50909;">📮</div>
+              <div>
+                <div class="action-title">Letter (USPS) · 3 mailed</div>
+                <div class="action-sub">Generated from same template engine</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card elevated mt-2">
+      <h2>Shared audit trail · tamper-evident</h2>
+      <p class="help">One audit service replaces 5 independent audit stores (RMS, MSS, IACRA, DMS, CARES). Cross-domain correlation unlocks LEAP/FOIA responses that previously required manual stitching.</p>
+
+      <div class="timeline">
+        <div class="tl-event done">
+          <div class="tl-time">2026-04-21 14:22:04 UTC</div>
+          <div class="tl-title">event · knowledge.test.result.received</div>
+          <div class="tl-body"><code>subject=FAA-A8F2-7K19-Q3</code> · <code>source=atlas-aviation</code> · signed SHA-256 <code>3f2a8b…</code></div>
+        </div>
+        <div class="tl-event done">
+          <div class="tl-time">2026-04-18 09:15:17 UTC</div>
+          <div class="tl-title">event · document.endorsement.signed</div>
+          <div class="tl-body"><code>doc=CFI-END-488291</code> · <code>signer=CFI-832901</code> · DocuSign envelope <code>ds-8734…</code></div>
+        </div>
+        <div class="tl-event done">
+          <div class="tl-time">2026-04-02 11:45:52 UTC</div>
+          <div class="tl-title">event · application.submitted</div>
+          <div class="tl-body"><code>form=8710-1</code> · <code>subject=FAA-A8F2-7K19-Q3</code> · <code>workflow=rating-add</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 11: AI FEATURES                                       -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-ai">
+    <h1>AI-powered features</h1>
+    <p class="muted">ATLAS uses Claude to remove friction that no amount of form redesign can fix — pre-fill from history, predict status, and search in plain English.</p>
+
+    <div class="ai-banner">
+      <div class="ai-mark">AI</div>
+      <div class="ai-text">
+        <div class="ai-title">Not a chatbot bolted on. AI is a first-class service.</div>
+        <div class="ai-sub">Smart form pre-fill, status-time predictions, NLP search, case triage, decision support — each embedded where the user actually needs it.</div>
+      </div>
+    </div>
+
+    <div class="grid-equal">
+      <div class="card elevated">
+        <h2>Smart form pre-fill</h2>
+        <p class="help">Forms pre-populate from the Person Master Record, prior applications, and logbooks. ATLAS AI also suggests values for discretionary fields based on your history.</p>
+
+        <div class="summary-row"><div class="label">Form 8710-1 pre-fill rate</div><div><strong>94%</strong> of fields — from identity, cert, medical, logbook</div></div>
+        <div class="summary-row"><div class="label">Form 8500-8 pre-fill rate</div><div><strong>88%</strong> — identity + medical history from last exam</div></div>
+        <div class="summary-row"><div class="label">Registration 8050-1 pre-fill</div><div><strong>76%</strong> — owner identity + prior aircraft</div></div>
+
+        <div class="ai-suggest mt-2">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <span class="ai-label">Suggested:</span> your "total flight hours" field value is stale (last updated 2024-06). Pull latest from logbook (+187 hrs)?
+          </div>
+          <button class="apply-btn">Apply</button>
+        </div>
+      </div>
+
+      <div class="card elevated">
+        <h2>Status predictions</h2>
+        <p class="help">AI surfaces realistic ETAs for queue-driven processes — deferred medicals, registration adjudication, designee reviews — so applicants don't need to call FSDO.</p>
+
+        <ul class="action-list">
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #d9e8f6; color: #005ea2;">Rx</div>
+              <div>
+                <div class="action-title">Medical (Class I, deferred)</div>
+                <div class="action-sub">Predicted decision: 12–18 days (similar cases Q2)</div>
+              </div>
+            </div>
+            <span class="badge ai">AI · 84% conf</span>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #dff5df; color: #1a6e1f;">✈</div>
+              <div>
+                <div class="action-title">Aircraft registration (LLC)</div>
+                <div class="action-sub">Predicted issuance: 4–7 business days</div>
+              </div>
+            </div>
+            <span class="badge ai">AI · 92% conf</span>
+          </li>
+          <li>
+            <div class="action-body">
+              <div class="action-icon" style="background: #eee5ff; color: #553199;">◆</div>
+              <div>
+                <div class="action-title">Designee application (DPE)</div>
+                <div class="action-sub">Predicted decision: 45–60 days · 3 pending your district</div>
+              </div>
+            </div>
+            <span class="badge ai">AI · 76% conf</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card elevated">
+      <h2>Natural-language search</h2>
+      <p class="help">Inspectors, examiners, and the public ask questions in plain English. ATLAS translates them to SORN-aware, policy-compliant queries.</p>
+
+      <div class="nlp-search">
+        <div class="ai-mark-sm">AI</div>
+        <input type="search" value="show me pilots with expired medicals based at KBJC" />
+        <button>Search</button>
+      </div>
+
+      <div class="alert alert-ai">
+        <div class="alert-icon">AI</div>
+        <div>
+          <strong>Interpreted as:</strong> <code>airmen WHERE medical.status='expired' AND home_airport='KBJC'</code> · access-scope filtered by your FSDO · SORN 847 fields redacted for unauthorized consumers · <strong>23 results</strong>.
+        </div>
+      </div>
+
+      <table class="apps-table">
+        <thead><tr><th>Airman</th><th>FTN</th><th>Cert</th><th>Medical</th><th>Expired</th></tr></thead>
+        <tbody>
+          <tr><td><span class="avatar">JL</span>J. Lopez</td><td>5621007</td><td>Private</td><td>III</td><td>2026-03-14</td></tr>
+          <tr><td><span class="avatar">KB</span>K. Brown</td><td>3901842</td><td>Commercial</td><td>II</td><td>2026-02-28</td></tr>
+          <tr><td><span class="avatar">TR</span>T. Reyes</td><td>2019445</td><td>ATP</td><td>I</td><td>2026-02-11</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-equal mt-2">
+      <div class="card elevated">
+        <h2>Case triage (FAA internal)</h2>
+        <p class="help">Inspector queues ordered by AI-assessed risk — not strict submission date. Deadline pressure, prior enforcement patterns, anomaly signals all factor in.</p>
+
+        <div class="ai-suggest">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <strong>Top priority (1/6):</strong> CASE-26-04799 · DPE Janet Yu · pass rate dropped to 78% (peer 91%) + LOI overdue 2 days. Prior LOI 2024-11 has similar pattern. <strong>Recommend corrective-action escalation.</strong>
+          </div>
+        </div>
+
+        <div class="ai-suggest">
+          <div class="ai-dot">AI</div>
+          <div style="flex:1;">
+            <strong>Next (2/6):</strong> CASE-26-04812 · Address mismatch between CAIS and MSS. Auto-resolution would apply Person Master update · no inspector action needed.
+          </div>
+          <button class="apply-btn">Auto-resolve</button>
+        </div>
+      </div>
+
+      <div class="card elevated">
+        <h2>AME decision support</h2>
+        <p class="help">882-page AME Guide embedded at the point of exam. When the AME logs a finding, ATLAS surfaces the matching disposition table inline.</p>
+
+        <div class="alert alert-ai">
+          <div class="alert-icon">AI</div>
+          <div>
+            <strong>Finding:</strong> BP 142/88 on Class III renewal. <strong>AME Guide §8.3.2</strong> — BP threshold 155/95 for unconditional issuance. <strong>Disposition: ISSUE · no limitation, no deferral.</strong> Cite rule text? <button class="link-btn">View</button>
+          </div>
+        </div>
+
+        <div class="alert alert-ai">
+          <div class="alert-icon">AI</div>
+          <div>
+            <strong>Context:</strong> applicant's last 3 exams show stable BP trend (136/82, 140/86, now 142/88). No additional workup required.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 12: BEFORE vs AFTER                                   -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-compare">
+    <div class="compare-section">
+      <div class="compare-header">
+        <h2>Before vs After · the modernization case</h2>
+        <p>Every metric below is traced to a shared-service row in the requirements traceability matrix — not aspiration.</p>
+      </div>
+
+      <div class="compare-impact">
+        <div class="impact-item">
+          <div class="impact-big">−75%</div>
+          <div class="impact-lbl">Fewer systems</div>
+          <div class="impact-sub">4 → 1 (ATLAS)</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-big">−67%</div>
+          <div class="impact-lbl">Fewer accounts</div>
+          <div class="impact-sub">3 → 1 (Login.gov)</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-big">−100%</div>
+          <div class="impact-lbl">Zero handoffs</div>
+          <div class="impact-sub">6 → 0 per journey</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-big">−70%</div>
+          <div class="impact-lbl">Faster certification</div>
+          <div class="impact-sub">12–26 wk → 3–8 wk</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-big">0</div>
+          <div class="impact-lbl">TIFF/FTP</div>
+          <div class="impact-sub">174M images retired</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-big">33</div>
+          <div class="impact-lbl">Duplicates collapsed</div>
+          <div class="impact-sub">Into 11 shared services</div>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th class="metric-col">Metric</th><th>Current state</th><th>ATLAS</th><th>Delta</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="metric-col">Systems touched (external user)</td>
+            <td class="before-col">4 — MedXPress, IACRA, Atlas Aviation, airmen services</td>
+            <td class="after-col">1 — ATLAS (+ test vendor via API)</td>
+            <td class="delta-col">−75%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Accounts / credentials needed</td>
+            <td class="before-col">2–3 separate (MedXPress, IACRA, MyAccess)</td>
+            <td class="after-col">1 (Login.gov AAL2 or MyAccess PIV)</td>
+            <td class="delta-col">−67%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Integration handoffs per cert journey</td>
+            <td class="before-col">4–6 handoffs (TIFF/FTP, SQL-linked, batch)</td>
+            <td class="after-col">0 — internal event streams</td>
+            <td class="delta-col">−100%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">TIFF/FTP legacy integrations</td>
+            <td class="before-col">2 (IACRA→CAIS, AVS eForms→RMS)</td>
+            <td class="after-col">0 — structured REST</td>
+            <td class="delta-col">−100%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">SQL linked-server cross-DB bindings</td>
+            <td class="before-col">1 (IACRA↔Atlas Aviation)</td>
+            <td class="after-col">0 — shared test-results API</td>
+            <td class="delta-col">−100%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Elapsed time — first-time pilot cert</td>
+            <td class="before-col">12–26 weeks</td>
+            <td class="after-col">3–8 weeks (gated by training)</td>
+            <td class="delta-col">~−70%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Paper-mail steps (first-time cert)</td>
+            <td class="before-col">3 (summary, temp cert, permanent)</td>
+            <td class="after-col">0 required (plastic optional)</td>
+            <td class="delta-col">−100%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Duplicate identity re-entry</td>
+            <td class="before-col">Yes — captured 5 times</td>
+            <td class="after-col">No — Person Master Record</td>
+            <td class="delta-col">Eliminated</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Real-time cross-domain status</td>
+            <td class="before-col">No — batch syncs, siloed views</td>
+            <td class="after-col">Yes — shared case engine + events</td>
+            <td class="delta-col">New</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Mobile-native experience</td>
+            <td class="before-col">No — 1024×768 web UI</td>
+            <td class="after-col">Yes — responsive + push</td>
+            <td class="delta-col">New</td>
+          </tr>
+          <tr>
+            <td class="metric-col">AME session-timeout loss</td>
+            <td class="before-col">20-min hard timeout, unsaved data lost</td>
+            <td class="after-col">Continuous + auto-save</td>
+            <td class="delta-col">Eliminated</td>
+          </tr>
+          <tr>
+            <td class="metric-col">AME document upload ceiling</td>
+            <td class="before-col">3 MB/doc · 25 docs · 30+ types</td>
+            <td class="after-col">500 MB/doc · unlimited · unified taxonomy</td>
+            <td class="delta-col">~160×</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Designee authorizations (CLOA)</td>
+            <td class="before-col">PDF (not queryable)</td>
+            <td class="after-col">Structured data · queryable</td>
+            <td class="delta-col">Structured</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Public inquiry surfaces</td>
+            <td class="before-col">3 separate (RMS airmen, RMS aircraft, DMS locator)</td>
+            <td class="after-col">1 unified API + UI</td>
+            <td class="delta-col">−67%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Pay.gov integrations</td>
+            <td class="before-col">3 parallel (RMS, DMS, CARES)</td>
+            <td class="after-col">1 CARES-hosted broker</td>
+            <td class="delta-col">−67%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">AAL2 compliance (public auth)</td>
+            <td class="before-col">Gap — IACRA email-MFA phishable</td>
+            <td class="after-col">Login.gov AAL2</td>
+            <td class="delta-col">Restored</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Audit stores</td>
+            <td class="before-col">5 independent</td>
+            <td class="after-col">1 shared, SORN-aware</td>
+            <td class="delta-col">−80%</td>
+          </tr>
+          <tr>
+            <td class="metric-col">Proactive timeline reminders</td>
+            <td class="before-col">Manual tickler files</td>
+            <td class="after-col">Shared notifications + countdowns</td>
+            <td class="delta-col">New</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-equal mt-3">
+      <div class="card elevated">
+        <h2>Workflow: first-time pilot certification</h2>
+
+        <div class="wf-before">
+          <div class="wf-label">AS-IS · 24 steps · 6 handoffs</div>
+          <div class="wf-chain">
+            <span class="wf-node sys">MedXPress</span>
+            <span class="wf-arrow legacy">print</span>
+            <span class="wf-node sys">AMCS</span>
+            <span class="wf-arrow legacy">→</span>
+            <span class="wf-node sys">DIWS</span>
+            <span class="wf-arrow legacy">wait</span>
+            <span class="wf-node sys">IACRA</span>
+            <span class="wf-arrow legacy">SQL</span>
+            <span class="wf-node sys">Atlas</span>
+            <span class="wf-arrow legacy">swap</span>
+            <span class="wf-node sys">DMS</span>
+            <span class="wf-arrow legacy">TIFF/FTP</span>
+            <span class="wf-node sys">CAIS</span>
+            <span class="wf-arrow legacy">📮</span>
+            <span class="wf-node sys">Mail 6–8 wk</span>
+          </div>
+        </div>
+
+        <div class="wf-after">
+          <div class="wf-label">TO-BE · 15 steps · 0 handoffs</div>
+          <div class="wf-chain">
+            <span class="wf-node atlas">ATLAS</span>
+          </div>
+          <p class="muted mt-2" style="font-size: 0.85rem;">Event-driven · wallet-delivered · mobile-native · Person-Master-backed.</p>
+        </div>
+      </div>
+
+      <div class="card elevated">
+        <h2>Workflow: DPE checkride</h2>
+
+        <div class="wf-before">
+          <div class="wf-label">AS-IS · 4 handoffs · re-entry</div>
+          <div class="wf-chain">
+            <span class="wf-node sys">DMS (pre-approval)</span>
+            <span class="wf-arrow legacy">swap</span>
+            <span class="wf-node sys">IACRA (result)</span>
+            <span class="wf-arrow legacy">TIFF/FTP</span>
+            <span class="wf-node sys">CAIS</span>
+            <span class="wf-arrow legacy">swap</span>
+            <span class="wf-node sys">DMS (PAR)</span>
+            <span class="wf-arrow legacy">batch</span>
+            <span class="wf-node sys">MS oversight</span>
+          </div>
+        </div>
+
+        <div class="wf-after">
+          <div class="wf-label">TO-BE · 1 linear flow</div>
+          <div class="wf-chain">
+            <span class="wf-node atlas">Pre-approval → Checkride → PAR</span>
+          </div>
+          <p class="muted mt-2" style="font-size: 0.85rem;">Structured CLOA · pre-populated PAR · real-time oversight events.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card elevated mt-2">
+      <h2>Rationalization math</h2>
+      <p class="help">Derived from <code>research/cross-cutting/requirements-traceability-matrix.md</code>.</p>
+      <div class="form-row-4">
+        <div class="tile green">
+          <div class="tile-icon">≡</div>
+          <div class="tile-val">33</div>
+          <div class="tile-lbl">Duplicate capabilities</div>
+          <div class="tile-sub">Identified across 5 systems</div>
+        </div>
+        <div class="tile purple">
+          <div class="tile-icon">◆</div>
+          <div class="tile-val">11</div>
+          <div class="tile-lbl">Shared services</div>
+          <div class="tile-sub">Replace 33 duplicates</div>
+        </div>
+        <div class="tile gold">
+          <div class="tile-icon">⌛</div>
+          <div class="tile-val">P0×4</div>
+          <div class="tile-lbl">Priority-zero</div>
+          <div class="tile-sub">Identity · PM · Docs · Pay</div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon">§</div>
+          <div class="tile-val">14</div>
+          <div class="tile-lbl">Personas served</div>
+          <div class="tile-sub">External + designee + FAA</div>
+        </div>
+      </div>
+
+      <div class="btn-group mt-2">
+        <button class="btn" onclick="showScreen('login')">Back to home</button>
+        <button class="btn secondary" onclick="showScreen('services')">Review shared services</button>
+        <button class="btn ai" onclick="showScreen('ai')">See AI capabilities</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="faa-footer">
+  <div class="container">
+    <div>
+      <h4>ATLAS · Unified FAA Certification Portal</h4>
+      <p style="margin: 0 0 0.25rem;">A modernization concept consolidating IACRA, MedXPress/MSS, DMS, and RMS into a single identity-backed platform.</p>
+      <p style="opacity: 0.7; margin: 0.5rem 0 0; font-size: 0.8rem;">Mockup · 2026-04-23 · Not authoritative FAA UI</p>
+    </div>
+    <div>
+      <h4>Shared services</h4>
+      <ul>
+        <li><a href="#" onclick="showScreen('services'); return false;">Identity (Login.gov)</a></li>
+        <li><a href="#" onclick="showScreen('services'); return false;">Person Master Record</a></li>
+        <li><a href="#" onclick="showScreen('docs'); return false;">Document Service</a></li>
+        <li><a href="#" onclick="showScreen('services'); return false;">Pay.gov Broker</a></li>
+        <li><a href="#" onclick="showScreen('ai'); return false;">AI Platform</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Related research</h4>
+      <ul>
+        <li><a href="../iacra/index.html">IACRA (current state)</a></li>
+        <li><a href="../medxpress/index.html">MedXPress (current state)</a></li>
+        <li><a href="../dms/index.html">DMS (current state)</a></li>
+        <li><a href="../rms/index.html">RMS (current state)</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this) closeModal();">
+  <div class="modal">
+    <h2 id="modalTitle">Notice</h2>
+    <p id="modalBody" class="muted"></p>
+    <div class="btn-group">
+      <button class="btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const crumbs = {
+    login: 'Sign in',
+    resolver: 'Unified FAA Identity',
+    rolepicker: 'Pick a dashboard',
+    pilot: 'Pilot dashboard',
+    pilotrating: 'Instrument Rating · Integrated workflow',
+    ame: 'AME dashboard',
+    dpe: 'DPE dashboard',
+    inspector: 'FAA Inspector · Unified case view',
+    docs: 'Document Management Hub',
+    services: 'Shared services',
+    ai: 'AI features',
+    compare: 'Before vs After',
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + id);
+    if (el) el.classList.add('active');
+    const crumb = document.getElementById('crumbCurrent');
+    if (crumb) crumb.textContent = crumbs[id] || id;
+    const sel = document.getElementById('jumpSel');
+    if (sel) sel.value = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function jumpScreen() {
+    const v = document.getElementById('jumpSel').value;
+    if (v) showScreen(v);
+  }
+
+  function doLoginGov() {
+    setSignedIn('Sarah Martinez', 'FAA-A8F2-7K19-Q3');
+    showScreen('resolver');
+  }
+  function doLoginPIV() {
+    setSignedIn('Rebecca Alvarez · ASI', 'PIV · FSDO-DEN');
+    showScreen('inspector');
+  }
+  function setSignedIn(name, id) {
+    const area = document.getElementById('userInfoArea');
+    area.innerHTML = '<span id="userGreeting">Signed in as <strong>' + name + '</strong> <span class="pill">' + id + '</span></span>' +
+      ' <button onclick="signOut()">Sign out</button>';
+  }
+  function signOut() {
+    const area = document.getElementById('userInfoArea');
+    area.innerHTML = '<span id="userGreeting">Not signed in</span>';
+    showScreen('login');
+  }
+
+  function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalBackdrop').classList.add('show');
+  }
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('show');
+  }
+
+  // Tab switching (inspector queue tabs + others)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tabs').forEach(tabs => {
+      const btns = tabs.querySelectorAll('button');
+      btns.forEach(b => b.addEventListener('click', () => {
+        btns.forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+      }));
+    });
+
+    // NLP search example click-through
+    document.querySelectorAll('.nlp-examples span').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const input = chip.closest('.screen').querySelector('.nlp-search input');
+        if (input) { input.value = chip.textContent; input.focus(); }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
