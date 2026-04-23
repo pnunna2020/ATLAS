@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RMS — Registry Modernization System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue: #162e51;
+    --usa-blue-dark: #0b1f3f;
+    --usa-blue-light: #1a4480;
+    --usa-blue-hover: #2672de;
+    --usa-red: #b50909;
+    --usa-gold: #ffbe2e;
+    --usa-green: #00a91c;
+    --usa-orange: #c05500;
+    --usa-base: #1b1b1b;
+    --usa-base-darker: #3d4551;
+    --usa-base-dark: #565c65;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest: #f0f0f0;
+    --usa-white: #ffffff;
+    --usa-ink: #1b1b1b;
+    --focus-outline: #2491ff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3, h4 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; }
+  h1 { font-size: 1.75rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; font-weight: 700; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  p { margin: 0 0 0.75rem 0; }
+
+  .usa-banner {
+    background: #f0f0f0;
+    font-size: 0.8rem;
+    padding: 0.25rem 1rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .usa-banner strong { color: var(--usa-blue); }
+
+  header.faa-header {
+    background: var(--usa-blue);
+    color: white;
+    padding: 1rem 2rem;
+    border-bottom: 4px solid var(--usa-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .faa-logo { display: flex; align-items: center; gap: 0.75rem; }
+  .faa-seal {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--usa-gold) 0%, #c68a00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 0.7rem;
+    border: 2px solid white;
+  }
+  .faa-header h1 {
+    color: white;
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .faa-header .sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .user-info { font-size: 0.85rem; text-align: right; }
+  .user-info .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+  .user-info button {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .user-info button:hover { background: rgba(255,255,255,0.1); }
+
+  .breadcrumbs {
+    background: white;
+    padding: 0.6rem 2rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    color: var(--usa-base-dark);
+  }
+  .breadcrumbs span { margin: 0 0.3rem; color: var(--usa-base-lighter); }
+  .breadcrumbs a { color: var(--usa-blue-light); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .current { color: var(--usa-ink); font-weight: 600; }
+
+  main {
+    min-height: calc(100vh - 280px);
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.15s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card h2 { border-bottom: 2px solid var(--usa-blue); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--usa-base-darker);
+    font-size: 0.95rem;
+  }
+  label .req { color: var(--usa-red); margin-left: 2px; }
+  input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], input[type=tel], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    font-family: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--usa-base-dark);
+    border-radius: 3px;
+    background: white;
+    margin-bottom: 1rem;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--focus-outline);
+    outline-offset: 0;
+    border-color: var(--usa-blue-light);
+  }
+  input.invalid, select.invalid {
+    border: 2px solid var(--usa-red);
+    background: #fff4f4;
+  }
+  .field-error {
+    color: var(--usa-red);
+    font-size: 0.85rem;
+    margin-top: -0.75rem;
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+  .field-error.show { display: block; }
+  .help { font-size: 0.85rem; color: var(--usa-base-dark); margin-bottom: 0.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .form-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  @media (max-width: 700px) {
+    .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--usa-blue-light);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--usa-blue-hover); }
+  .btn:focus { outline: 3px solid var(--focus-outline); outline-offset: 2px; }
+  .btn.secondary {
+    background: white;
+    color: var(--usa-blue-light);
+    border: 1px solid var(--usa-blue-light);
+  }
+  .btn.secondary:hover { background: var(--usa-blue-light); color: white; }
+  .btn.danger { background: var(--usa-red); }
+  .btn.danger:hover { background: #8a0707; }
+  .btn.success { background: var(--usa-green); }
+  .btn.success:hover { background: #007f15; }
+  .btn.warning { background: var(--usa-orange); }
+  .btn.warning:hover { background: #8a3c00; }
+  .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.active     { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.pending    { background: #fff4d6; color: #7c5c00; border: 1px solid #c68a00; }
+  .badge.expired    { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+  .badge.reserved   { background: #d9e8f6; color: var(--usa-blue-light); border: 1px solid #005ea2; }
+  .badge.submitted  { background: #d9e8f6; color: var(--usa-blue-light); border: 1px solid #005ea2; }
+  .badge.approved   { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.deficient  { background: #fae0cd; color: #7a3b00; border: 1px solid var(--usa-orange); }
+  .badge.canceled   { background: #e5e5e5; color: #3d4551; border: 1px solid #8a8a8a; }
+  .badge.exported   { background: #e5e5e5; color: #3d4551; border: 1px solid #8a8a8a; }
+  .badge.overdue    { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+
+  /* Ownership-type color pills */
+  .otype-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .otype-indiv { background: #1a4480; }
+  .otype-part  { background: #005ea2; }
+  .otype-corp  { background: #8a6e00; }
+  .otype-llc   { background: #2e5b00; }
+  .otype-trust { background: #5c3b00; }
+  .otype-noncz { background: #7a0808; }
+  .otype-govt  { background: #3d4551; }
+  .otype-coown { background: #006670; }
+
+  table.apps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  .apps-table th, .apps-table td {
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .apps-table th {
+    background: var(--usa-base-lightest);
+    font-weight: 700;
+    color: var(--usa-base-darker);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .apps-table tr:hover td { background: #fafafa; }
+  .apps-table .app-id {
+    font-family: monospace;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+  }
+  .apps-table .app-id:hover { text-decoration: underline; }
+  .nnum {
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--usa-blue);
+    background: var(--usa-base-lightest);
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    letter-spacing: 0.03em;
+  }
+
+  .wizard-steps {
+    display: flex;
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .wizard-step {
+    flex: 1;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+    border-right: 1px solid var(--usa-base-lighter);
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    position: relative;
+    background: white;
+    min-width: 110px;
+    cursor: pointer;
+  }
+  .wizard-step:last-child { border-right: none; }
+  .wizard-step.done { background: #f0f7f0; color: #1a6e1f; }
+  .wizard-step.active {
+    background: var(--usa-blue);
+    color: white;
+    font-weight: 600;
+  }
+  .wizard-step .num {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--usa-base-lighter);
+    color: var(--usa-base-darker);
+    line-height: 22px;
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+    font-weight: 700;
+  }
+  .wizard-step.active .num { background: var(--usa-gold); color: var(--usa-blue); }
+  .wizard-step.done .num { background: var(--usa-green); color: white; }
+
+  .login-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+  @media (max-width: 700px) { .login-page { grid-template-columns: 1fr; } }
+  .login-page .create-card {
+    background: linear-gradient(135deg, #f0f4f9 0%, #dfe7f2 100%);
+  }
+
+  .alert {
+    padding: 0.85rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+  .alert-info    { background: #e7f6ff; border-color: #005ea2; color: #00344f; }
+  .alert-success { background: #ecf3ec; border-color: var(--usa-green); color: #1a6e1f; }
+  .alert-warning { background: #faf3d1; border-color: var(--usa-gold); color: #5c4300; }
+  .alert-error   { background: #f8dadb; border-color: var(--usa-red); color: #7a0808; }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .summary-row .label { font-weight: 600; color: var(--usa-base-darker); }
+  .summary-row:last-child { border-bottom: none; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 6px;
+    max-width: 640px;
+    width: 100%;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .modal h2 { border: none; }
+
+  footer.faa-footer {
+    background: var(--usa-blue-dark);
+    color: white;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+  }
+  .faa-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 700px) { .faa-footer .container { grid-template-columns: 1fr; } }
+  .faa-footer a { color: #9fc7ff; }
+  .faa-footer .center-address { text-align: right; opacity: 0.9; }
+  @media (max-width: 700px) { .faa-footer .center-address { text-align: left; } }
+
+  .role-switcher {
+    background: #fffbea;
+    border: 1px dashed #c68a00;
+    padding: 0.5rem 0.85rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .role-switcher strong { color: #7c5c00; }
+  .role-switcher select {
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    width: auto;
+  }
+
+  .radio-group label, .checkbox-inline label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.25rem;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .radio-group input, .checkbox-inline input {
+    margin-right: 0.4rem;
+    width: auto;
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .link-btn:hover { color: var(--usa-blue-hover); }
+
+  .signature-box {
+    background: #f8f9fa;
+    border: 2px dashed var(--usa-base-dark);
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+
+  .status-tile {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+    transition: box-shadow 0.1s;
+  }
+  .status-tile .big { font-size: 1.6rem; font-weight: 700; color: var(--usa-blue); }
+  .status-tile .lbl { font-size: 0.8rem; color: var(--usa-base-dark); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .muted { color: var(--usa-base-dark); }
+  .mt-1 { margin-top: 0.5rem; }
+  .mt-2 { margin-top: 1rem; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .text-center { text-align: center; }
+
+  .upload-grid {
+    background: #fafafa;
+    border: 2px dashed var(--usa-base-dark);
+    border-radius: 4px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Deadline countdown */
+  .deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .deadline.ok { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .deadline.soon { background: #faf3d1; color: #5c4300; border: 1px solid var(--usa-gold); }
+  .deadline.overdue { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(181,9,9,0.4); } 50% { box-shadow: 0 0 0 6px rgba(181,9,9,0); } }
+
+  /* Aircraft Certificate styling */
+  .cert-paper {
+    background:
+      linear-gradient(135deg, rgba(255,190,46,0.03) 0%, rgba(22,46,81,0.03) 100%),
+      white;
+    border: 6px double var(--usa-blue);
+    padding: 2rem 2.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    font-family: "Merriweather", Georgia, serif;
+    color: var(--usa-ink);
+  }
+  .cert-paper::before {
+    content: "OFFICIAL · FAA CERTIFICATE OF AIRCRAFT REGISTRATION";
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--usa-blue);
+    background: white;
+    padding: 0 0.6rem;
+  }
+  .cert-header { text-align: center; margin: 0.75rem 0 1.25rem; }
+  .cert-header h2 {
+    font-family: "Merriweather", Georgia, serif;
+    color: var(--usa-blue);
+    border: none;
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.02em;
+  }
+  .cert-header .authority {
+    font-size: 0.85rem;
+    color: var(--usa-base-dark);
+    font-style: italic;
+  }
+  .cert-seal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0 1.25rem;
+  }
+  .cert-seal {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--usa-gold) 0%, #a96f00 100%);
+    border: 3px solid var(--usa-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--usa-blue);
+    font-weight: 700;
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.8rem;
+    text-align: center;
+    line-height: 1;
+  }
+  .cert-nnum-block {
+    text-align: center;
+    flex: 1;
+    padding: 0 1rem;
+  }
+  .cert-nnum-block .n-display {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-family: "Merriweather", Georgia, serif;
+    letter-spacing: 0.1em;
+  }
+  .cert-nnum-block .sub {
+    font-size: 0.85rem;
+    color: var(--usa-base-dark);
+  }
+  .cert-dates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    background: #fafafa;
+    border: 1px solid var(--usa-base-lighter);
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0 1rem;
+    border-radius: 3px;
+  }
+  .cert-dates .dt-block { text-align: center; }
+  .cert-dates .dt-lbl {
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--usa-base-dark);
+  }
+  .cert-dates .dt-val {
+    font-family: "Public Sans", sans-serif;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 1rem;
+  }
+  .cert-section-title {
+    font-family: "Public Sans", sans-serif;
+    color: var(--usa-blue);
+    border-bottom: 1px solid var(--usa-blue);
+    padding-bottom: 0.25rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 1rem 0 0.5rem;
+  }
+  .cert-fields-grid {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0.3rem 1rem;
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.95rem;
+  }
+  .cert-fields-grid dt {
+    font-weight: 600;
+    color: var(--usa-base-darker);
+  }
+  .cert-fields-grid dd { margin: 0; }
+  .cert-signature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--usa-blue);
+    font-family: "Public Sans", sans-serif;
+  }
+  .cert-signature-row .sig-line {
+    border-bottom: 1px solid var(--usa-ink);
+    padding-bottom: 0.25rem;
+    font-family: "Merriweather", Georgia, serif;
+    font-style: italic;
+    font-size: 1.05rem;
+  }
+  .cert-signature-row .sig-title {
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    margin-top: 0.25rem;
+  }
+
+  /* N-number reservation picker */
+  .nnum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .nnum-tile {
+    border: 1px solid var(--usa-base-lighter);
+    padding: 0.6rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    background: white;
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--usa-blue);
+    transition: all 0.1s;
+  }
+  .nnum-tile:hover { background: #e7f6ff; border-color: var(--usa-blue-light); }
+  .nnum-tile.selected {
+    background: var(--usa-blue);
+    color: white;
+    border-color: var(--usa-blue);
+  }
+  .nnum-tile.taken {
+    background: #f5f5f5;
+    color: #aaa;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+  .nnum-tile .tag {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 500;
+    font-family: "Public Sans", sans-serif;
+    color: var(--usa-base-dark);
+    letter-spacing: 0.04em;
+    margin-top: 0.15rem;
+    text-transform: uppercase;
+  }
+  .nnum-tile.selected .tag { color: rgba(255,255,255,0.8); }
+
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--usa-base-lighter);
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .tabs button {
+    background: transparent;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--usa-base-dark);
+    font-family: inherit;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+  }
+  .tabs button.active {
+    color: var(--usa-blue);
+    border-bottom-color: var(--usa-blue);
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .legacy-banner {
+    background: linear-gradient(90deg, #5c3b00 0%, #7c5c00 100%);
+    color: #fff4d6;
+    font-family: monospace;
+    font-size: 0.78rem;
+    padding: 0.3rem 2rem;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .legacy-banner .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--usa-gold);
+    margin-right: 0.4rem;
+    animation: pulse 2s infinite;
+  }
+
+  .locator-filter {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (max-width: 700px) { .locator-filter { grid-template-columns: 1fr; } }
+
+  .chain-item {
+    border-left: 3px solid var(--usa-blue-light);
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.5rem;
+    background: #fafafa;
+    border-radius: 0 3px 3px 0;
+    font-size: 0.92rem;
+  }
+  .chain-item .cdate {
+    font-family: monospace;
+    color: var(--usa-blue-light);
+    font-weight: 700;
+  }
+
+  .priv-notice {
+    background: #fff4d6;
+    border: 1px solid #c68a00;
+    padding: 0.75rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #5c4300;
+  }
+  .priv-notice strong { color: #7c5c00; }
+</style>
+</head>
+<body>
+
+<div class="usa-banner">
+  <strong>An official website of the United States government</strong>
+  <span class="muted">· Mockup / Illustrative Only</span>
+</div>
+
+<div class="legacy-banner">
+  <span><span class="dot"></span> CAIS MAINFRAME · NATURAL / ADABAS · Last sync: 00:00 CT · 174M TIFF images on IMS</span>
+  <span>RMS v2.8 · ATO 2022-04-20 · Transitioning to CARES (Phase 1 FOC: Fall 2027)</span>
+</div>
+
+<header class="faa-header">
+  <div class="faa-logo">
+    <div class="faa-seal">FAA</div>
+    <div>
+      <h1>RMS — Registry Modernization System</h1>
+      <div class="sub">Aircraft Registry · Civil Aviation Registry Division · 14 CFR Parts 47/49</div>
+    </div>
+  </div>
+  <div class="user-info" id="userInfoArea">
+    <span id="userGreeting">Not signed in</span>
+    <button onclick="signOut()" id="signOutBtn" style="display:none;">Sign out</button>
+  </div>
+</header>
+
+<nav class="breadcrumbs" id="breadcrumbs">
+  <a href="#" onclick="showScreen('login'); return false;">Home</a>
+</nav>
+
+<main>
+
+  <div class="role-switcher">
+    <strong>Demo mode:</strong>
+    <span class="muted">Jump to:</span>
+    <select id="jumpSel" onchange="jumpScreen()">
+      <option value="">— screen —</option>
+      <option value="login">1. Login</option>
+      <option value="register">2. Create Account</option>
+      <option value="dashboard">3. Owner Dashboard</option>
+      <option value="nnumber">4. N-Number Reservation</option>
+      <option value="wizard">5. Aircraft Registration (AC 8050-1)</option>
+      <option value="certificate">6. Certificate of Registration</option>
+      <option value="renewal">7. Registration Renewal (7-year)</option>
+      <option value="deregister">8. De-Registration / Export</option>
+      <option value="inquiry">9. Aircraft Inquiry (public)</option>
+      <option value="inquiry-detail">9b. Inquiry Detail View</option>
+      <option value="docrequest">10. Document Request / Certified Copies</option>
+      <option value="dealer">11. Dealer Registration</option>
+    </select>
+    <span class="muted">· Not authoritative UI — mockup only.</span>
+  </div>
+
+  <!-- ========= SCREEN: LOGIN ========= -->
+  <section class="screen active" id="screen-login">
+    <div class="alert alert-info" style="max-width: 900px; margin: 0 auto 1rem;">
+      <strong>Privacy Act Statement.</strong> Records in RMS are maintained under <strong>SORN DOT/FAA 801</strong> (Aviation Registration Records, 88 FR 53951) and <strong>SORN DOT/FAA 847</strong> (Aviation Records on Individuals). Authority: 49 U.S.C. §§ 44101–44108; 14 CFR Parts 47/49. Digital image copies are the authoritative legal record.
+    </div>
+
+    <div class="login-page">
+      <div class="card">
+        <h2>Sign in</h2>
+        <p class="help">Aircraft owners, dealers, and authorized representatives can sign in to manage registrations, renewals, and document filings.</p>
+
+        <button class="btn secondary" style="width: 100%; margin-bottom: 0.75rem;" onclick="doLogin()">
+          Continue with Login.gov
+        </button>
+
+        <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--usa-base-lighter);" />
+
+        <label>Legacy Username (amsrvs) <span class="req">*</span></label>
+        <input type="text" id="loginUser" value="r.martinez" />
+        <label>Password <span class="req">*</span></label>
+        <input type="password" id="loginPass" value="••••••••" />
+
+        <div class="btn-group">
+          <button class="btn" onclick="doLogin()">Sign in</button>
+          <button class="btn secondary" onclick="alert('Demo: password reset answers your security question.')">Forgot password?</button>
+        </div>
+
+        <p class="help mt-2">
+          <a href="#" onclick="showScreen('inquiry'); return false;"><strong>Aircraft Inquiry</strong></a> — public N-number lookup (no sign-in required).
+        </p>
+      </div>
+
+      <div class="card create-card">
+        <h2>New to the Registry?</h2>
+        <p class="help">Create an account to reserve an N-number, file a registration (AC Form 8050-1), renew, or request records. All fees are collected via Pay.gov.</p>
+        <button class="btn success" style="width: 100%;" onclick="showScreen('register')">Create Account</button>
+
+        <hr style="margin: 1.25rem 0; border: none; border-top: 1px solid rgba(22,46,81,0.15);" />
+
+        <h3>Common tasks</h3>
+        <ul style="padding-left: 1.1rem; font-size: 0.9rem; color: var(--usa-base-darker);">
+          <li>Reserve an N-number (up to 5 per person)</li>
+          <li>File AC Form 8050-1 aircraft registration</li>
+          <li>Renew aircraft registration (7-year cycle)</li>
+          <li>Request certified copies of registry records</li>
+          <li>Apply for an Aircraft Dealer Certificate</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: REGISTRATION ========= -->
+  <section class="screen" id="screen-register">
+    <h1>Create Account</h1>
+    <p class="muted">Self-registration grants access to Aircraft Registry online services. After the account is created, you will be signed in.</p>
+
+    <div class="card">
+      <h2>Account Information</h2>
+      <div class="form-row">
+        <div><label>First name <span class="req">*</span></label><input type="text" value="Ricardo" /></div>
+        <div><label>Last name <span class="req">*</span></label><input type="text" value="Martinez" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Email <span class="req">*</span></label><input type="email" value="r.martinez@example.com" /></div>
+        <div><label>Chosen username <span class="req">*</span></label><input type="text" value="r.martinez" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Password <span class="req">*</span></label><input type="password" value="••••••••••" /></div>
+        <div><label>Confirm password <span class="req">*</span></label><input type="password" value="••••••••••" /></div>
+      </div>
+      <p class="help">Minimum 12 characters; mix of letters, numbers, and symbols. Password recovery transitions to Login.gov — a local security question is retained during the migration window.</p>
+
+      <h3 style="margin-top: 1rem;">Citizenship attestation (preview)</h3>
+      <p class="help">Your citizenship status will be attested on each registration filing. Registration options differ for U.S. citizens, resident aliens, and non-citizen corporations per 49 U.S.C. § 40102(a)(15).</p>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="regCitz" checked /> U.S. citizen</label>
+        <label><input type="radio" name="regCitz" /> Lawful resident alien</label>
+        <label><input type="radio" name="regCitz" /> Non-citizen corporation</label>
+        <label><input type="radio" name="regCitz" /> Government / Other</label>
+      </div>
+
+      <h3>Security question</h3>
+      <label>Question <span class="req">*</span></label>
+      <select>
+        <option>What city were you born in?</option>
+        <option>First aircraft make/model you flew?</option>
+        <option>Name of your first flight school?</option>
+      </select>
+      <label>Answer <span class="req">*</span></label>
+      <input type="text" />
+
+      <div class="alert alert-info">
+        Name, email, and password changes will eventually route to <strong>Login.gov account management</strong> — not editable directly in RMS.
+      </div>
+
+      <div class="checkbox-inline" style="margin-top: 0.75rem;">
+        <label>
+          <input type="checkbox" id="termsAccept" />
+          I accept the <a href="#" onclick="return false;">RMS Terms of Use</a> and the <a href="#" onclick="return false;">Privacy Act Statement</a> (SORN DOT/FAA 801).
+        </label>
+      </div>
+      <div class="field-error" id="termsAcceptErr">You must accept the terms to continue.</div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('login')">Cancel</button>
+        <button class="btn success" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DASHBOARD ========= -->
+  <section class="screen" id="screen-dashboard">
+    <h1>My Registry Home</h1>
+    <p class="muted">Welcome, <strong>Ricardo Martinez</strong>. Registry Customer ID <span class="nnum">RCI-18227491</span> · Citizenship: U.S. citizen · 2 registered aircraft · 1 N-number reservation</p>
+
+    <div class="form-row-4 mb-2" style="margin-top: 1rem;">
+      <div class="status-tile">
+        <div class="big">2</div>
+        <div class="lbl">Registered Aircraft</div>
+      </div>
+      <div class="status-tile">
+        <div class="big">1</div>
+        <div class="lbl">Pending Applications</div>
+      </div>
+      <div class="status-tile">
+        <div class="big">1</div>
+        <div class="lbl">N-Number Reservations</div>
+      </div>
+      <div class="status-tile">
+        <div class="big" style="color: var(--usa-orange); font-size: 1.2rem;">63 days</div>
+        <div class="lbl">Next Renewal Due</div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <strong>Renewal notice:</strong> <span class="nnum">N7342K</span> registration expires <strong>2026-06-25</strong>. FAA mails a Notice of Expiration 6 months before expiration — your notice was sent on <strong>2025-12-25</strong> with security code <code>X7F-42A</code>. Renew online (affirm-no-change) or file a paper AC Form 8050-1B with $5 fee.
+      <button class="link-btn" onclick="showScreen('renewal')" style="margin-left: 0.5rem;">Renew now →</button>
+    </div>
+
+    <div class="form-row">
+      <div class="card">
+        <h2>Quick Actions</h2>
+        <ul class="action-list" style="list-style:none; padding:0; margin:0;">
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Reserve an N-Number</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">Up to 5 reservations per person; $10 each</div>
+            </div>
+            <button class="btn secondary" style="padding: 0.35rem 0.85rem; font-size:0.85rem;" onclick="showScreen('nnumber')">Start</button>
+          </li>
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">File Aircraft Registration (AC 8050-1)</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">New, ownership transfer, amateur-built, or import</div>
+            </div>
+            <button class="btn secondary" style="padding: 0.35rem 0.85rem; font-size:0.85rem;" onclick="showScreen('wizard')">Start</button>
+          </li>
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Renew Aircraft Registration</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">Online affirm-no-change flow; 7-year cycle</div>
+            </div>
+            <button class="btn secondary" style="padding: 0.35rem 0.85rem; font-size:0.85rem;" onclick="showScreen('renewal')">Start</button>
+          </li>
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Request Document Copies</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">Registry records, certified copies, aircraft record CD</div>
+            </div>
+            <button class="btn secondary" style="padding: 0.35rem 0.85rem; font-size:0.85rem;" onclick="showScreen('docrequest')">Start</button>
+          </li>
+          <li style="padding:0.7rem 0; display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">De-Register / Export</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">Cancel registration; Certificate of Airworthiness for Export</div>
+            </div>
+            <button class="btn secondary" style="padding: 0.35rem 0.85rem; font-size:0.85rem;" onclick="showScreen('deregister')">Start</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Action Items</h2>
+        <ul style="list-style:none; padding:0; margin:0;">
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Renew N7342K</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">Expires 2026-06-25 · online affirm-no-change available</div>
+            </div>
+            <span class="deadline soon">63 days</span>
+          </li>
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Registration Deficiency</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">APP-2026-128844 · missing notarized bill of sale</div>
+            </div>
+            <span class="deadline overdue">correction letter sent</span>
+          </li>
+          <li style="padding:0.7rem 0; border-bottom: 1px solid var(--usa-base-lightest); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">N-Number Reservation</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">N188RM expires 2026-10-12 (renewable)</div>
+            </div>
+            <span class="deadline ok">~172 days</span>
+          </li>
+          <li style="padding:0.7rem 0; display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+            <div>
+              <div style="font-weight:600; color: var(--usa-blue);">Change of address (30-day rule)</div>
+              <div style="font-size:0.85rem; color: var(--usa-base-dark);">14 CFR Part 47 requires notification within 30 days</div>
+            </div>
+            <button class="link-btn" onclick="showModal('Change of Address','A change-of-address filing under 14 CFR Part 47 must be submitted within 30 days. This form would open here.')">File</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>My Registered Aircraft</h2>
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>N-Number</th>
+            <th>Make / Model</th>
+            <th>Serial</th>
+            <th>Ownership Type</th>
+            <th>Status</th>
+            <th>Expires</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="nnum">N7342K</span></td>
+            <td>Cessna 172S Skyhawk</td>
+            <td>172S10388</td>
+            <td><span class="otype-badge otype-indiv">INDIV</span></td>
+            <td><span class="badge active">Active</span></td>
+            <td>2026-06-25</td>
+            <td>
+              <button class="link-btn" onclick="showScreen('certificate')">View</button> ·
+              <button class="link-btn" onclick="showScreen('renewal')">Renew</button> ·
+              <button class="link-btn" onclick="showScreen('deregister')">De-reg</button>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="nnum">N5011M</span></td>
+            <td>Van's RV-7A (Experimental / Amateur-Built)</td>
+            <td>71993</td>
+            <td><span class="otype-badge otype-indiv">INDIV</span></td>
+            <td><span class="badge active">Active</span></td>
+            <td>2029-04-01</td>
+            <td>
+              <button class="link-btn" onclick="showScreen('certificate')">View</button> ·
+              <button class="link-btn" onclick="showScreen('docrequest')">Docs</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>My Applications</h2>
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Type</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="app-id">APP-2026-128844</span></td>
+            <td>AC 8050-1 Initial Registration</td>
+            <td><span class="nnum">N812AM</span> · Piper PA-28-181 Archer III</td>
+            <td><span class="badge deficient">Deficient</span></td>
+            <td>2026-03-14</td>
+            <td><button class="link-btn" onclick="showScreen('wizard')">Resume</button></td>
+          </tr>
+          <tr>
+            <td><span class="app-id">RES-2026-044012</span></td>
+            <td>N-Number Reservation</td>
+            <td><span class="nnum">N188RM</span></td>
+            <td><span class="badge approved">Approved</span></td>
+            <td>2026-04-12</td>
+            <td><button class="link-btn" onclick="showScreen('nnumber')">View</button></td>
+          </tr>
+          <tr>
+            <td><span class="app-id">DOC-2025-999123</span></td>
+            <td>Document Request (CD)</td>
+            <td>Aircraft Record CD — N7342K</td>
+            <td><span class="badge approved">Fulfilled</span></td>
+            <td>2025-11-03</td>
+            <td><button class="link-btn">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: N-NUMBER RESERVATION ========= -->
+  <section class="screen" id="screen-nnumber">
+    <h1>N-Number Reservation</h1>
+    <p class="muted">U.S. Registration Numbers (N-numbers) follow ICAO Annex 7 and 14 CFR Part 47. Up to <strong>5 reservations</strong> per person. Reservations are valid for one year and may be renewed.</p>
+
+    <div class="alert alert-info">
+      <strong>Format rules.</strong> N-numbers start with the letter <strong>N</strong> followed by 1–5 characters. Last 2 characters may be letters (A–Z, excluding I and O). Up to 5 numbers, or 3 numbers + 1 letter, or 2 numbers + 2 letters.
+    </div>
+
+    <div class="tabs">
+      <button class="active" onclick="switchTab(event, 'nn-search')">Search Available</button>
+      <button onclick="switchTab(event, 'nn-special')">Special Request</button>
+      <button onclick="switchTab(event, 'nn-reserved')">My Reservations (1)</button>
+    </div>
+
+    <!-- SEARCH AVAILABLE -->
+    <div class="tab-content active" id="nn-search">
+      <div class="card">
+        <h2>Search Available N-Numbers</h2>
+
+        <div class="form-row-3">
+          <div>
+            <label>Starts with / Pattern</label>
+            <input type="text" id="nnPattern" value="N188" placeholder="e.g., N188, N7R, N42*" />
+            <p class="help" style="margin-top:-0.75rem;">Use * as wildcard. Leave blank to browse.</p>
+          </div>
+          <div>
+            <label>Length</label>
+            <select>
+              <option>Any</option>
+              <option>2 characters (N + 1)</option>
+              <option>3 characters (N + 2)</option>
+              <option>4 characters (N + 3)</option>
+              <option>5 characters (N + 4)</option>
+              <option>6 characters (N + 5)</option>
+            </select>
+          </div>
+          <div>
+            <label>Suffix type</label>
+            <select>
+              <option>Any</option>
+              <option>Numbers only</option>
+              <option>Ends with 1 letter</option>
+              <option>Ends with 2 letters</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn" onclick="document.getElementById('nnResults').style.display=''">Search Availability</button>
+
+        <div id="nnResults" style="display: block; margin-top: 1rem;">
+          <h3>Available N-numbers matching "N188"</h3>
+          <div class="nnum-grid">
+            <div class="nnum-tile" onclick="selectNnum(this)">N188A<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188B<span class="tag">available</span></div>
+            <div class="nnum-tile taken">N188C<span class="tag">in use</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188D<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188E<span class="tag">available</span></div>
+            <div class="nnum-tile taken">N188F<span class="tag">reserved</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188G<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188H<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188J<span class="tag">available</span></div>
+            <div class="nnum-tile taken">N188K<span class="tag">in use</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188L<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188M<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188N<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188P<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188Q<span class="tag">available</span></div>
+            <div class="nnum-tile taken">N188R<span class="tag">in use</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188S<span class="tag">available</span></div>
+            <div class="nnum-tile" onclick="selectNnum(this)">N188T<span class="tag">available</span></div>
+          </div>
+          <p class="help">Showing 18 of ~140 available. <a href="#" onclick="return false;">Show more</a></p>
+
+          <div class="alert alert-info" id="nnSelected" style="display:none;">
+            <strong>Selected:</strong> <span id="nnSelectedNum" class="nnum"></span> — $10 reservation fee (Pay.gov). Reservation valid 1 year; renewable for $10 per year.
+          </div>
+
+          <div class="btn-group">
+            <button class="btn success" id="nnReserveBtn" disabled onclick="reserveNnum()">Reserve selected N-number ($10)</button>
+            <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECIAL REQUEST -->
+    <div class="tab-content" id="nn-special">
+      <div class="card">
+        <h2>Special N-Number Request</h2>
+        <p class="help">Special N-numbers (numbers not in the standard available pool, including previously-cancelled numbers or numbers of personal significance) require individual review. Fee: $10, non-refundable.</p>
+
+        <label>Requested N-number (1st choice) <span class="req">*</span></label>
+        <input type="text" value="N188RM" placeholder="e.g., N188RM" />
+
+        <div class="form-row">
+          <div><label>2nd choice</label><input type="text" value="N188MR" /></div>
+          <div><label>3rd choice</label><input type="text" value="N88RM" /></div>
+        </div>
+
+        <label>Reason for request</label>
+        <textarea rows="3">Personal initials (RM) plus year aircraft was built (1988). Tail of existing RV-7A to be reassigned on next recertification.</textarea>
+
+        <label>Intended aircraft (if known)</label>
+        <input type="text" value="Van's RV-7A — serial 71993 — currently registered as N5011M" />
+
+        <div class="btn-group">
+          <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+          <button class="btn success" onclick="showModal('Special Request Submitted','Request SNR-2026-00817 submitted. You will be notified of the decision by email. $10 non-refundable fee will be charged to your Pay.gov profile.')">Submit Special Request ($10)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY RESERVATIONS -->
+    <div class="tab-content" id="nn-reserved">
+      <div class="card">
+        <h2>My N-Number Reservations</h2>
+        <table class="apps-table">
+          <thead>
+            <tr><th>N-Number</th><th>Reserved</th><th>Expires</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="nnum">N188RM</span></td>
+              <td>2026-04-12</td>
+              <td>2026-10-12 <span class="deadline ok" style="margin-left:0.5rem;">~172 days</span></td>
+              <td><span class="badge reserved">Reserved</span></td>
+              <td>
+                <button class="link-btn" onclick="showScreen('wizard')">Assign to aircraft</button> ·
+                <button class="link-btn">Renew ($10)</button> ·
+                <button class="link-btn" style="color: var(--usa-red);">Release</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="help mt-2">You have 1 of 5 maximum reservations. Assign a reserved N-number to an aircraft by starting an AC Form 8050-1 application and selecting this reservation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: AIRCRAFT REGISTRATION WIZARD (AC 8050-1) ========= -->
+  <section class="screen" id="screen-wizard">
+    <h1>Aircraft Registration Application — AC Form 8050-1</h1>
+
+    <div class="alert alert-info">
+      OMB Control No. <strong>2120-0042</strong> · Registration fee: <strong>$5</strong> (paid via Pay.gov). Digital signatures accepted per <strong>January 2025 rulemaking</strong> (14 CFR Parts 47/49). Incomplete applications will be returned with a correction letter. Every tab has a Save button — resume later.
+    </div>
+
+    <div class="wizard-steps" id="wizSteps">
+      <div class="wizard-step active" data-step="1"><span class="num">1</span> Registration Type</div>
+      <div class="wizard-step" data-step="2"><span class="num">2</span> Aircraft Description</div>
+      <div class="wizard-step" data-step="3"><span class="num">3</span> N-Number</div>
+      <div class="wizard-step" data-step="4"><span class="num">4</span> Ownership</div>
+      <div class="wizard-step" data-step="5"><span class="num">5</span> Applicant &amp; Citizenship</div>
+      <div class="wizard-step" data-step="6"><span class="num">6</span> Evidence</div>
+      <div class="wizard-step" data-step="7"><span class="num">7</span> Review</div>
+      <div class="wizard-step" data-step="8"><span class="num">8</span> Sign &amp; Pay</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="card wiz-panel" data-panel="1">
+      <h2>Tab 1 — Registration Type</h2>
+
+      <label>What are you registering? <span class="req">*</span></label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="regType" checked /> New — never registered (factory-new, imported, or freshly built)</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="regType" /> Change of ownership (bought from prior registered owner)</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="regType" /> Re-registration (previously cancelled / expired)</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="regType" /> Amateur-built / Experimental</label>
+      </div>
+
+      <label>Will this aircraft require a registration letter for immediate NAS operation? <span class="req">*</span></label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="nasLetter" checked /> Yes — fly before certificate arrives</label>
+        <label><input type="radio" name="nasLetter" /> No</label>
+      </div>
+      <p class="help">Under 14 CFR 47.31(c), applicants may carry a copy of the signed application as temporary authority while the certificate is mailed. Not available >12 months after transfer from last registered owner.</p>
+
+      <label>Is this an imported aircraft? <span class="req">*</span></label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="imported" /> Yes (export priority applies)</label>
+        <label><input type="radio" name="imported" checked /> No</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card wiz-panel" data-panel="2" style="display:none;">
+      <h2>Tab 2 — Aircraft Description</h2>
+      <p class="help">Fields correspond to AC Form 8050-1 items 2, 3, and 4 (Manufacturer, Model, Serial Number).</p>
+
+      <div class="form-row">
+        <div><label>Aircraft Manufacturer <span class="req">*</span></label><input type="text" value="Piper Aircraft, Inc." placeholder="Type to search…" /></div>
+        <div><label>Model <span class="req">*</span></label><input type="text" value="PA-28-181 Archer III" /></div>
+      </div>
+      <div class="form-row-3">
+        <div><label>Year of Manufacture</label><input type="number" value="2019" /></div>
+        <div><label>Aircraft Serial Number <span class="req">*</span></label><input type="text" value="2843712" /></div>
+        <div><label>Category</label>
+          <select>
+            <option>Standard — Normal</option>
+            <option>Standard — Utility</option>
+            <option>Standard — Acrobatic</option>
+            <option>Experimental — Amateur-Built</option>
+            <option>Experimental — Exhibition</option>
+            <option>Restricted</option>
+            <option>Limited</option>
+            <option>Light-Sport</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div><label>Engine Make/Model</label><input type="text" value="Lycoming O-360-A4M" /></div>
+        <div><label># of Engines</label><input type="number" value="1" /></div>
+        <div><label>Engine S/N</label><input type="text" value="L-44822-36A" /></div>
+      </div>
+
+      <div class="alert alert-info">
+        <strong>Amateur-builder certification.</strong> For amateur-built aircraft, a Form 8130-12 Eligibility Statement is required. Upload will appear on tab 6 (Evidence) if "Amateur-Built" is selected.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card wiz-panel" data-panel="3" style="display:none;">
+      <h2>Tab 3 — N-Number Selection</h2>
+      <p class="help">Corresponds to AC Form 8050-1 item 1 (U.S. Registration Number).</p>
+
+      <label>N-number source <span class="req">*</span></label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="nnSource" checked /> Use one of my reserved N-numbers</label>
+        <label><input type="radio" name="nnSource" /> Search for a new N-number now</label>
+        <label><input type="radio" name="nnSource" /> FAA-assigned (sequential)</label>
+        <label><input type="radio" name="nnSource" /> Already-assigned (ownership transfer)</label>
+      </div>
+
+      <label>Reserved N-number</label>
+      <select>
+        <option>N188RM — reserved 2026-04-12 · expires 2026-10-12</option>
+      </select>
+
+      <div class="alert alert-success">
+        <strong>Previous registration check.</strong> N188RM has <strong>no prior registration</strong> on record in RMS or IMS. Safe to assign to new aircraft. <span class="muted">(174M TIFF images queried · 0 matches)</span>
+      </div>
+
+      <label>Alternate / fallback N-number (optional)</label>
+      <input type="text" placeholder="Enter a backup if first choice is conflicted at review time" />
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="card wiz-panel" data-panel="4" style="display:none;">
+      <h2>Tab 4 — Ownership Type</h2>
+      <p class="help">Corresponds to AC Form 8050-1 item 5. Select exactly one. Enumeration mirrors the paper form (note: option 6 is intentionally not used).</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" checked /> <span><span class="otype-badge otype-indiv">1 INDIV</span> &nbsp; Individual</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-part">2 PART</span> &nbsp; Partnership</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-corp">3 CORP</span> &nbsp; Corporation</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-coown">4 CO-OWN</span> &nbsp; Co-Owner</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-govt">5 GOVT</span> &nbsp; Government</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-llc">7 LLC</span> &nbsp; Limited Liability Co.</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-noncz">8 NON-CZ CORP</span> &nbsp; Non-Citizen Corp</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-noncz">9 NCCOI</span> &nbsp; Non-Citizen Co-Owner</span></label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px; grid-column: 1/-1;"><input type="radio" name="ownType" /> <span><span class="otype-badge otype-trust">T</span> &nbsp; Trust (non-citizen trustee, voting trust, owner trust — requires trust instrument)</span></label>
+      </div>
+
+      <h3>Type-specific disclosures</h3>
+
+      <div class="alert alert-warning" style="display:none;" id="owntTrust">
+        <strong>Trust filings.</strong> Trust-based registrations require the trust instrument, trustee identification, and beneficiary disclosure. See OIG 2014 management advisory on non-citizen trustee trust registrations.
+      </div>
+      <div class="alert alert-warning" style="display:none;" id="owntNoncz">
+        <strong>Non-citizen corporation requirement (per AC 8050-1, certification box c).</strong> Aircraft must be based and primarily used in the United States; flight-hour records must be kept at a physical address you provide. A certified copy of the certificate of incorporation must be attached (tab 6 — Evidence).
+      </div>
+
+      <label>Name of the owner as it should appear on the certificate <span class="req">*</span></label>
+      <input type="text" value="Ricardo H. Martinez" />
+      <p class="help">Individual ownership: last, first, middle initial.</p>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="card wiz-panel" data-panel="5" style="display:none;">
+      <h2>Tab 5 — Applicant &amp; Citizenship</h2>
+      <p class="help">Corresponds to AC Form 8050-1 items 6–12. Citizenship is the core regulatory gate for aircraft registration under 49 U.S.C. § 40102(a)(15).</p>
+
+      <h3>Applicant(s)</h3>
+      <div class="form-row-3">
+        <div><label>Last name <span class="req">*</span></label><input type="text" value="Martinez" /></div>
+        <div><label>First name <span class="req">*</span></label><input type="text" value="Ricardo" /></div>
+        <div><label>Middle <span class="req">*</span></label><input type="text" value="H" /></div>
+      </div>
+      <div class="form-row">
+        <div><label>Phone <span class="req">*</span></label><input type="tel" value="(928) 555-0161" /></div>
+        <div><label>Email <span class="req">*</span></label><input type="email" value="r.martinez@example.com" /></div>
+      </div>
+
+      <h3>Mailing Address</h3>
+      <label>Street / PO Box / RR <span class="req">*</span></label>
+      <input type="text" value="PO Box 2208" />
+      <div class="form-row-3">
+        <div><label>City <span class="req">*</span></label><input type="text" value="Sedona" /></div>
+        <div><label>State <span class="req">*</span></label><input type="text" value="AZ" /></div>
+        <div><label>ZIP <span class="req">*</span></label><input type="text" value="86336" /></div>
+      </div>
+
+      <h3>Physical Address <span class="muted" style="font-weight:400; font-size:0.85rem;">(required when mailing uses PO Box, mail drop, or RR)</span></h3>
+      <label>Physical street address <span class="req">*</span></label>
+      <input type="text" value="1477 Airport Rd, Hangar 14" />
+      <label>Description of location (if no standard address)</label>
+      <input type="text" value="Sedona Airport (KSEZ), tie-down row C, 2nd building east of FBO" />
+
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" /> Item 11 — This is a change of address (notify within 30 days per 14 CFR Part 47)</label>
+      </div>
+
+      <h3>Item 12 — Citizenship Certification <span class="req">*</span></h3>
+      <p class="help">Select one. This selection is a legal attestation.</p>
+      <div style="display:grid; grid-template-columns: 1fr; gap:0.4rem; margin-bottom: 1rem;">
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="citz" checked /> <strong>(a)</strong> I am a citizen of the United States as defined in 49 U.S.C. § 40102(a)(15).</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="citz" /> <strong>(b)</strong> I am a resident alien with USCIS Form I-551 (attach a copy).</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="citz" /> <strong>(c)</strong> A non-citizen corporation organized under the laws of <em>[state]</em>. Aircraft is based and primarily used in the U.S.; flight-hour records kept at <em>[physical address]</em>.</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="citz" /> <strong>(d)</strong> A corporation using a voting trust to qualify under § 40102(a)(15); trustee name: <em>[name]</em>.</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="card wiz-panel" data-panel="6" style="display:none;">
+      <h2>Tab 6 — Evidence of Ownership &amp; Supporting Documents</h2>
+      <p class="help">Every submitted document is scanned front-and-back (TIFF today, PDF/A with OCR after CARES cutover). Documents become part of the permanent aircraft record file (NARA N1-237-04-03 — <strong>Permanent</strong>).</p>
+
+      <div class="alert alert-info">
+        <strong>Accepted evidence of ownership</strong> under 14 CFR Part 49: AC Form 8050-2 (Aircraft Bill of Sale), contract of conditional sale (recording fee applies), equivalent conveyance document. If you did not purchase from the last registered owner, upload the complete chain-of-title.
+      </div>
+
+      <div class="upload-grid">
+        <p><strong>Drag files here or click to browse</strong></p>
+        <p class="muted">PDF · JPG · PNG · TIFF — max 10 MB per file. Digital signatures accepted.</p>
+        <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+      </div>
+
+      <table class="apps-table">
+        <thead>
+          <tr><th>Document</th><th>Type</th><th>Uploaded</th><th>Size</th><th>Front/Back</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BillOfSale-8050-2.pdf</td>
+            <td>AC 8050-2 Aircraft Bill of Sale</td>
+            <td>2026-04-22</td>
+            <td>0.9 MB</td>
+            <td>Both</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>Chain-of-Title.pdf</td>
+            <td>Conveyance (chain-of-title)</td>
+            <td>2026-04-22</td>
+            <td>1.4 MB</td>
+            <td>Both</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>SecurityAgreement-Bank.pdf</td>
+            <td>Security / Lease Agreement (14 CFR 49)</td>
+            <td>2026-04-22</td>
+            <td>0.7 MB</td>
+            <td>Both</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr style="opacity: 0.7;">
+            <td>—</td>
+            <td>Amateur-Built Eligibility (Form 8130-12)</td>
+            <td>not required for this application</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="muted">Conditional</span></td>
+          </tr>
+          <tr style="opacity: 0.7;">
+            <td>—</td>
+            <td>Certificate of Incorporation (Non-Citizen Corp)</td>
+            <td>not required</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="muted">Conditional</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top: 1rem;">Item 13 — Signature Method</h3>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="sigMethod" checked /> Digital signature (this submission)</label>
+        <label><input type="radio" name="sigMethod" /> Notarized ink signature (upload scanned original)</label>
+      </div>
+      <p class="help">Digital signatures are accepted under the January 2025 rulemaking. If notarized ink is chosen, the paper original is retained at MMAC until QA confirms the digital copy is an adequate substitute (36 CFR 1234.30 / 1234.32).</p>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="card wiz-panel" data-panel="7" style="display:none;">
+      <h2>Tab 7 — Review</h2>
+      <p class="help">Verify the summary below. Click any tab in the progress bar to edit a section.</p>
+
+      <h3>Registration Type</h3>
+      <div class="summary-row"><span class="label">Type:</span><span>New — never registered</span></div>
+      <div class="summary-row"><span class="label">NAS letter requested:</span><span>Yes</span></div>
+      <div class="summary-row"><span class="label">Imported:</span><span>No</span></div>
+
+      <h3 style="margin-top: 1rem;">Aircraft</h3>
+      <div class="summary-row"><span class="label">N-Number:</span><span><span class="nnum">N188RM</span> (from reservation RES-2026-044012)</span></div>
+      <div class="summary-row"><span class="label">Manufacturer / Model:</span><span>Piper Aircraft, Inc. — PA-28-181 Archer III (2019)</span></div>
+      <div class="summary-row"><span class="label">Serial:</span><span>2843712</span></div>
+      <div class="summary-row"><span class="label">Category:</span><span>Standard — Normal</span></div>
+      <div class="summary-row"><span class="label">Engine:</span><span>Lycoming O-360-A4M · S/N L-44822-36A</span></div>
+
+      <h3 style="margin-top: 1rem;">Ownership</h3>
+      <div class="summary-row"><span class="label">Type:</span><span><span class="otype-badge otype-indiv">1 INDIV</span> Individual</span></div>
+      <div class="summary-row"><span class="label">Owner name:</span><span>Ricardo H. Martinez</span></div>
+      <div class="summary-row"><span class="label">Phone / Email:</span><span>(928) 555-0161 · r.martinez@example.com</span></div>
+      <div class="summary-row"><span class="label">Mailing:</span><span>PO Box 2208, Sedona AZ 86336</span></div>
+      <div class="summary-row"><span class="label">Physical:</span><span>1477 Airport Rd, Hangar 14, Sedona Airport (KSEZ)</span></div>
+      <div class="summary-row"><span class="label">Citizenship:</span><span>(a) U.S. citizen per 49 U.S.C. § 40102(a)(15)</span></div>
+
+      <h3 style="margin-top: 1rem;">Evidence</h3>
+      <div class="summary-row"><span class="label">Bill of Sale:</span><span>AC 8050-2 · digital signature</span></div>
+      <div class="summary-row"><span class="label">Chain of title:</span><span>1 document (1.4 MB)</span></div>
+      <div class="summary-row"><span class="label">Security agreement:</span><span>1 document (0.7 MB) · recording fee applies (14 CFR 49.15)</span></div>
+
+      <h3 style="margin-top: 1rem;">Fees</h3>
+      <div class="summary-row"><span class="label">Registration fee:</span><span>$5.00 (14 CFR 47.17)</span></div>
+      <div class="summary-row"><span class="label">Security-interest recording:</span><span>$5.00 (14 CFR 49.15)</span></div>
+      <div class="summary-row"><span class="label">Total:</span><span><strong>$10.00 · paid via Pay.gov</strong></span></div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Continue to Sign &amp; Pay →</button>
+      </div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="card wiz-panel" data-panel="8" style="display:none;">
+      <h2>Tab 8 — Signature &amp; Payment</h2>
+
+      <div class="alert alert-error">
+        <strong>18 U.S.C. §§ 1001, 3571 &amp; 49 U.S.C. § 46306.</strong> Willfully making a false or fraudulent statement on this form is subject to criminal prosecution and a fine of up to $500,000, imprisonment up to 5 years, or both. False registration statements may also result in delay, denial, or revocation of registration and criminal prosecution under 49 U.S.C. § 46306.
+      </div>
+
+      <h3>Certification</h3>
+      <p class="help">I certify under penalty of perjury that all statements on this form and attached evidence are true, complete, and correct to the best of my knowledge, and that the applicant meets the citizenship requirement marked in Item 12.</p>
+      <div class="checkbox-inline mb-2"><label><input type="checkbox" id="sigR1" /> I Agree — Certification Statement</label></div>
+
+      <h3>Item 13 — Signature (Digital)</h3>
+      <div class="signature-box">
+        <strong>Electronic Signature</strong>
+        <p class="help">Type your full legal name as your electronic signature. Co-owners may add additional signatures; every co-owner must sign.</p>
+        <div class="form-row">
+          <div><label>Full legal name <span class="req">*</span></label><input type="text" id="sigName" placeholder="Ricardo H. Martinez" /></div>
+          <div><label>Title (if signing on behalf of entity)</label><input type="text" placeholder="Individual" /></div>
+        </div>
+        <div class="form-row">
+          <div><label>Date <span class="req">*</span></label><input type="date" id="sigDate" /></div>
+          <div><label>Signing capacity</label>
+            <select><option>Individual</option><option>Officer of corporation</option><option>Managing member (LLC)</option><option>Partner</option><option>Trustee</option></select>
+          </div>
+        </div>
+        <div class="checkbox-inline"><label><input type="checkbox" id="sigBox" /> I affirm this is my electronic signature.</label></div>
+        <button class="btn secondary" style="margin-top:0.75rem;" onclick="showModal('Add co-owner signature','Additional signature blocks (items 18–26 on the paper form) would appear here for each co-owner. All co-owners must sign.')">+ Add co-owner signature</button>
+      </div>
+
+      <h3>Payment</h3>
+      <div class="alert alert-info">
+        You will be redirected to <strong>Pay.gov</strong> to complete the $10.00 payment. RMS stores only the Pay.gov transaction ID — no card data is retained.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn success" onclick="submitApplication()">Sign, Pay $10, and Submit</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: CERTIFICATE OF AIRCRAFT REGISTRATION ========= -->
+  <section class="screen" id="screen-certificate">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+      <h1>Certificate of Aircraft Registration</h1>
+      <div class="btn-group" style="margin: 0;">
+        <button class="btn secondary" onclick="window.print()">🖨 Print</button>
+        <button class="btn secondary" onclick="alert('Demo: PDF download.')">⬇ Download PDF</button>
+        <button class="btn secondary" onclick="showModal('Registration Letter','Under 14 CFR 47.31(c) a signed copy of the application serves as temporary operating authority until the certificate arrives. Fax requests are processed for export and immediate NAS operation.')">✉ Request registration letter (fax)</button>
+      </div>
+    </div>
+
+    <div class="cert-paper">
+      <div class="cert-header">
+        <h2>Federal Aviation Administration</h2>
+        <div class="authority">Issued under authority of 49 U.S.C. §§ 44102–44108 and 14 CFR Part 47</div>
+      </div>
+
+      <div class="cert-seal-row">
+        <div class="cert-seal">FAA<br/>SEAL</div>
+        <div class="cert-nnum-block">
+          <div style="font-size: 0.8rem; color: var(--usa-base-dark); letter-spacing: 0.08em; text-transform: uppercase;">U.S. Registration Number</div>
+          <div class="n-display">N188RM</div>
+          <div class="sub">Certificate No. C-8050-3827-2026 · AC Form 8050-3</div>
+        </div>
+        <div class="cert-seal">FAA<br/>SEAL</div>
+      </div>
+
+      <div class="cert-dates">
+        <div class="dt-block"><div class="dt-lbl">Issued</div><div class="dt-val">2026-04-22</div></div>
+        <div class="dt-block"><div class="dt-lbl">Expires</div><div class="dt-val">2033-04-30</div></div>
+        <div class="dt-block"><div class="dt-lbl">Renewal Cycle</div><div class="dt-val">7 years</div></div>
+      </div>
+
+      <div class="cert-section-title">Aircraft</div>
+      <dl class="cert-fields-grid">
+        <dt>Manufacturer</dt><dd>Piper Aircraft, Inc.</dd>
+        <dt>Model</dt><dd>PA-28-181 Archer III (2019)</dd>
+        <dt>Serial number</dt><dd>2843712</dd>
+        <dt>Category</dt><dd>Standard — Normal</dd>
+      </dl>
+
+      <div class="cert-section-title">Registered Owner</div>
+      <dl class="cert-fields-grid">
+        <dt>Name</dt><dd>Ricardo H. Martinez</dd>
+        <dt>Ownership type</dt><dd>1 · Individual</dd>
+        <dt>Mailing address</dt><dd>PO Box 2208, Sedona AZ 86336</dd>
+        <dt>Physical address</dt><dd>1477 Airport Rd, Hangar 14, Sedona Airport (KSEZ)</dd>
+        <dt>Citizenship</dt><dd>U.S. citizen per 49 U.S.C. § 40102(a)(15)</dd>
+      </dl>
+
+      <div class="cert-signature-row">
+        <div>
+          <div class="sig-line">Kelly A. Merritt</div>
+          <div class="sig-title">Manager, Aircraft Registration Branch (AFB-710)</div>
+        </div>
+        <div>
+          <div class="sig-line">Carla J. Colwell</div>
+          <div class="sig-title">Program Manager, Civil Aviation Registry</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--usa-base-dark); text-align: center; font-family: 'Public Sans', sans-serif;">
+        Aircraft must be registered under Part 47 to operate in U.S. airspace · Change of address to be reported within 30 days · Certificate must be carried aboard the aircraft
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Chain of Title / Recorded Instruments</h2>
+      <div class="chain-item">
+        <div><span class="cdate">2026-04-22</span> — AC 8050-1 Registration (this certificate) · Ricardo H. Martinez (INDIV) · evidence: 8050-2 Bill of Sale</div>
+      </div>
+      <div class="chain-item">
+        <div><span class="cdate">2026-03-19</span> — Security Agreement recorded · Pinal Valley Bank N.A., secured party · (14 CFR 49)</div>
+      </div>
+      <div class="chain-item">
+        <div><span class="cdate">2026-02-08</span> — Prior owner cancellation · Arizona Flight Academy LLC (ownership change)</div>
+      </div>
+      <p class="help">Recorded instruments are part of the permanent aircraft record. Copies available via <button class="link-btn" onclick="showScreen('docrequest')">Document Request</button>.</p>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: REGISTRATION RENEWAL ========= -->
+  <section class="screen" id="screen-renewal">
+    <h1>Aircraft Registration Renewal</h1>
+    <p class="muted">The FAA Reauthorization Act of 2018 extended the renewal cycle from 3 years to <strong>7 years</strong>. A Notice of Expiration is mailed approximately 6 months before the registration expires.</p>
+
+    <div class="alert alert-warning">
+      <strong>Notice letter security code required.</strong> Online renewal requires your N-number plus the random security code printed on the mailed Notice of Expiration. Lost the letter? Paper renewal (AC Form 8050-1B) with $5 fee is still available.
+    </div>
+
+    <div class="card">
+      <h2>Step 1 — Identify Registration</h2>
+      <div class="form-row">
+        <div>
+          <label>N-Number <span class="req">*</span></label>
+          <select id="renewNSel">
+            <option>N7342K — Cessna 172S Skyhawk — expires 2026-06-25</option>
+            <option>N5011M — Van's RV-7A — expires 2029-04-01</option>
+          </select>
+        </div>
+        <div>
+          <label>Security code from Notice letter <span class="req">*</span></label>
+          <input type="text" value="X7F-42A" placeholder="XXX-XXX" />
+          <p class="help" style="margin-top:-0.75rem;">Printed on the Notice of Expiration mailed 2025-12-25.</p>
+        </div>
+      </div>
+
+      <h2 style="margin-top: 1rem;">Step 2 — Confirm Information (no-change flow)</h2>
+      <p class="help">The online renewal path is an <strong>affirm-no-change</strong> flow. If any of the information below has changed, you must file a paper AC Form 8050-1B or a new AC Form 8050-1.</p>
+
+      <div style="background:#fafafa; border:1px solid var(--usa-base-lighter); padding:1rem 1.25rem; border-radius: 3px; margin-bottom: 1rem;">
+        <div class="summary-row"><span class="label">N-Number:</span><span><span class="nnum">N7342K</span></span></div>
+        <div class="summary-row"><span class="label">Aircraft:</span><span>Cessna 172S Skyhawk · S/N 172S10388 (2008)</span></div>
+        <div class="summary-row"><span class="label">Owner:</span><span>Ricardo H. Martinez (INDIV)</span></div>
+        <div class="summary-row"><span class="label">Mailing:</span><span>PO Box 2208, Sedona AZ 86336</span></div>
+        <div class="summary-row"><span class="label">Physical:</span><span>1477 Airport Rd, Hangar 14, Sedona Airport (KSEZ)</span></div>
+        <div class="summary-row"><span class="label">Current expiration:</span><span>2026-06-25</span></div>
+        <div class="summary-row"><span class="label">New expiration (if renewed):</span><span><strong>2033-06-30</strong> (+7 years)</span></div>
+      </div>
+
+      <label>Affirmation <span class="req">*</span></label>
+      <div style="display:grid; grid-template-columns: 1fr; gap: 0.4rem; margin-bottom: 1rem;">
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;">
+          <input type="radio" name="renewAffirm" checked /> I affirm <strong>no changes</strong> to owner, address, ownership type, or aircraft information since last registration.
+        </label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;">
+          <input type="radio" name="renewAffirm" onclick="showModal('Online renewal blocked','Changes to owner, address, or aircraft information require a paper AC Form 8050-1B submission or a new AC Form 8050-1 application. You will be redirected to the full application flow.')" /> One or more fields have changed (forces paper submission)
+        </label>
+      </div>
+
+      <h2>Step 3 — Payment</h2>
+      <p class="help">Renewal fee: <strong>$5.00</strong> (14 CFR 47.17). Paid via Pay.gov. RMS stores only the transaction ID.</p>
+
+      <div class="alert alert-error">
+        <strong>Penalty statement.</strong> Knowingly submitting false information on a renewal application may result in criminal prosecution and registration revocation per 49 U.S.C. § 46306, 18 U.S.C. §§ 1001/3571.
+      </div>
+
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" /> I certify the information is true, complete, and correct.</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+        <button class="btn success" onclick="showModal('Renewal submitted','Renewal for N7342K submitted. A new Certificate of Aircraft Registration (expiration 2033-06-30) will be mailed to PO Box 2208. Pay.gov transaction PAYGOV-2026-44812 recorded.')">Renew $5 and Submit</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Renewal History — N7342K</h2>
+      <table class="apps-table">
+        <thead>
+          <tr><th>Date</th><th>Activity</th><th>Expiration Set</th><th>Fee</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2019-06-30</td><td>Renewal (3-yr → 7-yr transition)</td><td>2026-06-25</td><td>$5.00</td><td><span class="badge approved">Completed</span></td></tr>
+          <tr><td>2016-06-18</td><td>Renewal (3-year cycle)</td><td>2019-06-30</td><td>$5.00</td><td><span class="badge approved">Completed</span></td></tr>
+          <tr><td>2013-06-02</td><td>Renewal (3-year cycle)</td><td>2016-06-18</td><td>$5.00</td><td><span class="badge approved">Completed</span></td></tr>
+          <tr><td>2010-05-12</td><td>Initial Registration</td><td>2013-06-02</td><td>$5.00</td><td><span class="badge approved">Completed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DE-REGISTRATION / EXPORT ========= -->
+  <section class="screen" id="screen-deregister">
+    <h1>De-Registration / Export</h1>
+    <p class="muted">Cancel an aircraft's U.S. registration (export to non-U.S. owner, destruction, scrapping, or permanent withdrawal from service) and optionally request a <strong>Certificate of Airworthiness for Export</strong>.</p>
+
+    <div class="alert alert-warning">
+      <strong>Export priority.</strong> Per OIG 2019, export-related filings receive processing priority over all other users. Expect faster processing than a standard registration.
+    </div>
+
+    <div class="card">
+      <h2>Cancellation Details</h2>
+      <div class="form-row">
+        <div>
+          <label>N-Number <span class="req">*</span></label>
+          <select>
+            <option>N7342K — Cessna 172S Skyhawk</option>
+            <option>N5011M — Van's RV-7A</option>
+          </select>
+        </div>
+        <div>
+          <label>Reason for cancellation <span class="req">*</span></label>
+          <select id="deregReason" onchange="toggleExport()">
+            <option value="export">Export — sale to non-U.S. owner</option>
+            <option value="destroyed">Aircraft destroyed</option>
+            <option value="scrapped">Scrapped / salvaged</option>
+            <option value="withdrawn">Permanently withdrawn from service</option>
+            <option value="transfer">Transfer to another U.S. owner (use 8050-1 instead)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="exportFields">
+        <h3>Export Destination</h3>
+        <div class="form-row">
+          <div><label>Country of export <span class="req">*</span></label>
+            <select>
+              <option>Canada</option>
+              <option>Mexico</option>
+              <option>Germany</option>
+              <option>Brazil</option>
+              <option>Australia</option>
+              <option>United Kingdom</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div><label>New foreign registry (if known)</label><input type="text" placeholder="e.g., C-FABC" /></div>
+        </div>
+        <div class="form-row">
+          <div><label>New owner name <span class="req">*</span></label><input type="text" value="Prairie Wings Aviation Ltd." /></div>
+          <div><label>New owner country <span class="req">*</span></label><input type="text" value="Canada" /></div>
+        </div>
+        <label>Sale / export date <span class="req">*</span></label>
+        <input type="date" value="2026-05-10" />
+
+        <div class="checkbox-inline mb-2">
+          <label><input type="checkbox" checked /> Also request Certificate of Airworthiness for Export (AC Form 8130-4)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Supporting Documents</h2>
+      <div class="alert alert-info">
+        <strong>Required for export:</strong> evidence of sale to the new foreign owner (bill of sale), any outstanding security interest release, CAA of destination acceptance letter (optional).
+      </div>
+      <div class="upload-grid">
+        <p><strong>Drag files here or click to browse</strong></p>
+        <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+      </div>
+
+      <table class="apps-table">
+        <thead>
+          <tr><th>Document</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Foreign-BillOfSale.pdf</td>
+            <td>Sale to non-U.S. owner</td>
+            <td>2026-04-22</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+          <tr>
+            <td>LienRelease-Bank.pdf</td>
+            <td>Security interest release</td>
+            <td>2026-04-22</td>
+            <td><button class="link-btn">View</button> · <button class="link-btn" style="color:var(--usa-red);">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Certification &amp; Signature</h2>
+      <div class="alert alert-error">
+        Penalties of 49 U.S.C. § 46306, 18 U.S.C. §§ 1001/3571 apply. False export statements may result in denial or delay of export-related processing.
+      </div>
+      <div class="checkbox-inline mb-2"><label><input type="checkbox" /> I certify that the aircraft is being transferred or removed from service as described.</label></div>
+      <div class="signature-box">
+        <label>Electronic signature (full legal name) <span class="req">*</span></label>
+        <input type="text" placeholder="Ricardo H. Martinez" />
+        <label>Date <span class="req">*</span></label>
+        <input type="date" />
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+        <button class="btn danger" onclick="showModal('De-Registration Submitted','N7342K de-registration submitted. Reference: DEREG-2026-00418. Export priority applied — expected processing < 2 weeks. Certificate of Airworthiness for Export will be issued upon examiner review.')">Submit De-Registration</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: AIRCRAFT INQUIRY (PUBLIC) ========= -->
+  <section class="screen" id="screen-inquiry">
+    <h1>Aircraft Inquiry</h1>
+    <p class="muted">Public search of the FAA Aircraft Registry. No sign-in required. Data refreshed nightly at midnight Central Time (federal workdays).</p>
+
+    <div class="priv-notice">
+      <strong>Privacy notice (SORN DOT/FAA 801, 88 FR 53951, 2023-08-09).</strong> Information released includes owner name, address, U.S. Registration Number, aircraft type, and legal documents related to title/financing. <strong>Small UAS (Part 48) owners' email and phone numbers are NOT publicly disclosed</strong> under the applicable routine use.
+    </div>
+
+    <div class="card">
+      <h2>Search</h2>
+
+      <div class="tabs">
+        <button class="active" onclick="switchTab(event, 'inq-nnum')">N-Number</button>
+        <button onclick="switchTab(event, 'inq-ser')">Serial Number</button>
+        <button onclick="switchTab(event, 'inq-mkmd')">Make / Model</button>
+        <button onclick="switchTab(event, 'inq-owner')">Owner</button>
+      </div>
+
+      <div class="tab-content active" id="inq-nnum">
+        <label>N-Number</label>
+        <input type="text" value="N7342K" placeholder="e.g., N7342K" />
+        <button class="btn" onclick="document.getElementById('inqResults').style.display=''">Search</button>
+      </div>
+      <div class="tab-content" id="inq-ser">
+        <div class="form-row">
+          <div><label>Manufacturer</label><input type="text" placeholder="Cessna" /></div>
+          <div><label>Serial Number</label><input type="text" placeholder="172S10388" /></div>
+        </div>
+        <button class="btn" onclick="document.getElementById('inqResults').style.display=''">Search</button>
+      </div>
+      <div class="tab-content" id="inq-mkmd">
+        <div class="form-row">
+          <div><label>Manufacturer</label><input type="text" placeholder="Cessna" /></div>
+          <div><label>Model</label><input type="text" placeholder="172S" /></div>
+        </div>
+        <button class="btn" onclick="document.getElementById('inqResults').style.display=''">Search</button>
+      </div>
+      <div class="tab-content" id="inq-owner">
+        <div class="locator-filter">
+          <div><label>Last name</label><input type="text" placeholder="Martinez" /></div>
+          <div><label>First name</label><input type="text" placeholder="Ricardo" /></div>
+          <div><label>State</label>
+            <select><option>—</option><option>AZ</option><option>CA</option><option>TX</option><option>FL</option></select>
+          </div>
+          <div><label>Entity name</label><input type="text" placeholder="(optional)" /></div>
+        </div>
+        <button class="btn" onclick="document.getElementById('inqResults').style.display=''">Search</button>
+      </div>
+    </div>
+
+    <div class="card" id="inqResults" style="display:none;">
+      <h2>Search Results (1)</h2>
+      <table class="apps-table">
+        <thead>
+          <tr><th>N-Number</th><th>Make/Model</th><th>Serial</th><th>Owner</th><th>City/State</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="nnum">N7342K</span></td>
+            <td>Cessna 172S Skyhawk</td>
+            <td>172S10388</td>
+            <td>Martinez, Ricardo H.</td>
+            <td>Sedona, AZ</td>
+            <td><span class="badge active">Active</span></td>
+            <td><button class="link-btn" onclick="showScreen('inquiry-detail')">View details</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="help mt-2">Data as of 2026-04-22 00:00 CT · refreshed nightly from CAIS mainframe.</p>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn secondary" onclick="showScreen('login')">← Back to sign in</button>
+      <a href="#" onclick="return false;" class="btn secondary">Download Aircraft Registration Database (updated nightly)</a>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: INQUIRY DETAIL ========= -->
+  <section class="screen" id="screen-inquiry-detail">
+    <h1>Aircraft Details — <span class="nnum">N7342K</span></h1>
+
+    <div class="priv-notice">
+      <strong>Data disclosure.</strong> Fields shown below are releasable under SORN DOT/FAA 801. Email, phone, and SPII are not displayed in public inquiry. Records current as of <strong>2026-04-22 00:00 CT</strong>.
+    </div>
+
+    <div class="card">
+      <h2>Aircraft</h2>
+      <dl class="cert-fields-grid" style="font-family: 'Public Sans', sans-serif;">
+        <dt>N-Number</dt><dd><span class="nnum">N7342K</span></dd>
+        <dt>Manufacturer</dt><dd>Cessna Aircraft Co.</dd>
+        <dt>Model</dt><dd>172S Skyhawk</dd>
+        <dt>Year</dt><dd>2008</dd>
+        <dt>Serial Number</dt><dd>172S10388</dd>
+        <dt>Category</dt><dd>Standard — Normal</dd>
+        <dt>Engine</dt><dd>Lycoming IO-360-L2A</dd>
+        <dt>Airworthiness</dt><dd>Standard — Normal · last inspection 2025-09-14</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h2>Registered Owner</h2>
+      <dl class="cert-fields-grid" style="font-family: 'Public Sans', sans-serif;">
+        <dt>Owner</dt><dd>Martinez, Ricardo H.</dd>
+        <dt>Ownership type</dt><dd><span class="otype-badge otype-indiv">1 INDIV</span> Individual</dd>
+        <dt>Address</dt><dd>PO Box 2208, Sedona AZ 86336</dd>
+        <dt>Certificate issued</dt><dd>2019-07-02</dd>
+        <dt>Expires</dt><dd>2026-06-25</dd>
+        <dt>Status</dt><dd><span class="badge active">Active</span></dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h2>Recorded Documents (chain of title)</h2>
+      <div class="chain-item"><span class="cdate">2019-07-02</span> — Renewal (3-yr → 7-yr transition)</div>
+      <div class="chain-item"><span class="cdate">2010-05-12</span> — AC 8050-1 Initial Registration · Martinez, Ricardo H. (INDIV)</div>
+      <div class="chain-item"><span class="cdate">2010-04-28</span> — AC 8050-2 Aircraft Bill of Sale · from Cessna Aircraft Co.</div>
+      <div class="chain-item"><span class="cdate">2010-04-28</span> — Security Agreement recorded · Pinal Valley Bank N.A.</div>
+      <p class="help">Copies of recorded documents available via <button class="link-btn" onclick="showScreen('docrequest')">Document Request</button> (fee applies).</p>
+    </div>
+
+    <div class="card">
+      <h2>Privacy / Release Controls</h2>
+      <p class="help">Under the Privacy Act (5 U.S.C. § 552a) and SORN DOT/FAA 801, owners may request redaction of specific sensitive information from public display. To make a request:</p>
+      <ul style="padding-left: 1.1rem; font-size: 0.95rem;">
+        <li>File a Privacy Act amendment / redaction request through the FAA Privacy Office</li>
+        <li>Small UAS (Part 48) owners have automatic suppression of email and phone</li>
+        <li>FOIA path: <a href="#" onclick="return false;">FAA FOIA portal</a></li>
+      </ul>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn secondary" onclick="showScreen('inquiry')">← Back to search</button>
+      <button class="btn" onclick="window.print()">🖨 Print</button>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DOCUMENT REQUEST ========= -->
+  <section class="screen" id="screen-docrequest">
+    <h1>Document Request</h1>
+    <p class="muted">Request copies of aircraft registry records from the Image Management System (IMS). ~174M TIFF images are held; retention is <strong>permanent</strong> (NARA N1-237-04-03).</p>
+
+    <div class="alert alert-info">
+      <strong>Fulfillment channels.</strong> Requests may be fulfilled by (a) <strong>aircraft record CD</strong> mailed to address on file (FY2017: 15,000 CDs mailed), (b) <strong>certified paper copies</strong> mailed, (c) <strong>uncertified download</strong> (after CARES cutover — in development). For real-time title search or ownership history, see the <strong>Public Documents Room (PDR)</strong> in Oklahoma City.
+    </div>
+
+    <div class="card">
+      <h2>Request Details</h2>
+
+      <label>Request type <span class="req">*</span></label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap: 0.4rem; margin-bottom: 1rem;">
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="docType" checked /> Complete aircraft record (CD) — $10</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="docType" /> Certified copy — specific documents ($5 + per-doc fee)</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="docType" /> Abstract of title (commercial title-company style) — $30</label>
+        <label style="border:1px solid var(--usa-base-lighter); padding:0.6rem 0.85rem; border-radius:3px;"><input type="radio" name="docType" /> Verification of registration status (no-fee letter)</label>
+      </div>
+
+      <div class="form-row">
+        <div><label>N-Number <span class="req">*</span></label><input type="text" value="N7342K" /></div>
+        <div><label>Reason for request</label>
+          <select>
+            <option>Own aircraft — record request</option>
+            <option>Sale / purchase evaluation</option>
+            <option>Title insurance / financing</option>
+            <option>Legal proceeding</option>
+            <option>Insurance claim</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Specific documents (if certified-copy request)</label>
+      <div class="checkbox-inline" style="display:grid; grid-template-columns:1fr 1fr; gap: 0.3rem;">
+        <label><input type="checkbox" /> Most recent AC Form 8050-1 (registration application)</label>
+        <label><input type="checkbox" /> AC Form 8050-2 (Aircraft Bill of Sale)</label>
+        <label><input type="checkbox" /> Security agreement / lien filings (14 CFR 49)</label>
+        <label><input type="checkbox" /> Chain-of-title conveyances</label>
+        <label><input type="checkbox" /> Airworthiness documentation</label>
+        <label><input type="checkbox" /> Form 337 (Major Repair/Alteration)</label>
+      </div>
+
+      <h3 style="margin-top:1rem;">Delivery</h3>
+      <div class="form-row">
+        <div>
+          <label>Delivery method <span class="req">*</span></label>
+          <select>
+            <option>Mail to address on file</option>
+            <option>Mail to alternate address (enter below)</option>
+            <option>Courier pickup (MMAC Oklahoma City)</option>
+          </select>
+        </div>
+        <div><label>Expedite ($25 surcharge)?</label>
+          <select><option>No (~4–6 weeks)</option><option>Yes (~1 week)</option></select>
+        </div>
+      </div>
+
+      <label>Alternate delivery address (if applicable)</label>
+      <input type="text" placeholder="Name, Address, City, State, ZIP" />
+
+      <div class="alert alert-info">
+        <strong>Fees summary.</strong> Complete record CD: <strong>$10</strong>. Total charged via Pay.gov. RMS stores only the transaction ID.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+        <button class="btn success" onclick="showModal('Request submitted','Document request DOC-2026-017721 submitted. Expected delivery: 4–6 weeks via USPS to PO Box 2208, Sedona AZ 86336. Pay.gov $10.00 charged.')">Submit Request</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Alternative: Public Documents Room (PDR)</h2>
+      <p class="help">For real-time title search, ownership history, lien tracing, and same-day record access, the Public Documents Room at the Mike Monroney Aeronautical Center in Oklahoma City offers 47 workstations (42 held by permit-holder title/trust companies, 3 public). U.S. citizen public access requires 2 business days advance notice; international users 3 weeks. Permits are $3,441/year per workstation.</p>
+      <div class="form-row">
+        <div>
+          <label>Reserve PDR public workstation</label>
+          <input type="date" />
+        </div>
+        <div>
+          <label>Reason</label>
+          <input type="text" placeholder="Title search, chain-of-title review, etc." />
+        </div>
+      </div>
+      <button class="btn secondary" onclick="showModal('PDR reservation','PDR workstation reservations are routed to the Registry IT attendant. Background check required for permit holders; public users bring government-issued ID.')">Request PDR Appointment</button>
+      <p class="help mt-2">FAA plans to phase out the PDR once CARES delivers virtual real-time access.</p>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: DEALER REGISTRATION ========= -->
+  <section class="screen" id="screen-dealer">
+    <h1>Aircraft Dealer Certificate Application</h1>
+    <p class="muted">An Aircraft Dealer Certificate under 14 CFR Part 47 Subpart C authorizes flight under the dealer's registration number without individual aircraft registration prior to sale. Dealer certificates are issued for a 1-year term and renewable.</p>
+
+    <div class="alert alert-info">
+      <strong>Eligibility.</strong> Applicant must be a U.S. citizen (individual, partnership, corporation, or LLC), engaged in the business of manufacturing or selling aircraft, and have a permanent business address in the United States. A registered dealer may fly any aircraft in their possession under the dealer's N-number pending sale.
+    </div>
+
+    <div class="card">
+      <h2>Dealer Information</h2>
+
+      <label>Dealer type <span class="req">*</span></label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="dealerType" checked /> Sole proprietorship / Individual</label>
+        <label><input type="radio" name="dealerType" /> Partnership</label>
+        <label><input type="radio" name="dealerType" /> Corporation</label>
+        <label><input type="radio" name="dealerType" /> LLC</label>
+      </div>
+
+      <label>Dealer / Business legal name <span class="req">*</span></label>
+      <input type="text" value="Sedona Sky Aviation LLC" />
+
+      <div class="form-row">
+        <div><label>Doing-business-as (DBA)</label><input type="text" value="Sedona Sky Sales" /></div>
+        <div><label>Year established</label><input type="number" value="2021" /></div>
+      </div>
+
+      <h3>Business Address</h3>
+      <label>Street <span class="req">*</span></label>
+      <input type="text" value="1475 Airport Rd, Suite 3" />
+      <div class="form-row-3">
+        <div><label>City <span class="req">*</span></label><input type="text" value="Sedona" /></div>
+        <div><label>State <span class="req">*</span></label><input type="text" value="AZ" /></div>
+        <div><label>ZIP <span class="req">*</span></label><input type="text" value="86336" /></div>
+      </div>
+
+      <div class="form-row">
+        <div><label>Phone <span class="req">*</span></label><input type="tel" value="(928) 555-0140" /></div>
+        <div><label>Email <span class="req">*</span></label><input type="email" value="sales@sedonasky.example.com" /></div>
+      </div>
+
+      <h3>Dealer N-Number</h3>
+      <p class="help">Dealers are issued a unique dealer registration number. You may request a specific suffix or accept FAA-assigned.</p>
+      <div class="form-row">
+        <div>
+          <label>Dealer N-number preference</label>
+          <select>
+            <option>FAA-assigned (sequential)</option>
+            <option>Use one of my reserved N-numbers</option>
+            <option>Special request (requires review)</option>
+          </select>
+        </div>
+        <div>
+          <label>Expected # of aircraft in dealer inventory</label>
+          <input type="number" value="4" />
+        </div>
+      </div>
+
+      <h3>Officer / Principal Certification</h3>
+      <div class="form-row">
+        <div><label>Officer name <span class="req">*</span></label><input type="text" value="Ricardo H. Martinez" /></div>
+        <div><label>Title <span class="req">*</span></label><input type="text" value="Managing Member" /></div>
+      </div>
+
+      <h3>Citizenship Attestation</h3>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="dCitz" checked /> U.S. citizen or U.S.-organized entity (all members/partners are U.S. citizens)</label>
+        <label><input type="radio" name="dCitz" /> Other (not eligible — dealer certificate requires U.S. citizenship)</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Supporting Documents</h2>
+      <div class="upload-grid">
+        <p><strong>Drag files here or click to browse</strong></p>
+        <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+      </div>
+      <table class="apps-table">
+        <thead><tr><th>Document</th><th>Type</th><th>Uploaded</th></tr></thead>
+        <tbody>
+          <tr><td>AZ-LLC-ArticlesOfOrganization.pdf</td><td>Articles of Organization / Certificate of Formation</td><td>2026-04-22</td></tr>
+          <tr><td>BusinessLicense-Sedona.pdf</td><td>Business License</td><td>2026-04-22</td></tr>
+          <tr><td>OperatingAgreement.pdf</td><td>LLC Operating Agreement (member list)</td><td>2026-04-22</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Fees &amp; Signature</h2>
+      <div class="summary-row"><span class="label">Dealer certificate fee:</span><span>$10.00</span></div>
+      <div class="summary-row"><span class="label">Term:</span><span>1 year (renewable)</span></div>
+      <div class="summary-row"><span class="label">Payment:</span><span>Pay.gov (transaction ID only stored)</span></div>
+
+      <div class="alert alert-error">
+        Penalties of 49 U.S.C. § 46306, 18 U.S.C. §§ 1001/3571 apply to false statements on this application. Dealer certificates are subject to revocation for misuse.
+      </div>
+
+      <div class="checkbox-inline mb-2"><label><input type="checkbox" /> I certify the applicant meets all Part 47 Subpart C requirements.</label></div>
+      <div class="signature-box">
+        <label>Electronic signature (full legal name) <span class="req">*</span></label>
+        <input type="text" placeholder="Ricardo H. Martinez" />
+        <label>Date <span class="req">*</span></label>
+        <input type="date" />
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="showScreen('dashboard')">Cancel</button>
+        <button class="btn success" onclick="showModal('Dealer application submitted','Dealer application DLR-2026-00322 submitted. Expected processing: 4–6 weeks. Dealer certificate and N-number will be mailed upon examiner approval. $10.00 charged via Pay.gov.')">Submit Application ($10)</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========= MODAL ========= -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2 id="modalTitle">Notice</h2>
+    <p id="modalBody"></p>
+    <div class="btn-group">
+      <button class="btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<footer class="faa-footer">
+  <div class="container">
+    <div>
+      <strong>Federal Aviation Administration</strong><br/>
+      Civil Aviation Registry · Aircraft Registration Branch (AFB-710)<br/>
+      <a href="#" onclick="return false;">About RMS</a> · <a href="#" onclick="return false;">Accessibility</a> · <a href="#" onclick="return false;">Privacy Policy</a> · <a href="#" onclick="return false;">Contact</a>
+    </div>
+    <div class="center-address">
+      registry.faa.gov · amsrvs.registry.faa.gov<br/>
+      P.O. Box 25504, Oklahoma City, OK 73125-0504 · Courier: 6425 S Denning Ave<br/>
+      SORN DOT/FAA 801 (88 FR 53951) · OMB 2120-0042 (AC 8050-1) · OMB 2120-0020 (Form 337)<br/>
+      Retention: Permanent (NARA N1-237-04-03) · ATO 2022-04-20 · Pay.gov
+    </div>
+  </div>
+</footer>
+
+<script>
+  let currentStep = 1;
+  const TOTAL_STEPS = 8;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + id);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+    updateBreadcrumbs(id);
+    const jump = document.getElementById('jumpSel');
+    if (jump) jump.value = '';
+  }
+
+  function updateBreadcrumbs(id) {
+    const bc = document.getElementById('breadcrumbs');
+    const labels = {
+      login: 'Sign in',
+      register: 'Create Account',
+      dashboard: 'My Registry Home',
+      nnumber: 'N-Number Reservation',
+      wizard: 'Aircraft Registration (AC 8050-1)',
+      certificate: 'Certificate of Aircraft Registration',
+      renewal: 'Registration Renewal',
+      deregister: 'De-Registration / Export',
+      inquiry: 'Aircraft Inquiry (Public)',
+      'inquiry-detail': 'Aircraft Details',
+      docrequest: 'Document Request',
+      dealer: 'Dealer Certificate Application'
+    };
+    const home = (id === 'login' || id === 'register' || id === 'inquiry' || id === 'inquiry-detail') ? 'login' : 'dashboard';
+    bc.innerHTML = '<a href="#" onclick="showScreen(\'' + home + '\'); return false;">Home</a><span>›</span><span class="current">' + (labels[id] || '') + '</span>';
+  }
+
+  function jumpScreen() {
+    const v = document.getElementById('jumpSel').value;
+    if (v) showScreen(v);
+  }
+
+  function doLogin() {
+    document.getElementById('userGreeting').innerHTML = 'Ricardo Martinez · <span class="pill">RCI-18227491</span>';
+    document.getElementById('signOutBtn').style.display = 'inline-block';
+    showScreen('dashboard');
+  }
+  function doRegister() {
+    const ok = document.getElementById('termsAccept').checked;
+    const err = document.getElementById('termsAcceptErr');
+    if (!ok) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    showModal('Account Created', 'Your RMS account has been created. You can now reserve an N-number, file an aircraft registration, or request records.');
+    setTimeout(() => { closeModal(); doLogin(); }, 800);
+  }
+  function signOut() {
+    document.getElementById('userGreeting').textContent = 'Not signed in';
+    document.getElementById('signOutBtn').style.display = 'none';
+    showScreen('login');
+  }
+
+  // Wizard
+  function nextStep() { if (currentStep < TOTAL_STEPS) { currentStep++; renderWizard(); } }
+  function prevStep() { if (currentStep > 1) { currentStep--; renderWizard(); } }
+  function renderWizard() {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      const n = parseInt(s.dataset.step, 10);
+      s.classList.remove('active', 'done');
+      if (n < currentStep) s.classList.add('done');
+      if (n === currentStep) s.classList.add('active');
+    });
+    document.querySelectorAll('.wiz-panel').forEach(p => {
+      p.style.display = (parseInt(p.dataset.panel, 10) === currentStep) ? '' : 'none';
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function exitWizard() { showScreen('dashboard'); }
+
+  function submitApplication() {
+    const sig = (document.getElementById('sigName').value || '').trim();
+    const r1 = document.getElementById('sigR1').checked;
+    const box = document.getElementById('sigBox').checked;
+    if (!r1 || !box) {
+      showModal('Agreements required', 'Please check the Certification Statement and affirm the electronic signature.');
+      return;
+    }
+    if (!sig) { showModal('Signature required', 'Please type your full legal name as your electronic signature.'); return; }
+    showModal('Application submitted', 'Aircraft registration submitted. Application APP-2026-144098 created. Pay.gov transaction PAYGOV-2026-44811 recorded ($10.00). Expected examiner review: up to 6 weeks. A signed copy of this application serves as temporary operating authority per 14 CFR 47.31(c).');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 900);
+  }
+
+  // N-number selection
+  function selectNnum(el) {
+    if (el.classList.contains('taken')) return;
+    document.querySelectorAll('.nnum-tile.selected').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+    const num = el.childNodes[0].textContent.trim();
+    const box = document.getElementById('nnSelected');
+    const btn = document.getElementById('nnReserveBtn');
+    document.getElementById('nnSelectedNum').textContent = num;
+    box.style.display = '';
+    btn.disabled = false;
+  }
+  function reserveNnum() {
+    const num = document.getElementById('nnSelectedNum').textContent;
+    showModal('Reservation Complete', num + ' reserved for 1 year. Reservation ID: RES-2026-' + Math.floor(Math.random()*900000 + 100000) + '. Pay.gov $10.00 charged. Use it now to register an aircraft, or manage from the N-Number Reservations tab.');
+    setTimeout(() => { closeModal(); showScreen('dashboard'); }, 1000);
+  }
+
+  // De-registration export toggle
+  function toggleExport() {
+    const v = document.getElementById('deregReason').value;
+    document.getElementById('exportFields').style.display = (v === 'export') ? '' : 'none';
+  }
+
+  // Tabs
+  function switchTab(e, tabId) {
+    e.target.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    const scope = e.target.closest('.screen') || document;
+    scope.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('active');
+  }
+
+  // Modal
+  function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalBackdrop').classList.add('show');
+  }
+  function closeModal() { document.getElementById('modalBackdrop').classList.remove('show'); }
+
+  // Wizard step click
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      s.addEventListener('click', () => {
+        currentStep = parseInt(s.dataset.step, 10);
+        renderWizard();
+      });
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    const sigD = document.getElementById('sigDate');
+    if (sigD) sigD.value = today;
+  });
+</script>
+</body>
+</html>
