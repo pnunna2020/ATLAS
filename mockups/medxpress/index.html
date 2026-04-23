@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MedXPress — FAA Medical Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue: #162e51;
+    --usa-blue-dark: #0b1f3f;
+    --usa-blue-light: #1a4480;
+    --usa-blue-hover: #2672de;
+    --usa-red: #b50909;
+    --usa-gold: #ffbe2e;
+    --usa-green: #00a91c;
+    --usa-orange: #c05500;
+    --usa-base: #1b1b1b;
+    --usa-base-darker: #3d4551;
+    --usa-base-dark: #565c65;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest: #f0f0f0;
+    --usa-white: #ffffff;
+    --usa-ink: #1b1b1b;
+    --focus-outline: #2491ff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3, h4 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; }
+  h1 { font-size: 1.75rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; font-weight: 700; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  p { margin: 0 0 0.75rem 0; }
+
+  .usa-banner {
+    background: #f0f0f0;
+    font-size: 0.8rem;
+    padding: 0.25rem 1rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .usa-banner strong { color: var(--usa-blue); }
+
+  header.faa-header {
+    background: var(--usa-blue);
+    color: white;
+    padding: 1rem 2rem;
+    border-bottom: 4px solid var(--usa-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .faa-logo { display: flex; align-items: center; gap: 0.75rem; }
+  .faa-seal {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--usa-gold) 0%, #c68a00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 0.7rem;
+    border: 2px solid white;
+  }
+  .faa-header h1 {
+    color: white;
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .faa-header .sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .user-info { font-size: 0.85rem; text-align: right; }
+  .user-info .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+  .user-info button {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .user-info button:hover { background: rgba(255,255,255,0.1); }
+
+  .breadcrumbs {
+    background: white;
+    padding: 0.6rem 2rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    color: var(--usa-base-dark);
+  }
+  .breadcrumbs span { margin: 0 0.3rem; color: var(--usa-base-lighter); }
+  .breadcrumbs a { color: var(--usa-blue-light); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .current { color: var(--usa-ink); font-weight: 600; }
+
+  main {
+    min-height: calc(100vh - 280px);
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.15s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card h2 { border-bottom: 2px solid var(--usa-blue); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--usa-base-darker);
+    font-size: 0.95rem;
+  }
+  label .req { color: var(--usa-red); margin-left: 2px; }
+  input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], input[type=tel], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    font-family: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--usa-base-dark);
+    border-radius: 3px;
+    background: white;
+    margin-bottom: 1rem;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--focus-outline);
+    outline-offset: 0;
+    border-color: var(--usa-blue-light);
+  }
+  input.invalid, select.invalid {
+    border: 2px solid var(--usa-red);
+    background: #fff4f4;
+  }
+  .field-error {
+    color: var(--usa-red);
+    font-size: 0.85rem;
+    margin-top: -0.75rem;
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+  .field-error.show { display: block; }
+  .help { font-size: 0.85rem; color: var(--usa-base-dark); margin-bottom: 0.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .form-row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  @media (max-width: 700px) {
+    .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--usa-blue-light);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--usa-blue-hover); }
+  .btn:focus { outline: 3px solid var(--focus-outline); outline-offset: 2px; }
+  .btn.secondary {
+    background: white;
+    color: var(--usa-blue-light);
+    border: 1px solid var(--usa-blue-light);
+  }
+  .btn.secondary:hover { background: var(--usa-blue-light); color: white; }
+  .btn.danger { background: var(--usa-red); }
+  .btn.danger:hover { background: #8a0707; }
+  .btn.success { background: var(--usa-green); }
+  .btn.success:hover { background: #007f15; }
+  .btn.warning { background: var(--usa-orange); }
+  .btn.warning:hover { background: #8a3c00; }
+  .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.none { background: #e5e5e5; color: #3d4551; border: 1px solid #8a8a8a; }
+  .badge.submitted { background: #d9e8f6; color: var(--usa-blue-light); border: 1px solid #005ea2; }
+  .badge.imported { background: #d9e8f6; color: #00344f; border: 1px solid #005ea2; }
+  .badge.transmitted { background: #cfe8ff; color: #003c5c; border: 1px solid #0077b8; }
+  .badge.review { background: #fff4d6; color: #7c5c00; border: 1px solid #c68a00; }
+  .badge.action { background: #fae0cd; color: #7a3b00; border: 1px solid var(--usa-orange); }
+  .badge.issued { background: #e4f6e4; color: #1a6e1f; border: 1px solid var(--usa-green); }
+  .badge.denial { background: #ffd9d9; color: #7a0808; border: 1px solid var(--usa-red); }
+
+  table.apps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  .apps-table th, .apps-table td {
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .apps-table th {
+    background: var(--usa-base-lightest);
+    font-weight: 700;
+    color: var(--usa-base-darker);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .apps-table tr:hover td { background: #fafafa; }
+  .apps-table .app-id {
+    font-family: monospace;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+  }
+  .apps-table .app-id:hover { text-decoration: underline; }
+
+  .wizard-steps {
+    display: flex;
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .wizard-step {
+    flex: 1;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+    border-right: 1px solid var(--usa-base-lighter);
+    font-size: 0.8rem;
+    color: var(--usa-base-dark);
+    position: relative;
+    background: white;
+    min-width: 110px;
+    cursor: pointer;
+  }
+  .wizard-step:last-child { border-right: none; }
+  .wizard-step.done { background: #f0f7f0; color: #1a6e1f; }
+  .wizard-step.active {
+    background: var(--usa-blue);
+    color: white;
+    font-weight: 600;
+  }
+  .wizard-step .num {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--usa-base-lighter);
+    color: var(--usa-base-darker);
+    line-height: 22px;
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+    font-weight: 700;
+  }
+  .wizard-step.active .num { background: var(--usa-gold); color: var(--usa-blue); }
+  .wizard-step.done .num { background: var(--usa-green); color: white; }
+
+  .login-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+  @media (max-width: 700px) { .login-page { grid-template-columns: 1fr; } }
+  .login-page .create-card {
+    background: linear-gradient(135deg, #f0f4f9 0%, #dfe7f2 100%);
+  }
+
+  .alert {
+    padding: 0.85rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+  }
+  .alert-info { background: #e7f6ff; border-color: #005ea2; color: #00344f; }
+  .alert-success { background: #ecf3ec; border-color: var(--usa-green); color: #1a6e1f; }
+  .alert-warning { background: #faf3d1; border-color: var(--usa-gold); color: #5c4300; }
+  .alert-error { background: #f8dadb; border-color: var(--usa-red); color: #7a0808; }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--usa-base-lighter);
+    font-size: 0.95rem;
+  }
+  .summary-row .label { font-weight: 600; color: var(--usa-base-darker); }
+  .summary-row:last-child { border-bottom: none; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 6px;
+    max-width: 560px;
+    width: 100%;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .modal h2 { border: none; }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .checklist li {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--usa-base-lightest);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--usa-blue-light);
+    margin-top: 0.15rem;
+  }
+  .checklist .task-label { flex: 1; }
+  .checklist .task-meta { font-size: 0.85rem; color: var(--usa-base-dark); }
+
+  footer.faa-footer {
+    background: var(--usa-blue-dark);
+    color: white;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+  }
+  .faa-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 700px) { .faa-footer .container { grid-template-columns: 1fr; } }
+  .faa-footer a { color: #9fc7ff; }
+  .faa-footer .center-address { text-align: right; opacity: 0.9; }
+  @media (max-width: 700px) { .faa-footer .center-address { text-align: left; } }
+
+  .role-switcher {
+    background: #fffbea;
+    border: 1px dashed #c68a00;
+    padding: 0.5rem 0.85rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .role-switcher strong { color: #7c5c00; }
+  .role-switcher select {
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    width: auto;
+  }
+
+  .radio-group label, .checkbox-inline label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.25rem;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .radio-group input, .checkbox-inline input {
+    margin-right: 0.4rem;
+    width: auto;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--usa-blue-light);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .link-btn:hover { color: var(--usa-blue-hover); }
+
+  .signature-box {
+    background: #f8f9fa;
+    border: 2px dashed var(--usa-base-dark);
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+
+  .status-tile {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+    transition: box-shadow 0.1s;
+  }
+  .status-tile .big { font-size: 1.6rem; font-weight: 700; color: var(--usa-blue); }
+  .status-tile .lbl { font-size: 0.8rem; color: var(--usa-base-dark); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .muted { color: var(--usa-base-dark); }
+  .mt-1 { margin-top: 0.5rem; }
+  .mt-2 { margin-top: 1rem; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .text-center { text-align: center; }
+
+  .console-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 800px) { .console-grid { grid-template-columns: 1fr; } }
+  .left-nav {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: 4px;
+    padding: 1rem;
+  }
+  .left-nav h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--usa-base-dark);
+    border-bottom: 1px solid var(--usa-base-lighter);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .left-nav ul { list-style: none; padding: 0; margin: 0 0 1rem; }
+  .left-nav li { padding: 0.35rem 0; font-size: 0.9rem; }
+  .left-nav li a {
+    color: var(--usa-blue-light);
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0.35rem;
+    border-radius: 2px;
+  }
+  .left-nav li a:hover { background: var(--usa-base-lightest); }
+  .left-nav .confnum-block {
+    background: var(--usa-base-lightest);
+    padding: 0.6rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+  .left-nav .confnum-block .confnum-value {
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--usa-blue);
+    font-size: 1.05rem;
+  }
+
+  .med-row { display: grid; grid-template-columns: 2fr 1fr 2fr 1fr auto; gap: 0.5rem; align-items: end; margin-bottom: 0.5rem; }
+  @media (max-width: 700px) { .med-row { grid-template-columns: 1fr; } }
+
+  .history-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 1.5rem;
+    background: #fafafa;
+    border: 1px solid var(--usa-base-lighter);
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+  }
+  @media (max-width: 700px) { .history-grid { grid-template-columns: 1fr; } }
+  .history-grid label {
+    font-weight: 400;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    border-bottom: 1px dotted #e5e5e5;
+    cursor: pointer;
+  }
+  .history-grid input[type=checkbox] { width: auto; margin: 0; }
+
+  .system-exam-row {
+    display: grid;
+    grid-template-columns: 1fr 140px 140px 2fr;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 700px) { .system-exam-row { grid-template-columns: 1fr; } }
+  .system-exam-row .sys-name { font-weight: 600; color: var(--usa-base-darker); }
+
+  .upload-grid {
+    background: #fafafa;
+    border: 2px dashed var(--usa-base-dark);
+    border-radius: 4px;
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-banner {
+    background: linear-gradient(135deg, #1a4480 0%, #162e51 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .confirm-banner .big-num {
+    font-family: monospace;
+    font-size: 2.25rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.15);
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0.75rem 0;
+    letter-spacing: 0.05em;
+  }
+  .confirm-banner h2 { color: white; border: none; margin-bottom: 0.5rem; }
+
+  .timeline {
+    position: relative;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--usa-base-lighter);
+  }
+  .timeline-item {
+    position: relative;
+    padding: 0.5rem 0 0.75rem 0;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 0.85rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--usa-blue-light);
+    border: 3px solid white;
+    box-shadow: 0 0 0 1px var(--usa-blue-light);
+  }
+  .timeline-item.pending::before { background: var(--usa-base-lighter); box-shadow: 0 0 0 1px var(--usa-base-dark); }
+  .timeline-item.current::before { background: var(--usa-gold); box-shadow: 0 0 0 1px #c68a00; }
+  .timeline-item .when { font-size: 0.85rem; color: var(--usa-base-dark); }
+
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--usa-base-lighter);
+    margin-bottom: 1rem;
+  }
+  .tabs button {
+    background: transparent;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--usa-base-dark);
+    font-family: inherit;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .tabs button.active {
+    color: var(--usa-blue);
+    border-bottom-color: var(--usa-blue);
+    font-weight: 600;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="usa-banner">
+  <strong>An official website of the United States government</strong>
+  <span class="muted">· Mockup / Illustrative Only</span>
+</div>
+
+<header class="faa-header">
+  <div class="faa-logo">
+    <div class="faa-seal">FAA</div>
+    <div>
+      <h1>MedXPress</h1>
+      <div class="sub">FAA Medical Certification · Aerospace Medical Certification Division</div>
+    </div>
+  </div>
+  <div class="user-info" id="userInfoArea">
+    <span id="userGreeting">Not signed in</span>
+    <button onclick="signOut()" id="signOutBtn" style="display:none;">Sign out</button>
+  </div>
+</header>
+
+<nav class="breadcrumbs" id="breadcrumbs">
+  <a href="#" onclick="showScreen('login'); return false;">Home</a>
+</nav>
+
+<main>
+
+  <div class="role-switcher">
+    <strong>Demo role:</strong>
+    <select id="roleSel" onchange="switchRole()">
+      <option value="applicant">Applicant (airman)</option>
+      <option value="ame">AME (Aviation Medical Examiner) — AMCS</option>
+    </select>
+    <span class="muted">· Jump to:</span>
+    <select id="jumpSel" onchange="jumpScreen()">
+      <option value="">— screen —</option>
+      <option value="login">1. Login / Register</option>
+      <option value="dashboard">2. Applicant Dashboard</option>
+      <option value="wizard">3. Form 8500-8 Wizard</option>
+      <option value="confirm">4. Confirmation Page</option>
+      <option value="status">5. Status Tracking</option>
+      <option value="ameHome">6. AME Home (AMCS)</option>
+      <option value="ameImport">6a. AME Import Application</option>
+      <option value="ameExam">6b. AME Exam (Page 2)</option>
+    </select>
+  </div>
+
+  <!-- ========= SCREEN: LOGIN / REGISTRATION ========= -->
+  <section class="screen active" id="screen-login">
+    <div class="alert alert-info" style="max-width: 900px; margin: 0 auto 1rem;">
+      <strong>Privacy Act Statement.</strong> The information collected on Form 8500-8 is solicited under 49 U.S.C. § 44703 and 14 CFR Part 67. Records are maintained under SORN DOT/FAA 856 and used to determine medical qualification for airman certification. SSN is voluntary — if withheld, a pseudo-SSN will be assigned.
+    </div>
+
+    <div class="login-page">
+      <div class="card">
+        <h2>Sign in</h2>
+        <p class="help">Use your MedXPress username and password. Beginning August 2025, MedXPress is transitioning to <strong>Login.gov</strong>.</p>
+        <label>Username <span class="req">*</span></label>
+        <input type="text" id="loginUser" value="jdoe.pilot" />
+        <label>Password <span class="req">*</span></label>
+        <input type="password" id="loginPass" value="••••••••" />
+        <div class="btn-group">
+          <button class="btn" onclick="doLogin()">Sign in</button>
+          <button class="btn secondary" onclick="alert('Demo: password reset requires answering your 3 security questions.')">Forgot password?</button>
+        </div>
+        <hr style="margin: 1.25rem 0; border: none; border-top: 1px solid var(--usa-base-lighter);" />
+        <button class="btn secondary" style="width: 100%;" onclick="doLogin()">
+          Continue with Login.gov
+        </button>
+        <p class="help mt-2">After 30 days of inactivity, unsubmitted applications are auto-deleted. Submitted applications expire if not imported within 60 days.</p>
+      </div>
+
+      <div class="card create-card">
+        <h2>Create an account</h2>
+        <p class="help">Only a valid email is required. FAA-employed Air Traffic Controllers must <strong>not</strong> use MedXPress.</p>
+        <label>Email <span class="req">*</span></label>
+        <input type="email" placeholder="you@example.com" />
+        <label>Choose a username <span class="req">*</span></label>
+        <input type="text" placeholder="pilot.smith" />
+        <div class="form-row">
+          <div>
+            <label>Password <span class="req">*</span></label>
+            <input type="password" />
+          </div>
+          <div>
+            <label>Confirm password <span class="req">*</span></label>
+            <input type="password" />
+          </div>
+        </div>
+
+        <h3 style="margin-top: 1rem;">Security questions</h3>
+        <p class="help">Choose 3 questions used for account recovery. Answers are stored as one-way hashes.</p>
+        <label>Question 1 <span class="req">*</span></label>
+        <select>
+          <option>What city were you born in?</option>
+          <option>What was your first pet's name?</option>
+          <option>What is your mother's maiden name?</option>
+        </select>
+        <input type="text" placeholder="Answer" />
+
+        <label>Question 2 <span class="req">*</span></label>
+        <select>
+          <option>What was the model of your first aircraft?</option>
+          <option>What high school did you attend?</option>
+          <option>Name of childhood best friend?</option>
+        </select>
+        <input type="text" placeholder="Answer" />
+
+        <label>Question 3 <span class="req">*</span></label>
+        <select>
+          <option>What street did you grow up on?</option>
+          <option>What is your favorite book?</option>
+          <option>What was the name of your first employer?</option>
+        </select>
+        <input type="text" placeholder="Answer" />
+
+        <div class="checkbox-inline" style="margin-top: 0.75rem;">
+          <label>
+            <input type="checkbox" id="privacyAccept" />
+            I have read and accept the <a href="#" onclick="return false;">Privacy Act Statement</a>
+          </label>
+        </div>
+        <div class="field-error" id="privacyAcceptErr">You must accept the Privacy Act Statement to continue.</div>
+
+        <div class="btn-group">
+          <button class="btn success" onclick="doRegister()">Create account</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: APPLICANT DASHBOARD ========= -->
+  <section class="screen" id="screen-dashboard">
+    <h1>Applicant Dashboard</h1>
+    <p class="muted">Welcome, <strong id="dashName">Jane Doe</strong>. Complete FAA Form 8500-8 online, then take your Confirmation Number to your scheduled AME exam.</p>
+
+    <div class="form-row-4 mb-2" style="margin-top: 1rem;">
+      <div class="status-tile">
+        <div class="big" id="tileStatus">No Application</div>
+        <div class="lbl">Current status</div>
+      </div>
+      <div class="status-tile">
+        <div class="big" id="tileConfnum" style="font-family: monospace;">—</div>
+        <div class="lbl">Confirmation #</div>
+      </div>
+      <div class="status-tile">
+        <div class="big">3rd</div>
+        <div class="lbl">Class requested</div>
+      </div>
+      <div class="status-tile">
+        <div class="big" id="tileExpiry">—</div>
+        <div class="lbl">Expires</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>What would you like to do?</h2>
+      <div class="form-row">
+        <div>
+          <h3>Start a new application</h3>
+          <p class="muted">Complete Items 1–20 of Form 8500-8. Takes about 20–30 minutes.</p>
+          <button class="btn" onclick="startWizard()">Start Form 8500-8</button>
+        </div>
+        <div>
+          <h3>Track existing application</h3>
+          <p class="muted">View current status, correspondence, and next steps.</p>
+          <button class="btn secondary" onclick="showScreen('status')">View status</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recent applications</h2>
+      <table class="apps-table">
+        <thead>
+          <tr>
+            <th>Confirmation #</th>
+            <th>Submitted</th>
+            <th>Class</th>
+            <th>AME (if imported)</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dashTable">
+          <tr>
+            <td colspan="6" class="muted text-center" style="padding: 1.5rem;">
+              No prior applications. Start a new 8500-8 above.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Helpful resources</h2>
+      <ul>
+        <li><a href="#" onclick="return false;">FAA Form 8500-8 (PDF) — printable copy</a></li>
+        <li><a href="#" onclick="return false;">AME Locator</a> — find a certified examiner near you</li>
+        <li><a href="#" onclick="return false;">Medications database</a> — check if a medication is disqualifying</li>
+        <li><a href="#" onclick="return false;">AME Guide (Current edition)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: FORM 8500-8 WIZARD ========= -->
+  <section class="screen" id="screen-wizard">
+    <h1>FAA Form 8500-8 — Application for Airman Medical Certificate</h1>
+
+    <div class="alert alert-warning">
+      <strong>Important:</strong> Once submitted, you <strong>cannot</strong> make changes. Any correction requires your AME to enter and justify changes at the exam. Application expires if not imported within <strong>60 days</strong>.
+    </div>
+
+    <div class="wizard-steps" id="wizSteps">
+      <div class="wizard-step active" data-step="1"><span class="num">1</span> Type &amp; Class</div>
+      <div class="wizard-step" data-step="2"><span class="num">2</span> Personal Info</div>
+      <div class="wizard-step" data-step="3"><span class="num">3</span> Physical</div>
+      <div class="wizard-step" data-step="4"><span class="num">4</span> Prior Cert</div>
+      <div class="wizard-step" data-step="5"><span class="num">5</span> Medications</div>
+      <div class="wizard-step" data-step="6"><span class="num">6</span> Medical Hx</div>
+      <div class="wizard-step" data-step="7"><span class="num">7</span> Visits</div>
+      <div class="wizard-step" data-step="8"><span class="num">8</span> Declare &amp; Sign</div>
+      <div class="wizard-step" data-step="9"><span class="num">9</span> Review</div>
+    </div>
+
+    <!-- STEP 1: Type & Class -->
+    <div class="card wiz-panel" data-panel="1">
+      <h2>Step 1 — Application Type &amp; Class of Certificate</h2>
+
+      <label>Type of application <span class="req">*</span></label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="appType" checked /> Application for initial or renewal medical certificate</label>
+        <label><input type="radio" name="appType" /> Application for student pilot certificate (combined 8500-8 / 8710-2)</label>
+      </div>
+
+      <label>Class of medical certificate requested <span class="req">*</span> (Item 1)</label>
+      <div class="radio-group" style="margin-bottom: 1rem;">
+        <label><input type="radio" name="certClass" /> <strong>First class</strong> — ATP / Commercial-ATP</label>
+        <label><input type="radio" name="certClass" /> <strong>Second class</strong> — Commercial pilot</label>
+        <label><input type="radio" name="certClass" checked /> <strong>Third class</strong> — Private, Recreational, Student, Flight Instructor</label>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Purpose of flight activity</label>
+          <select>
+            <option>Personal flying</option>
+            <option>Business / Corporate</option>
+            <option>Student / Instruction</option>
+            <option>Commercial passenger</option>
+            <option>Commercial cargo</option>
+            <option>Airline / ATP</option>
+          </select>
+        </div>
+        <div>
+          <label>Have you applied for medical certification before?</label>
+          <div class="radio-group"><label><input type="radio" name="priorApply" checked /> Yes</label><label><input type="radio" name="priorApply" /> No</label></div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="exitWizard()">Save &amp; exit</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Personal Info -->
+    <div class="card wiz-panel" data-panel="2" style="display:none;">
+      <h2>Step 2 — Personal Information (Items 2–10)</h2>
+
+      <div class="form-row">
+        <div>
+          <label>Last name <span class="req">*</span></label>
+          <input type="text" value="Doe" />
+        </div>
+        <div>
+          <label>First name <span class="req">*</span></label>
+          <input type="text" value="Jane" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Middle name</label>
+          <input type="text" value="A" />
+        </div>
+        <div>
+          <label>Other names used (aliases, maiden)</label>
+          <input type="text" placeholder="If any" />
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div>
+          <label>Date of birth <span class="req">*</span></label>
+          <input type="date" value="1985-06-15" />
+        </div>
+        <div>
+          <label>Sex <span class="req">*</span></label>
+          <select><option>Female</option><option>Male</option><option>Unspecified</option></select>
+        </div>
+        <div>
+          <label>SSN <span class="muted" style="font-weight: 400;">(optional)</span></label>
+          <input type="text" placeholder="XXX-XX-XXXX" />
+          <p class="help">A pseudo-SSN will be assigned if blank.</p>
+        </div>
+      </div>
+
+      <label>Mailing address <span class="req">*</span></label>
+      <input type="text" value="1234 Aviation Way" />
+      <div class="form-row-3">
+        <div><label>City <span class="req">*</span></label><input type="text" value="Denver" /></div>
+        <div><label>State <span class="req">*</span></label><input type="text" value="CO" /></div>
+        <div><label>ZIP <span class="req">*</span></label><input type="text" value="80202" /></div>
+      </div>
+
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" checked /> Residential address same as mailing</label>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Phone <span class="req">*</span></label>
+          <input type="tel" value="(303) 555-0112" />
+        </div>
+        <div>
+          <label>Email <span class="req">*</span></label>
+          <input type="email" value="jdoe.pilot@example.com" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Country of citizenship <span class="req">*</span></label>
+          <select><option>United States</option><option>Canada</option><option>Mexico</option><option>United Kingdom</option><option>Other</option></select>
+        </div>
+        <div>
+          <label>Occupation</label>
+          <input type="text" value="Aerospace engineer" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Employer</label>
+          <input type="text" value="Lockheed Martin" />
+        </div>
+        <div>
+          <label>Total pilot time (hours)</label>
+          <input type="number" value="180" />
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Physical -->
+    <div class="card wiz-panel" data-panel="3" style="display:none;">
+      <h2>Step 3 — Physical Description</h2>
+      <div class="form-row-4">
+        <div>
+          <label>Hair color <span class="req">*</span></label>
+          <select><option>Brown</option><option>Black</option><option>Blonde</option><option>Red</option><option>Gray</option><option>White</option><option>Bald</option></select>
+        </div>
+        <div>
+          <label>Eye color <span class="req">*</span></label>
+          <select><option>Brown</option><option>Blue</option><option>Green</option><option>Hazel</option><option>Gray</option></select>
+        </div>
+        <div>
+          <label>Height (inches) <span class="req">*</span></label>
+          <input type="number" value="66" />
+        </div>
+        <div>
+          <label>Weight (lbs) <span class="req">*</span></label>
+          <input type="number" value="140" />
+        </div>
+      </div>
+
+      <h3>Vision</h3>
+      <div class="form-row">
+        <div>
+          <label>Do you wear corrective lenses?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="lenses" checked /> No</label>
+            <label><input type="radio" name="lenses" /> Contact lenses</label>
+            <label><input type="radio" name="lenses" /> Glasses</label>
+          </div>
+        </div>
+        <div>
+          <label>Prior refractive surgery?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="refract" checked /> No</label>
+            <label><input type="radio" name="refract" /> Yes</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Prior Cert -->
+    <div class="card wiz-panel" data-panel="4" style="display:none;">
+      <h2>Step 4 — Prior Medical Certificate Info (Items 11–14)</h2>
+
+      <div class="form-row">
+        <div>
+          <label>Have you ever held an FAA medical certificate?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="heldCert" checked /> Yes</label>
+            <label><input type="radio" name="heldCert" /> No</label>
+          </div>
+        </div>
+        <div>
+          <label>Class of last certificate</label>
+          <select><option>Third</option><option>Second</option><option>First</option></select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Date of last medical exam</label>
+          <input type="date" value="2024-05-10" />
+        </div>
+        <div>
+          <label>Name of AME who performed last exam</label>
+          <input type="text" value="Dr. Michael Chen" />
+        </div>
+      </div>
+
+      <label>Have you ever had a medical certificate denied, suspended, or revoked?</label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="denied" /> Yes</label>
+        <label><input type="radio" name="denied" checked /> No</label>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Airman certificate number</label>
+          <input type="text" value="4378291" />
+        </div>
+        <div>
+          <label>Ratings held</label>
+          <input type="text" value="Private ASEL, Instrument" />
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Medications -->
+    <div class="card wiz-panel" data-panel="5" style="display:none;">
+      <h2>Step 5 — Current Medications (Item 17a)</h2>
+      <p class="muted">List <strong>all</strong> prescription and over-the-counter medications, including dosage, purpose, and start date where known.</p>
+
+      <div id="medsList">
+        <div class="med-row">
+          <div><label>Medication name</label><input type="text" value="Loratadine" /></div>
+          <div><label>Dosage</label><input type="text" value="10 mg daily" /></div>
+          <div><label>Purpose</label><input type="text" value="Seasonal allergies" /></div>
+          <div><label>Start date</label><input type="date" value="2022-03-01" /></div>
+          <div><button class="btn secondary" style="padding: 0.5rem;" onclick="this.parentElement.parentElement.remove()">×</button></div>
+        </div>
+      </div>
+      <button class="btn secondary" onclick="addMedRow()">+ Add medication</button>
+
+      <div class="checkbox-inline mt-2 mb-2">
+        <label><input type="checkbox" /> I take no medications</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6: Medical History -->
+    <div class="card wiz-panel" data-panel="6" style="display:none;">
+      <h2>Step 6 — Medical History (Item 18)</h2>
+      <p class="muted">Check <strong>every</strong> condition you have <em>ever</em> had, even if it is in the past. An explanation will be required for each checked item.</p>
+
+      <div class="history-grid">
+        <label><input type="checkbox" /> 18a. Frequent or severe headaches</label>
+        <label><input type="checkbox" /> 18b. Dizziness or fainting spell</label>
+        <label><input type="checkbox" /> 18c. Unconsciousness for any reason</label>
+        <label><input type="checkbox" /> 18d. Eye or vision trouble</label>
+        <label><input type="checkbox" /> 18e. Hay fever or allergy</label>
+        <label><input type="checkbox" /> 18f. Asthma or lung disease</label>
+        <label><input type="checkbox" /> 18g. Heart or vascular trouble</label>
+        <label><input type="checkbox" /> 18h. High or low blood pressure</label>
+        <label><input type="checkbox" /> 18i. Stomach, liver, or intestinal trouble</label>
+        <label><input type="checkbox" /> 18j. Kidney stone or blood in urine</label>
+        <label><input type="checkbox" /> 18k. Diabetes</label>
+        <label><input type="checkbox" /> 18l. Neurological disorders; epilepsy, seizures, stroke, paralysis</label>
+        <label><input type="checkbox" /> 18m. Mental disorders of any sort; depression, anxiety, etc.</label>
+        <label><input type="checkbox" /> 18n. Substance dependence or failed drug/alcohol test</label>
+        <label><input type="checkbox" /> 18o. Alcohol dependence or abuse</label>
+        <label><input type="checkbox" /> 18p. Suicide attempt</label>
+        <label><input type="checkbox" /> 18q. Motion sickness requiring medication</label>
+        <label><input type="checkbox" /> 18r. Military medical discharge</label>
+        <label><input type="checkbox" /> 18s. Medical rejection by military service</label>
+        <label><input type="checkbox" /> 18t. Rejection for life insurance</label>
+        <label><input type="checkbox" /> 18u. Admission to hospital</label>
+        <label><input type="checkbox" /> 18v. Other illness, disability, or surgery</label>
+        <label><input type="checkbox" /> 18w. Unable to perform regular duties for more than 3 days</label>
+        <label><input type="checkbox" /> 18x. Current disability benefit or compensation</label>
+      </div>
+
+      <div class="alert alert-info mt-2">
+        <strong>Reminder:</strong> Falsification of answers on this form is a basis for denial and possible criminal prosecution under 18 U.S.C. § 1001.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 7: Visits -->
+    <div class="card wiz-panel" data-panel="7" style="display:none;">
+      <h2>Step 7 — Visits to Health Professionals (Item 19)</h2>
+      <p class="muted">List visits to all health professionals (including mental health) in the <strong>past 3 years</strong>. Routine physicals with this examiner are excluded.</p>
+
+      <div id="visitsList">
+        <div class="card" style="background: #fafafa; padding: 1rem;">
+          <div class="form-row">
+            <div><label>Date of visit</label><input type="date" value="2024-11-12" /></div>
+            <div><label>Reason</label><input type="text" value="Routine annual physical" /></div>
+          </div>
+          <div class="form-row">
+            <div><label>Provider name</label><input type="text" value="Dr. Sarah Williams" /></div>
+            <div><label>Provider address</label><input type="text" value="200 Medical Dr, Denver CO" /></div>
+          </div>
+          <button class="btn secondary" onclick="this.parentElement.remove()" style="padding: 0.3rem 0.75rem; font-size: 0.85rem;">Remove</button>
+        </div>
+      </div>
+      <button class="btn secondary mt-1" onclick="addVisit()">+ Add visit</button>
+
+      <h3 class="mt-2">Item 20 — Legal &amp; Disability</h3>
+      <label>Non-traffic misdemeanor or felony convictions?</label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="conv" /> Yes</label>
+        <label><input type="radio" name="conv" checked /> No</label>
+      </div>
+      <label>Drug/alcohol-related driving actions (arrests, convictions, admin actions)?</label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="dui" /> Yes</label>
+        <label><input type="radio" name="dui" checked /> No</label>
+      </div>
+      <label>Non-driving drug/alcohol convictions?</label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="ndui" /> Yes</label>
+        <label><input type="radio" name="ndui" checked /> No</label>
+      </div>
+      <label>Are you currently receiving disability benefits?</label>
+      <div class="radio-group mb-2">
+        <label><input type="radio" name="disb" /> Yes</label>
+        <label><input type="radio" name="disb" checked /> No</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 8: Declare & Sign -->
+    <div class="card wiz-panel" data-panel="8" style="display:none;">
+      <h2>Step 8 — Declaration &amp; Digital Signature</h2>
+
+      <div class="alert alert-warning">
+        Read the declaration below carefully before signing. This is the electronic equivalent of your signature on Form 8500-8.
+      </div>
+
+      <div style="background: #f8f9fa; padding: 1rem; border-left: 4px solid var(--usa-blue); font-size: 0.95rem; margin-bottom: 1rem;">
+        <p>I hereby certify that all statements and answers provided by me on this application are complete and true to the best of my knowledge. I agree that they are to be considered part of the basis for issuance of any FAA certificate to me.</p>
+        <p>I understand that any false or fraudulent statement on this form may result in denial, suspension, or revocation of any airman or medical certificate, and criminal prosecution under 18 U.S.C. § 1001.</p>
+        <p>I authorize the release to the FAA of any and all medical information that is relevant to this application, including records of diagnosis, treatment, and observations by any health care provider.</p>
+      </div>
+
+      <div class="signature-box">
+        <label>Type your full legal name to sign <span class="req">*</span></label>
+        <input type="text" id="sigName" placeholder="e.g., Jane A. Doe" />
+        <div class="form-row">
+          <div>
+            <label>Date</label>
+            <input type="date" id="sigDate" />
+          </div>
+          <div>
+            <label>Signature ID (auto-generated)</label>
+            <input type="text" value="MX-SIG-Pending" readonly style="background: #eee;" />
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox-inline mb-2">
+        <label><input type="checkbox" id="sigAttest" /> I understand this electronic signature has the same legal effect as a handwritten signature on FAA Form 8500-8.</label>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 9: Review & Submit -->
+    <div class="card wiz-panel" data-panel="9" style="display:none;">
+      <h2>Step 9 — Review &amp; Submit</h2>
+      <p class="muted">Verify your information below. After submission, no changes are possible — your AME will address any corrections at the exam.</p>
+
+      <h3>Certificate Request</h3>
+      <div class="summary-row"><span class="label">Class requested</span><span>Third class</span></div>
+      <div class="summary-row"><span class="label">Purpose of flight</span><span>Personal flying</span></div>
+
+      <h3 class="mt-2">Applicant</h3>
+      <div class="summary-row"><span class="label">Name</span><span>Jane A. Doe</span></div>
+      <div class="summary-row"><span class="label">Date of birth</span><span>1985-06-15</span></div>
+      <div class="summary-row"><span class="label">SSN</span><span class="muted">[Pseudo-SSN to be assigned]</span></div>
+      <div class="summary-row"><span class="label">Address</span><span>1234 Aviation Way, Denver CO 80202</span></div>
+      <div class="summary-row"><span class="label">Phone / Email</span><span>(303) 555-0112 · jdoe.pilot@example.com</span></div>
+      <div class="summary-row"><span class="label">Citizenship</span><span>United States</span></div>
+
+      <h3 class="mt-2">Physical</h3>
+      <div class="summary-row"><span class="label">Hair / Eyes</span><span>Brown / Brown</span></div>
+      <div class="summary-row"><span class="label">Height / Weight</span><span>66 in / 140 lb</span></div>
+
+      <h3 class="mt-2">Prior certification</h3>
+      <div class="summary-row"><span class="label">Last medical</span><span>Third class · 2024-05-10 · Dr. Michael Chen</span></div>
+      <div class="summary-row"><span class="label">Airman cert</span><span>4378291 — Private ASEL, Instrument</span></div>
+
+      <h3 class="mt-2">Medications</h3>
+      <div class="summary-row"><span class="label">Loratadine</span><span>10 mg daily · Seasonal allergies · Since 2022-03-01</span></div>
+
+      <h3 class="mt-2">Medical history (Item 18)</h3>
+      <div class="summary-row"><span class="label">Conditions reported</span><span class="muted">None</span></div>
+
+      <h3 class="mt-2">Item 19 — Visits</h3>
+      <div class="summary-row"><span class="label">2024-11-12</span><span>Routine annual physical · Dr. Sarah Williams</span></div>
+
+      <h3 class="mt-2">Item 20 — Legal</h3>
+      <div class="summary-row"><span class="label">All declarations</span><span>No</span></div>
+
+      <h3 class="mt-2">Signature</h3>
+      <div class="summary-row"><span class="label">Signed by</span><span id="reviewSig">— (complete Step 8)</span></div>
+
+      <div class="alert alert-info mt-2">
+        Your AME must import this application within <strong>60 days</strong> of submission or it will expire and require resubmission.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn secondary" onclick="prevStep()">← Back</button>
+        <button class="btn success" onclick="submitApplication()">Submit Application →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: CONFIRMATION PAGE ========= -->
+  <section class="screen" id="screen-confirm">
+    <div class="confirm-banner">
+      <h2 style="color: white; font-size: 1.5rem;">Application Submitted Successfully</h2>
+      <p style="opacity: 0.9;">Present this <strong>Confirmation Number</strong> to your Aviation Medical Examiner at your scheduled in-person exam.</p>
+      <div class="big-num" id="confNumDisplay">MX-2026-8432011</div>
+      <p style="opacity: 0.9; font-size: 0.9rem; margin: 0;">Submitted <span id="confSubmittedAt">Apr 23, 2026 · 3:42 PM ET</span></p>
+    </div>
+
+    <div class="card">
+      <h2>Next steps</h2>
+      <ol>
+        <li>Print or save your <strong>Summary Sheet</strong> using the button below.</li>
+        <li>Bring the Summary Sheet, this Confirmation Number, and a <strong>valid photo ID</strong> to your AME exam.</li>
+        <li>Your AME will import this application into AMCS — at that moment it becomes a signed FAA Form 8500-8.</li>
+        <li>After the exam, track your status in the applicant dashboard. If the AME issues a certificate in office, you will receive it the same day; deferrals go to FAA review.</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>60-day window:</strong> Your AME must import this application within 60 days of <span id="confSubmittedAt2">Apr 23, 2026</span>. After that, the application expires and you must resubmit.
+      </div>
+
+      <div class="btn-group">
+        <button class="btn" onclick="printSummary()">🖨️ Print Summary Sheet</button>
+        <button class="btn secondary" onclick="showScreen('dashboard')">Back to dashboard</button>
+        <button class="btn secondary" onclick="showScreen('status')">Track status</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Summary Sheet preview</h2>
+      <div style="background: white; border: 1px solid var(--usa-base-lighter); padding: 1.5rem; font-family: 'Source Sans 3', sans-serif;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid var(--usa-blue); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+          <div><strong style="color: var(--usa-blue);">FAA MedXPress — Summary Sheet</strong></div>
+          <div style="font-family: monospace;" id="confNumDisplay2">MX-2026-8432011</div>
+        </div>
+        <div class="summary-row"><span class="label">Applicant</span><span>Jane A. Doe (DOB 1985-06-15)</span></div>
+        <div class="summary-row"><span class="label">Class requested</span><span>Third class</span></div>
+        <div class="summary-row"><span class="label">Submitted</span><span>2026-04-23 · 15:42 ET</span></div>
+        <div class="summary-row"><span class="label">Expires (60-day)</span><span>2026-06-22</span></div>
+        <div class="summary-row"><span class="label">Barcode</span><span style="font-family: monospace; letter-spacing: 0.1em;">║█║║▌│██║║│▌║█║║▌│</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: STATUS TRACKING ========= -->
+  <section class="screen" id="screen-status">
+    <h1>Application Status</h1>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="border: none; margin: 0;">Confirmation <span style="font-family: monospace; color: var(--usa-blue-light);">MX-2026-8432011</span></h2>
+          <p class="muted" style="margin: 0.25rem 0 0;">Submitted Apr 23, 2026 · Third-class medical</p>
+        </div>
+        <span class="badge review" id="statusBadge">In Review</span>
+      </div>
+
+      <h3 class="mt-2">Status history</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong>Submitted</strong> <span class="when">· Apr 23, 2026 · 3:42 PM ET</span>
+          <div class="muted" style="font-size: 0.9rem;">MedXPress application submitted; Confirmation Number issued.</div>
+        </div>
+        <div class="timeline-item">
+          <strong>Imported</strong> <span class="when">· Apr 29, 2026 · 9:15 AM</span>
+          <div class="muted" style="font-size: 0.9rem;">Imported into AMCS by Dr. Sarah Williams (AME Serial 009832) — Denver CO.</div>
+        </div>
+        <div class="timeline-item">
+          <strong>Transmitted</strong> <span class="when">· Apr 29, 2026 · 4:02 PM</span>
+          <div class="muted" style="font-size: 0.9rem;">Exam completed; transmitted to Aerospace Medical Certification Division (AMCD), Oklahoma City.</div>
+        </div>
+        <div class="timeline-item current">
+          <strong>In Review</strong> <span class="when">· May 5, 2026 — current</span>
+          <div class="muted" style="font-size: 0.9rem;">Under clinical review. Average review time for deferred cases: 30–60 days.</div>
+        </div>
+        <div class="timeline-item pending">
+          <strong>Action Required</strong> <span class="when">· pending</span>
+        </div>
+        <div class="timeline-item pending">
+          <strong>Cert Issued / Denial</strong> <span class="when">· pending</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>All possible status values</h2>
+      <p class="muted">Color legend for medical certification status. Transitions are event-driven and timestamped.</p>
+      <div class="form-row-4" style="gap: 0.5rem;">
+        <div><span class="badge none">No Application</span><div class="help">No open application</div></div>
+        <div><span class="badge submitted">Submitted</span><div class="help">On MedXPress — awaiting AME import</div></div>
+        <div><span class="badge imported">Imported</span><div class="help">AME pulled by Confirmation #</div></div>
+        <div><span class="badge transmitted">Transmitted</span><div class="help">Exam sent to AMCD</div></div>
+        <div><span class="badge review">In Review</span><div class="help">AMCD clinical review</div></div>
+        <div><span class="badge action">Action Required</span><div class="help">Additional info needed</div></div>
+        <div><span class="badge issued">Cert Issued</span><div class="help">Medical certificate issued</div></div>
+        <div><span class="badge denial">Denial</span><div class="help">Certificate denied</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Correspondence</h2>
+      <table class="apps-table">
+        <thead>
+          <tr><th>Date</th><th>From</th><th>Subject</th><th>Type</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>May 5, 2026</td>
+            <td>AMCD — Medical Review Officer</td>
+            <td>Case transferred to Medical Specialty review — Cardiology</td>
+            <td>Notice</td>
+            <td><button class="link-btn">View letter (PDF)</button></td>
+          </tr>
+          <tr>
+            <td>Apr 29, 2026</td>
+            <td>Dr. Sarah Williams (AME)</td>
+            <td>Exam completed — deferred for additional review</td>
+            <td>Disposition</td>
+            <td><button class="link-btn">View letter (PDF)</button></td>
+          </tr>
+          <tr>
+            <td>Apr 29, 2026</td>
+            <td>AMCS</td>
+            <td>Application imported from MedXPress</td>
+            <td>System</td>
+            <td><span class="muted">—</span></td>
+          </tr>
+          <tr>
+            <td>Apr 23, 2026</td>
+            <td>MedXPress</td>
+            <td>Submission confirmed — MX-2026-8432011</td>
+            <td>System</td>
+            <td><button class="link-btn">View confirmation</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-group mt-2">
+        <button class="btn secondary" onclick="showScreen('dashboard')">← Back to dashboard</button>
+        <button class="btn" onclick="alert('In a real system, this would open the secure message composer to AMCD.')">Contact AMCD</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: AME HOME (AMCS) ========= -->
+  <section class="screen" id="screen-ameHome">
+    <div class="console-grid">
+      <aside class="left-nav">
+        <h3>Navigation</h3>
+        <ul>
+          <li><a href="#" onclick="showScreen('ameHome'); return false;">Home / Messages</a></li>
+          <li><a href="#" onclick="showScreen('ameHome'); return false;">Pending Exams</a></li>
+          <li><a href="#" onclick="showScreen('ameImport'); return false;"><strong>Import Application</strong></a></li>
+          <li><a href="#" onclick="return false;">Search Applicants</a></li>
+          <li><a href="#" onclick="return false;">Document Library</a></li>
+        </ul>
+        <div class="confnum-block">
+          <div class="muted">Signed in as</div>
+          <div><strong>Dr. Sarah Williams</strong></div>
+          <div class="muted" style="font-size: 0.8rem;">AME Serial: <span class="confnum-value" style="font-size: 0.9rem;">009832</span></div>
+          <div class="muted" style="font-size: 0.8rem;">Staff validated: 31 days ago</div>
+        </div>
+        <div class="alert alert-success" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+          Login.gov · MFA verified
+        </div>
+      </aside>
+
+      <div>
+        <h1>AMCS Home</h1>
+
+        <div class="tabs">
+          <button class="active" onclick="switchTab(event, 'tab-pending')">Pending Exams (3)</button>
+          <button onclick="switchTab(event, 'tab-messages')">Messages (2 new)</button>
+        </div>
+
+        <div class="tab-content active" id="tab-pending">
+          <div class="card" style="padding: 0;">
+            <table class="apps-table">
+              <thead>
+                <tr>
+                  <th>Last name</th>
+                  <th>First</th>
+                  <th>DOB</th>
+                  <th>Exam date</th>
+                  <th>Source</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Doe</strong></td>
+                  <td>Jane A.</td>
+                  <td>1985-06-15</td>
+                  <td>Apr 29, 2026</td>
+                  <td><span class="badge submitted">MedXPress</span></td>
+                  <td>
+                    <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;" onclick="showScreen('ameExam')">Open</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">📄</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🫀 ECG</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🖨️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Chen</strong></td>
+                  <td>Robert</td>
+                  <td>1972-03-22</td>
+                  <td>Apr 29, 2026</td>
+                  <td><span class="badge submitted">MedXPress</span></td>
+                  <td>
+                    <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;" onclick="showScreen('ameExam')">Open</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">📄</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🫀 ECG</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🖨️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Martinez</strong></td>
+                  <td>Elena</td>
+                  <td>1990-11-04</td>
+                  <td>Apr 30, 2026</td>
+                  <td><span class="badge none">Walk-in (no MX)</span></td>
+                  <td>
+                    <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;" onclick="showScreen('ameExam')">Open</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">📄</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🫀 ECG</button>
+                    <button class="btn secondary" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;">🖨️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-group mt-2">
+            <button class="btn" onclick="showScreen('ameImport')">+ Import Application by Confirmation #</button>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-messages">
+          <div class="card">
+            <div class="alert alert-warning">
+              <strong>Action required:</strong> 1 message requires your confirmation before application links are re-enabled.
+            </div>
+            <table class="apps-table">
+              <thead>
+                <tr><th>Req</th><th>Date</th><th>Subject</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>✓</td>
+                  <td>Apr 28, 2026</td>
+                  <td><strong>AME Guide 2026 Amendment 2 — effective May 15</strong></td>
+                  <td><button class="link-btn">View / Confirm</button></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>Apr 21, 2026</td>
+                  <td>Staff validation reminder — expires in 59 days</td>
+                  <td><button class="link-btn">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: AME IMPORT ========= -->
+  <section class="screen" id="screen-ameImport">
+    <h1>Import MedXPress Application</h1>
+    <div class="alert alert-info">
+      Enter the applicant's Confirmation Number to retrieve their submitted 8500-8 from MedXPress. Applications expire 60 days after submission.
+    </div>
+
+    <div class="card">
+      <h2>Search</h2>
+      <div class="form-row">
+        <div>
+          <label>Confirmation Number <span class="req">*</span></label>
+          <input type="text" id="impConfnum" value="MX-2026-8432011" placeholder="MX-YYYY-NNNNNNN" />
+        </div>
+        <div style="display: flex; align-items: end;">
+          <button class="btn" onclick="doImportSearch()">Search</button>
+        </div>
+      </div>
+      <p class="help">The applicant must provide a valid photo ID. Do not mail any portion of the MedXPress application.</p>
+    </div>
+
+    <div class="card" id="impResults" style="display: none;">
+      <h2>Search results</h2>
+      <table class="apps-table">
+        <thead>
+          <tr><th></th><th>Name</th><th>DOB</th><th>Submitted</th><th>Class</th><th>AMCS record</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="radio" name="impPick" checked /></td>
+            <td><strong>Doe, Jane A.</strong></td>
+            <td>1985-06-15</td>
+            <td>Apr 23, 2026</td>
+            <td>Third</td>
+            <td>Existing — Airman 4378291</td>
+          </tr>
+          <tr>
+            <td><input type="radio" name="impPick" /></td>
+            <td colspan="5"><em>+ Treat as new applicant (no FAA record found)</em></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn-group">
+        <button class="btn secondary" onclick="document.getElementById('impResults').style.display='none';">Cancel</button>
+        <button class="btn success" onclick="doProcessSelection()">Process Selection →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= SCREEN: AME EXAM (Page 2) ========= -->
+  <section class="screen" id="screen-ameExam">
+    <div class="console-grid">
+      <aside class="left-nav">
+        <h3>Exam</h3>
+        <div class="confnum-block">
+          <div class="muted" style="font-size: 0.8rem;">Applicant</div>
+          <div><strong>Doe, Jane A.</strong></div>
+          <div class="muted" style="font-size: 0.8rem;">DOB 1985-06-15 · Third class</div>
+          <div class="muted" style="font-size: 0.8rem;">Conf #: <span class="confnum-value" style="font-size: 0.9rem;">MX-2026-8432011</span></div>
+        </div>
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="#" onclick="return false;">Page 1 — Items 1–20 (from MedXPress)</a></li>
+          <li><a href="#" onclick="return false;"><strong>Page 2 — Physical Exam</strong></a></li>
+          <li><a href="#" onclick="return false;">Page 3 — Disposition</a></li>
+        </ul>
+        <h3>Documents</h3>
+        <div class="muted" style="font-size: 0.85rem;">3 / 25 uploaded · 4.8 MB</div>
+        <ul>
+          <li>• ECG-2026-04-29.pdf</li>
+          <li>• Admin-DriverLicense.jpg</li>
+          <li>• Eye-VisualField.pdf</li>
+        </ul>
+      </aside>
+
+      <div>
+        <h1>Form 8500-8 — Page 2 (Physical Examination)</h1>
+
+        <div class="card">
+          <h2>Vitals &amp; Visual (Items 21–26)</h2>
+          <div class="form-row-4">
+            <div><label>Blood pressure</label><input type="text" value="118/76" /></div>
+            <div><label>Pulse (bpm)</label><input type="number" value="68" /></div>
+            <div><label>Distant vision — Rt (20/)</label><input type="text" value="20/20" /></div>
+            <div><label>Distant vision — Lt (20/)</label><input type="text" value="20/25" /></div>
+          </div>
+          <div class="form-row-4">
+            <div><label>Near vision Rt</label><input type="text" value="20/20" /></div>
+            <div><label>Near vision Lt</label><input type="text" value="20/20" /></div>
+            <div><label>Color vision</label><select><option>Normal</option><option>Color defect — limitation</option></select></div>
+            <div><label>Hearing (whispered)</label><select><option>Pass bilateral</option><option>Pass Rt only</option><option>Pass Lt only</option><option>Audiogram req'd</option></select></div>
+          </div>
+          <div class="form-row">
+            <div><label>ECG required?</label>
+              <div class="radio-group"><label><input type="radio" name="ecg" /> Yes</label><label><input type="radio" name="ecg" checked /> No</label></div>
+            </div>
+            <div><label>Urinalysis (protein / sugar)</label><input type="text" value="Neg / Neg" /></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Body System Examination (Items 30–52)</h2>
+          <p class="muted">Check <strong>Abnormal</strong> only where findings would warrant comment. Required comment for each abnormal finding.</p>
+
+          <div class="system-exam-row" style="font-weight: 700; background: #f0f0f0; padding: 0.4rem 0.5rem; border-radius: 3px;">
+            <div>System</div><div>Normal</div><div>Abnormal</div><div>Comments</div>
+          </div>
+
+          <div class="system-exam-row"><div class="sys-name">30. Head, face, neck, scalp</div><div><input type="radio" name="s30" checked/></div><div><input type="radio" name="s30"/></div><div><input type="text" placeholder=""/></div></div>
+          <div class="system-exam-row"><div class="sys-name">31. Nose</div><div><input type="radio" name="s31" checked/></div><div><input type="radio" name="s31"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">32. Sinuses</div><div><input type="radio" name="s32" checked/></div><div><input type="radio" name="s32"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">33. Mouth and throat</div><div><input type="radio" name="s33" checked/></div><div><input type="radio" name="s33"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">34. Ears (general)</div><div><input type="radio" name="s34" checked/></div><div><input type="radio" name="s34"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">35. Ears (drums — otoscopic)</div><div><input type="radio" name="s35" checked/></div><div><input type="radio" name="s35"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">36. Eyes — general</div><div><input type="radio" name="s36" checked/></div><div><input type="radio" name="s36"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">37. Ophthalmoscopic</div><div><input type="radio" name="s37" checked/></div><div><input type="radio" name="s37"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">38. Pupils (equality/reaction)</div><div><input type="radio" name="s38" checked/></div><div><input type="radio" name="s38"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">39. Ocular motility</div><div><input type="radio" name="s39" checked/></div><div><input type="radio" name="s39"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">40. Lungs &amp; chest</div><div><input type="radio" name="s40" checked/></div><div><input type="radio" name="s40"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">41. Heart</div><div><input type="radio" name="s41" checked/></div><div><input type="radio" name="s41"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">42. Vascular system</div><div><input type="radio" name="s42" checked/></div><div><input type="radio" name="s42"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">43. Abdomen and viscera</div><div><input type="radio" name="s43" checked/></div><div><input type="radio" name="s43"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">44. Anus</div><div><input type="radio" name="s44" checked/></div><div><input type="radio" name="s44"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">45. Skin</div><div><input type="radio" name="s45" checked/></div><div><input type="radio" name="s45"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">46. G-U system (voiding)</div><div><input type="radio" name="s46" checked/></div><div><input type="radio" name="s46"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">47. Upper extremities</div><div><input type="radio" name="s47" checked/></div><div><input type="radio" name="s47"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">48. Lower extremities</div><div><input type="radio" name="s48" checked/></div><div><input type="radio" name="s48"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">49. Spine and other MSK</div><div><input type="radio" name="s49" checked/></div><div><input type="radio" name="s49"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">50. Identifying body marks / scars</div><div><input type="radio" name="s50" checked/></div><div><input type="radio" name="s50"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">51. Lymphatics</div><div><input type="radio" name="s51" checked/></div><div><input type="radio" name="s51"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">52. Neurologic</div><div><input type="radio" name="s52" checked/></div><div><input type="radio" name="s52"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">53. Psychiatric</div><div><input type="radio" name="s53" checked/></div><div><input type="radio" name="s53"/></div><div><input type="text"/></div></div>
+          <div class="system-exam-row"><div class="sys-name">54. General systemic</div><div><input type="radio" name="s54" checked/></div><div><input type="radio" name="s54"/></div><div><input type="text"/></div></div>
+        </div>
+
+        <div class="card">
+          <h2>Documents (AMCS)</h2>
+          <div class="upload-grid">
+            <p><strong>Drag files here or click to browse</strong></p>
+            <p class="muted">PDF · DOC · DOCX · JPG · JPEG · XPS — max 3 MB per file — up to 25 per exam</p>
+            <button class="btn secondary" onclick="alert('Demo: file picker would open here.')">Select files</button>
+          </div>
+
+          <table class="apps-table">
+            <thead>
+              <tr><th>Document name</th><th>Type</th><th>Date</th><th>Size</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ECG-2026-04-29.pdf</td>
+                <td>Cardiac - ECG</td>
+                <td>2026-04-29</td>
+                <td>1.2 MB</td>
+                <td>
+                  <button class="link-btn">View</button> ·
+                  <button class="link-btn">Edit</button> ·
+                  <button class="link-btn" style="color: var(--usa-red);">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Admin-DriverLicense.jpg</td>
+                <td>Admin - Driver License/Passport/ID</td>
+                <td>2026-04-29</td>
+                <td>0.8 MB</td>
+                <td>
+                  <button class="link-btn" disabled style="color: #999;">View (JPG blocked)</button> ·
+                  <button class="link-btn">Edit</button> ·
+                  <button class="link-btn" style="color: var(--usa-red);">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Eye-VisualField.pdf</td>
+                <td>Eye - Visual Field Graphs</td>
+                <td>2026-04-22</td>
+                <td>2.8 MB</td>
+                <td>
+                  <button class="link-btn">View</button> ·
+                  <button class="link-btn">Edit</button> ·
+                  <button class="link-btn" style="color: var(--usa-red);">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>Disposition (Item 60)</h2>
+          <div class="radio-group" style="margin-bottom: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <label><input type="radio" name="dispo" /> <strong>Issue</strong> — applicant meets standards; certificate issued in office</label>
+            <label><input type="radio" name="dispo" checked /> <strong>Defer</strong> — application referred to AMCD for further review</label>
+            <label><input type="radio" name="dispo" /> <strong>Deny</strong> — applicant does not meet standards; letter of denial</label>
+          </div>
+          <label>AME Comments</label>
+          <textarea rows="3" placeholder="Clinical notes, reason for deferral, conditions for CACI, etc.">Deferring pending review of cardiology workup — possible benign murmur, pt to submit echo within 30 days.</textarea>
+
+          <div class="signature-box">
+            <strong>AME Declaration &amp; Signature</strong>
+            <p class="help">I certify that I have personally examined the above-named applicant and that the findings are true and correct.</p>
+            <div class="form-row">
+              <div><label>Examiner name</label><input type="text" value="Sarah J. Williams, MD" /></div>
+              <div><label>AME serial</label><input type="text" value="009832" readonly style="background: #eee;" /></div>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Transmission window:</strong> Transmit this exam through AMCS within <strong>14 days</strong> of the exam date (7 days if a student certificate was issued).
+          </div>
+
+          <div class="btn-group">
+            <button class="btn secondary" onclick="showScreen('ameHome')">Save &amp; exit</button>
+            <button class="btn warning" onclick="alert('Demo: would transmit to AMCD.')">Transmit to AMCD →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========= MODAL ========= -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2 id="modalTitle">Notice</h2>
+    <p id="modalBody"></p>
+    <div class="btn-group">
+      <button class="btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<footer class="faa-footer">
+  <div class="container">
+    <div>
+      <strong>Federal Aviation Administration</strong><br/>
+      Aerospace Medical Certification Division (AAM-300)<br/>
+      <a href="#" onclick="return false;">About MedXPress</a> · <a href="#" onclick="return false;">Accessibility</a> · <a href="#" onclick="return false;">Privacy Policy</a> · <a href="#" onclick="return false;">Contact</a>
+    </div>
+    <div class="center-address">
+      CAMI — Civil Aerospace Medical Institute<br/>
+      6500 S MacArthur Blvd · Oklahoma City, OK 73169<br/>
+      Support: (405) 954-3238 · AMCSsupport@faa.gov
+    </div>
+  </div>
+</footer>
+
+<script>
+  let currentStep = 1;
+  const TOTAL_STEPS = 9;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + id);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+    updateBreadcrumbs(id);
+    // reflect the jump select
+    const jump = document.getElementById('jumpSel');
+    if (jump) jump.value = '';
+  }
+
+  function updateBreadcrumbs(id) {
+    const bc = document.getElementById('breadcrumbs');
+    const labels = {
+      login: 'Sign in',
+      dashboard: 'Applicant Dashboard',
+      wizard: 'Form 8500-8 Application',
+      confirm: 'Submission Confirmation',
+      status: 'Status Tracking',
+      ameHome: 'AMCS Home',
+      ameImport: 'Import Application',
+      ameExam: 'Exam — Page 2'
+    };
+    bc.innerHTML = '<a href="#" onclick="showScreen(\'' + (isAmeScreen(id) ? 'ameHome' : 'dashboard') + '\'); return false;">Home</a><span>›</span><span class="current">' + (labels[id] || '') + '</span>';
+  }
+  function isAmeScreen(id) { return id && id.startsWith('ame'); }
+
+  function switchRole() {
+    const r = document.getElementById('roleSel').value;
+    if (r === 'ame') { showScreen('ameHome'); }
+    else { showScreen('dashboard'); }
+  }
+  function jumpScreen() {
+    const v = document.getElementById('jumpSel').value;
+    if (v) showScreen(v);
+  }
+
+  function doLogin() {
+    document.getElementById('userGreeting').textContent = 'Jane Doe';
+    document.getElementById('signOutBtn').style.display = 'inline-block';
+    showScreen('dashboard');
+  }
+  function doRegister() {
+    const ok = document.getElementById('privacyAccept').checked;
+    const err = document.getElementById('privacyAcceptErr');
+    if (!ok) { err.classList.add('show'); return; }
+    err.classList.remove('show');
+    showModal('Account created', 'Your MedXPress account has been created. You can now sign in and start Form 8500-8.');
+    doLogin();
+  }
+  function signOut() {
+    document.getElementById('userGreeting').textContent = 'Not signed in';
+    document.getElementById('signOutBtn').style.display = 'none';
+    showScreen('login');
+  }
+
+  // Wizard
+  function startWizard() {
+    currentStep = 1;
+    renderWizard();
+    showScreen('wizard');
+  }
+  function nextStep() {
+    if (currentStep < TOTAL_STEPS) { currentStep++; renderWizard(); }
+  }
+  function prevStep() {
+    if (currentStep > 1) { currentStep--; renderWizard(); }
+  }
+  function renderWizard() {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      const n = parseInt(s.dataset.step, 10);
+      s.classList.remove('active', 'done');
+      if (n < currentStep) s.classList.add('done');
+      if (n === currentStep) s.classList.add('active');
+    });
+    document.querySelectorAll('.wiz-panel').forEach(p => {
+      p.style.display = (parseInt(p.dataset.panel, 10) === currentStep) ? '' : 'none';
+    });
+    // When reaching step 9, reflect the signer
+    if (currentStep === 9) {
+      const sig = document.getElementById('sigName');
+      document.getElementById('reviewSig').textContent = (sig && sig.value) ? sig.value + ' · ' + (document.getElementById('sigDate').value || 'today') : 'Jane A. Doe · today';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Clickable progress steps
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.wizard-step').forEach(s => {
+      s.addEventListener('click', () => {
+        const n = parseInt(s.dataset.step, 10);
+        currentStep = n;
+        renderWizard();
+      });
+    });
+    // Default signature date
+    const today = new Date().toISOString().slice(0, 10);
+    const sigD = document.getElementById('sigDate'); if (sigD) sigD.value = today;
+  });
+
+  function exitWizard() { showScreen('dashboard'); }
+
+  function addMedRow() {
+    const list = document.getElementById('medsList');
+    const div = document.createElement('div');
+    div.className = 'med-row';
+    div.innerHTML = '<div><label>Medication name</label><input type="text" /></div>' +
+      '<div><label>Dosage</label><input type="text" /></div>' +
+      '<div><label>Purpose</label><input type="text" /></div>' +
+      '<div><label>Start date</label><input type="date" /></div>' +
+      '<div><button class="btn secondary" style="padding: 0.5rem;" onclick="this.parentElement.parentElement.remove()">×</button></div>';
+    list.appendChild(div);
+  }
+  function addVisit() {
+    const list = document.getElementById('visitsList');
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.cssText = 'background: #fafafa; padding: 1rem;';
+    div.innerHTML = '<div class="form-row"><div><label>Date of visit</label><input type="date"/></div><div><label>Reason</label><input type="text"/></div></div>' +
+      '<div class="form-row"><div><label>Provider name</label><input type="text"/></div><div><label>Provider address</label><input type="text"/></div></div>' +
+      '<button class="btn secondary" onclick="this.parentElement.remove()" style="padding: 0.3rem 0.75rem; font-size: 0.85rem;">Remove</button>';
+    list.appendChild(div);
+  }
+
+  function submitApplication() {
+    const sig = document.getElementById('sigName').value.trim();
+    const attest = document.getElementById('sigAttest').checked;
+    if (!sig) { showModal('Signature required', 'Please go back to Step 8 and type your full legal name to sign.'); currentStep = 8; renderWizard(); return; }
+    if (!attest) { showModal('Attestation required', 'Please check the electronic signature attestation at Step 8.'); currentStep = 8; renderWizard(); return; }
+
+    // Generate confirmation number
+    const year = new Date().getFullYear();
+    const rand = Math.floor(1000000 + Math.random() * 9000000);
+    const conf = 'MX-' + year + '-' + rand;
+    document.getElementById('confNumDisplay').textContent = conf;
+    document.getElementById('confNumDisplay2').textContent = conf;
+
+    const now = new Date();
+    const submitted = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' +
+                      now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) + ' ET';
+    document.getElementById('confSubmittedAt').textContent = submitted;
+    document.getElementById('confSubmittedAt2').textContent = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    // update dashboard state
+    document.getElementById('tileStatus').textContent = 'Submitted';
+    document.getElementById('tileConfnum').textContent = conf;
+    const exp = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
+    document.getElementById('tileExpiry').textContent = exp.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+    // add to dashboard table
+    const tbl = document.getElementById('dashTable');
+    tbl.innerHTML = '<tr>' +
+      '<td><span class="app-id">' + conf + '</span></td>' +
+      '<td>' + now.toLocaleDateString() + '</td>' +
+      '<td>Third</td>' +
+      '<td class="muted">— (not yet imported)</td>' +
+      '<td><span class="badge submitted">Submitted</span></td>' +
+      '<td><button class="link-btn" onclick="showScreen(\'status\')">Track</button> · <button class="link-btn" onclick="printSummary()">Print</button></td>' +
+      '</tr>';
+
+    showScreen('confirm');
+  }
+
+  function printSummary() {
+    showModal('Print Summary Sheet', 'In a real system, this would open the print dialog with the Summary Sheet PDF including the barcode of your Confirmation Number for AME scan.');
+  }
+
+  // AME import
+  function doImportSearch() {
+    document.getElementById('impResults').style.display = '';
+  }
+  function doProcessSelection() {
+    showModal('Application Imported', 'Confirmation MX-2026-8432011 imported. AMCS assigned certificate number 4378291. Print the Summary Sheet — this application becomes a signed FAA Form 8500-8 upon import.');
+    setTimeout(() => { closeModal(); showScreen('ameExam'); }, 800);
+  }
+
+  // Tabs (AME)
+  function switchTab(e, tabId) {
+    e.target.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  // Modal
+  function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalBackdrop').classList.add('show');
+  }
+  function closeModal() { document.getElementById('modalBackdrop').classList.remove('show'); }
+</script>
+</body>
+</html>
