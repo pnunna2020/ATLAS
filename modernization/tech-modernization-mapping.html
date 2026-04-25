@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FAA AVS Tech Modernization Mapping — ATLAS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue:         #162e51;
+    --usa-blue-dark:    #0b1f3f;
+    --usa-blue-deep:    #071532;
+    --usa-blue-light:   #1a4480;
+    --usa-blue-hover:   #2672de;
+    --usa-blue-vivid:   #2491ff;
+    --usa-gold:         #ffbe2e;
+    --usa-gold-dark:    #c68a00;
+    --usa-green:        #00a91c;
+    --usa-green-dark:   #007315;
+    --usa-green-light:  #ecf3ec;
+    --usa-red:          #b50909;
+    --usa-red-dark:     #8b0000;
+    --usa-red-light:    #fce8e8;
+    --usa-orange:       #c05500;
+    --usa-orange-light: #fef0e6;
+    --usa-amber:        #e6a817;
+    --usa-amber-light:  #fdf5e1;
+    --usa-base:         #1b1b1b;
+    --usa-base-darker:  #3d4551;
+    --usa-base-dark:    #565c65;
+    --usa-base-mid:     #71767a;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest:#f0f0f0;
+    --usa-white:        #ffffff;
+    --usa-ink:          #1b1b1b;
+    --focus-outline:    #2491ff;
+
+    --shadow-sm: 0 1px 3px rgba(22,46,81,0.08);
+    --shadow-md: 0 2px 8px rgba(22,46,81,0.12);
+    --shadow-lg: 0 4px 20px rgba(22,46,81,0.14);
+
+    --grad-header: linear-gradient(135deg, #071532 0%, #162e51 55%, #1a4480 100%);
+    --radius: 4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+    font-size: 0.925rem;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3, h4 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; }
+
+  /* ─── GOV BANNER ─── */
+  .usa-banner {
+    background: #f0f0f0;
+    border-bottom: 1px solid #dfe1e2;
+    font-size: 0.775rem;
+    padding: 0.3rem 1.5rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .usa-banner .flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    color: var(--usa-blue);
+  }
+  .usa-banner .flag-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .usa-banner .lock-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #3d4551;
+  }
+  .banner-sep { color: #dfe1e2; margin: 0 0.25rem; }
+
+  /* ─── HEADER ─── */
+  header.faa-header {
+    background: var(--grad-header);
+    color: white;
+    padding: 1.25rem 2rem 1.1rem;
+    border-bottom: 4px solid var(--usa-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .faa-logo { display: flex; align-items: center; gap: 0.875rem; }
+  .faa-seal {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--usa-gold) 0%, var(--usa-gold-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--usa-blue-dark);
+    font-size: 0.65rem;
+    border: 2.5px solid rgba(255,255,255,0.6);
+    text-align: center;
+    line-height: 1.1;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .faa-wordmark h1 {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.25;
+  }
+  .faa-wordmark .sub {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-weight: 400;
+    display: block;
+    margin-top: 0.1rem;
+  }
+  .header-meta {
+    text-align: right;
+    font-size: 0.8rem;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+  .header-meta .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    margin-left: 0.3rem;
+  }
+
+  /* ─── BREADCRUMB ─── */
+  .breadcrumbs {
+    background: white;
+    padding: 0.55rem 2rem;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--usa-base-lighter);
+    color: var(--usa-base-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+  .breadcrumbs a { color: var(--usa-blue-light); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { color: var(--usa-base-lighter); }
+  .breadcrumbs .current { color: var(--usa-ink); font-weight: 600; }
+
+  /* ─── MAIN LAYOUT ─── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.75rem 2rem 3rem;
+  }
+
+  /* ─── PAGE INTRO ─── */
+  .page-intro {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-left: 5px solid var(--usa-blue);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .page-intro h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.35rem;
+    color: var(--usa-blue);
+  }
+  .page-intro p {
+    margin: 0;
+    color: var(--usa-base-darker);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* ─── SUMMARY STATS BAR ─── */
+  .stats-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    align-items: stretch;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: var(--radius);
+    padding: 0.875rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    flex: 1;
+    text-align: center;
+  }
+  .stat-card .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: "Public Sans", sans-serif;
+  }
+  .stat-card .stat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 0.25rem;
+    color: var(--usa-base-dark);
+  }
+  .stat-card.total { border-top: 3px solid var(--usa-blue); }
+  .stat-card.total .stat-num { color: var(--usa-blue); }
+  .stat-card.categories { border-top: 3px solid var(--usa-blue-hover); }
+  .stat-card.categories .stat-num { color: var(--usa-blue-hover); }
+  .stat-card.high { border-top: 3px solid var(--usa-red); }
+  .stat-card.high .stat-num { color: var(--usa-red); }
+  .stat-card.medium { border-top: 3px solid var(--usa-amber); }
+  .stat-card.medium .stat-num { color: var(--usa-amber); }
+  .stat-card.low { border-top: 3px solid var(--usa-green); }
+  .stat-card.low .stat-num { color: var(--usa-green); }
+
+  /* ─── FILTER BAR ─── */
+  .filter-bar {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-bar .filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--usa-base-dark);
+    margin-right: 0.25rem;
+    white-space: nowrap;
+  }
+  .filter-btn {
+    padding: 0.3rem 0.75rem;
+    border: 1.5px solid var(--usa-base-lighter);
+    border-radius: 3px;
+    background: white;
+    color: var(--usa-base-darker);
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--usa-blue-light); color: var(--usa-blue); background: #f0f4fa; }
+  .filter-btn.active { background: var(--usa-blue); color: white; border-color: var(--usa-blue); }
+  .filter-btn.active-high { background: var(--usa-red); color: white; border-color: var(--usa-red); }
+  .filter-btn.active-medium { background: var(--usa-amber); color: white; border-color: var(--usa-amber); }
+  .filter-btn.active-low { background: var(--usa-green); color: white; border-color: var(--usa-green); }
+
+  /* ─── TABLE WRAPPER ─── */
+  .table-wrapper {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ─── CATEGORY HEADER ROW ─── */
+  .table-category-header {
+    background: linear-gradient(90deg, #162e51 0%, #1a4480 100%);
+    color: white;
+  }
+  .table-category-header td {
+    padding: 0.55rem 1rem 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border: none !important;
+  }
+  .table-category-header td .cat-icon {
+    margin-right: 0.4rem;
+    opacity: 0.9;
+  }
+  .cat-counter {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 0.05rem 0.45rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    font-weight: 600;
+  }
+
+  /* ─── TABLE ─── */
+  table.tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  table.tech-table thead tr {
+    background: #f7f8fa;
+    border-bottom: 2px solid var(--usa-blue);
+  }
+  table.tech-table thead th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--usa-blue);
+    white-space: nowrap;
+  }
+  table.tech-table thead th:first-child { width: 130px; }
+  table.tech-table thead th:nth-child(2) { width: 200px; }
+  table.tech-table thead th:nth-child(3) { min-width: 220px; }
+  table.tech-table thead th:nth-child(4) { width: 160px; }
+  table.tech-table thead th:nth-child(5) { width: 110px; text-align: center; }
+
+  table.tech-table tbody tr {
+    border-bottom: 1px solid #eef0f2;
+    transition: background 0.1s;
+  }
+  table.tech-table tbody tr:last-child { border-bottom: none; }
+  table.tech-table tbody tr:hover { background: #f5f8ff; }
+  table.tech-table tbody tr.hidden { display: none; }
+
+  table.tech-table td {
+    padding: 0.75rem 1rem;
+    vertical-align: top;
+    line-height: 1.5;
+    color: var(--usa-base);
+  }
+  table.tech-table td:first-child {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--usa-blue-light);
+    padding-top: 0.85rem;
+    white-space: nowrap;
+  }
+  table.tech-table td.legacy {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--usa-red-dark);
+    background: #fff8f8;
+  }
+  table.tech-table td.modern {
+    font-size: 0.85rem;
+    color: #004d10;
+    background: #f4faf5;
+  }
+  table.tech-table td.risk-cell {
+    text-align: center;
+    padding-top: 0.85rem;
+  }
+
+  /* ─── RISK BADGES ─── */
+  .risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    border: 1.5px solid transparent;
+  }
+  .risk-badge.high {
+    background: var(--usa-red-light);
+    color: var(--usa-red-dark);
+    border-color: #f5c6c6;
+  }
+  .risk-badge.medium {
+    background: var(--usa-amber-light);
+    color: #7a4a00;
+    border-color: #f0d78a;
+  }
+  .risk-badge.low {
+    background: var(--usa-green-light);
+    color: var(--usa-green-dark);
+    border-color: #b8dcba;
+  }
+  .risk-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .risk-badge.high .risk-dot { background: var(--usa-red); }
+  .risk-badge.medium .risk-dot { background: var(--usa-amber); }
+  .risk-badge.low .risk-dot { background: var(--usa-green); }
+
+  /* ─── APP BADGES ─── */
+  .app-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.1rem;
+  }
+  .app-tag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .app-tag.rms    { background: #e8eef8; color: #1a4480; border: 1px solid #c0cfea; }
+  .app-tag.mss    { background: #e8f3ec; color: #1a5c2a; border: 1px solid #b0d4bb; }
+  .app-tag.iacra  { background: #f0e8f5; color: #5a1a80; border: 1px solid #d0b0e8; }
+  .app-tag.dms    { background: #fdf0e0; color: #7a4000; border: 1px solid #e8c88a; }
+  .app-tag.cares  { background: #e0f0f8; color: #006080; border: 1px solid #a0d4e8; }
+  .app-tag.all    { background: #f0f0f0; color: #3d4551; border: 1px solid #c0c5ca; font-size: 0.65rem; }
+
+  /* ─── LEGEND ─── */
+  .legend-section {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .legend-section h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--usa-blue);
+    margin-bottom: 0.75rem;
+  }
+  .legend-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--usa-base-darker);
+    line-height: 1.4;
+  }
+  .legend-item .legend-badge { flex-shrink: 0; margin-top: 0.05rem; }
+
+  .apps-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .app-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--usa-base-darker);
+  }
+
+  /* ─── FOOTER ─── */
+  footer.faa-footer {
+    background: var(--usa-blue-dark);
+    color: rgba(255,255,255,0.75);
+    border-top: 4px solid var(--usa-gold);
+    padding: 1.25rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+  footer.faa-footer a { color: rgba(255,255,255,0.85); }
+  footer.faa-footer .footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    font-size: 0.78rem;
+  }
+  footer.faa-footer .footer-nav a { text-decoration: none; }
+  footer.faa-footer .footer-nav a:hover { text-decoration: underline; }
+
+  /* ─── PRINT STYLES ─── */
+  @media print {
+    .usa-banner, .filter-bar, .breadcrumbs, footer.faa-footer { display: none !important; }
+    body { background: white; font-size: 0.8rem; }
+    header.faa-header {
+      background: white !important;
+      color: black !important;
+      border: 2px solid #162e51;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    .faa-wordmark h1, .faa-wordmark .sub { color: black !important; }
+    .stats-bar { display: none; }
+    .table-wrapper { box-shadow: none; border: 1px solid #ccc; }
+    table.tech-table td.legacy, table.tech-table td.modern { background: white !important; }
+    .risk-badge, .app-tag { border: 1px solid #999 !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    main { padding: 0.5rem; }
+    .page-intro { display: none; }
+    .legend-section { page-break-inside: avoid; }
+    a[href]::after { content: none; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    header.faa-header { padding: 1rem 1rem; }
+    main { padding: 1rem 1rem 2rem; }
+    .breadcrumbs { padding: 0.55rem 1rem; }
+    .stats-bar { gap: 0.5rem; }
+    .stat-card { padding: 0.65rem 0.75rem; min-width: 90px; }
+    .stat-card .stat-num { font-size: 1.5rem; }
+    .legend-section { grid-template-columns: 1fr; }
+    table.tech-table thead th:nth-child(2),
+    table.tech-table thead th:nth-child(3) { min-width: unset; }
+  }
+
+  @media (max-width: 600px) {
+    header.faa-header { flex-direction: column; align-items: flex-start; }
+    .header-meta { text-align: left; }
+    .stats-bar { flex-direction: column; }
+    .stat-card { flex-direction: row; align-items: center; gap: 0.75rem; text-align: left; }
+    .stat-card .stat-num { font-size: 1.75rem; }
+  }
+
+  /* ─── MISC UTILITY ─── */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  .text-muted { color: var(--usa-base-dark); font-size: 0.82rem; }
+  .arrow-icon { color: var(--usa-base-mid); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<!-- ─── GOV BANNER ─── -->
+<div class="usa-banner" role="banner">
+  <span class="flag">
+    <span class="flag-icon" aria-hidden="true">🇺🇸</span>
+    An official website of the United States government
+  </span>
+  <span class="banner-sep" aria-hidden="true">|</span>
+  <span class="lock-icon">
+    <svg aria-hidden="true" focusable="false" width="12" height="14" viewBox="0 0 12 14" fill="currentColor" style="margin-right:0.25rem">
+      <path d="M10 6V4a4 4 0 1 0-8 0v2H1v8h10V6h-1zM4 4a2 2 0 1 1 4 0v2H4V4z"/>
+    </svg>
+    <strong>Official website</strong> — HTTPS is used for all connections
+  </span>
+</div>
+
+<!-- ─── HEADER ─── -->
+<header class="faa-header" role="banner">
+  <div class="faa-logo">
+    <div class="faa-seal" aria-hidden="true">FAA<br>AVS</div>
+    <div class="faa-wordmark">
+      <h1>FAA Aviation Safety — ATLAS</h1>
+      <span class="sub">Technology Modernization Reference · Aviation Safety Portfolio</span>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div>Modernization Planning Document</div>
+    <div>
+      <span class="pill">DRAFT</span>
+      <span class="pill">FY 2025–2030</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── BREADCRUMB ─── -->
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="../index.html">ATLAS Home</a>
+  <span class="sep" aria-hidden="true">›</span>
+  <span class="current">Tech Modernization Mapping</span>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main id="main-content">
+
+  <!-- Page intro -->
+  <div class="page-intro" role="region" aria-label="Page introduction">
+    <h2>Legacy-to-Modern Technology Mapping — FAA AVS Portfolio</h2>
+    <p>
+      This reference maps the current-state technology stack across the five FAA Aviation Safety (AVS) applications
+      — <strong>RMS, MSS/MedXPress, IACRA, DMS,</strong> and <strong>CARES</strong> —
+      to their recommended modern counterparts. Each row identifies the migration risk, affected applications,
+      and the rationale for the target architecture. Use this table to prioritize roadmap sequencing,
+      vendor engagement, and FedRAMP-compliant cloud migration planning.
+    </p>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="stats-bar" role="region" aria-label="Summary statistics">
+    <div class="stat-card total">
+      <div class="stat-num">27</div>
+      <div class="stat-label">Technology Mappings</div>
+    </div>
+    <div class="stat-card categories">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-card high">
+      <div class="stat-num">7</div>
+      <div class="stat-label">High Risk</div>
+    </div>
+    <div class="stat-card medium">
+      <div class="stat-num">10</div>
+      <div class="stat-label">Medium Risk</div>
+    </div>
+    <div class="stat-card low">
+      <div class="stat-num">10</div>
+      <div class="stat-label">Low Risk</div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" role="search" aria-label="Filter by risk level">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="all" onclick="filterRows('all', this)">All (27)</button>
+    <button class="filter-btn" data-filter="high" onclick="filterRows('high', this)">🔴 High (7)</button>
+    <button class="filter-btn" data-filter="medium" onclick="filterRows('medium', this)">🟡 Medium (10)</button>
+    <button class="filter-btn" data-filter="low" onclick="filterRows('low', this)">🟢 Low (10)</button>
+  </div>
+
+  <!-- Main table -->
+  <div class="table-wrapper" role="region" aria-label="Technology mapping table">
+    <table class="tech-table" aria-label="FAA AVS Legacy-to-Modern Technology Mapping">
+      <thead>
+        <tr>
+          <th scope="col">Sub-Category</th>
+          <th scope="col">Legacy Technology</th>
+          <th scope="col">Modern Counterpart</th>
+          <th scope="col">Affected Apps</th>
+          <th scope="col">Migration Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ══ CATEGORY 1: PROGRAMMING LANGUAGES & FRAMEWORKS ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">⌨</span>
+            Programming Languages &amp; Frameworks
+            <span class="cat-counter">3</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Backend language</td>
+          <td class="legacy">NATURAL (Software AG 4GL)</td>
+          <td class="modern">Java 21 / Spring Boot 3.x<br><span class="text-muted">or Python / FastAPI</span></td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Web framework</td>
+          <td class="legacy">ASP.NET Web Forms (.aspx)</td>
+          <td class="modern">React 18 + .NET 8 Minimal API<br><span class="text-muted">or Node.js</span></td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag mss">MSS</span>
+              <span class="app-tag iacra">IACRA</span>
+              <span class="app-tag dms">DMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Frontend</td>
+          <td class="legacy">Server-rendered HTML, minimal JS, IE 11 dependency</td>
+          <td class="modern">React 18 + TypeScript + USWDS 3.x design system</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 2: DATABASE & DATA STORAGE ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">🗄</span>
+            Database &amp; Data Storage
+            <span class="cat-counter">4</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Primary database</td>
+          <td class="legacy">ADABAS (inverted-list, non-relational)</td>
+          <td class="modern">PostgreSQL 16<br><span class="text-muted">or AWS Aurora PostgreSQL</span></td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Relational DB</td>
+          <td class="legacy">SQL Server (on-prem)</td>
+          <td class="modern">PostgreSQL 16 / Aurora PostgreSQL</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag mss">MSS</span>
+              <span class="app-tag iacra">IACRA</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Document imaging</td>
+          <td class="legacy">IMS — 174M TIFF images, non-OCR</td>
+          <td class="modern">S3 + OpenSearch + AI OCR (Textract/Tesseract), PDF/A format</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Medical imaging</td>
+          <td class="legacy">DIWS — 3MB cap, PDF/DOC/JPG, 30+ doc types</td>
+          <td class="modern">S3 object store + metadata in PostgreSQL, 50MB cap</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag mss">MSS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 3: AUTHENTICATION & IDENTITY ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">🔐</span>
+            Authentication &amp; Identity
+            <span class="cat-counter">4</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Public auth</td>
+          <td class="legacy">Username/password + security questions</td>
+          <td class="modern">Login.gov (SAML/OIDC, AAL2, phishing-resistant MFA)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag mss">MSS</span>
+              <span class="app-tag dms">DMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Email MFA</td>
+          <td class="legacy">30-day email codes (NIST non-compliant)</td>
+          <td class="modern">Login.gov TOTP / WebAuthn / PIV</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag iacra">IACRA</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Internal auth</td>
+          <td class="legacy">IWA (Integrated Windows Auth / AD / Kerberos)</td>
+          <td class="modern">MyAccess (OKTA) + PIV/CAC via SAML 2.0, zero-trust</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag dms">DMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Identity model</td>
+          <td class="legacy">6+ siloed identifiers (FTN, MID, Cert#, SSN, Designee#, Applicant ID)</td>
+          <td class="modern">Unified FAA ID with crosswalk table, Login.gov sub as anchor</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 4: INTEGRATION & MIDDLEWARE ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">🔗</span>
+            Integration &amp; Middleware
+            <span class="cat-counter">4</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>File transfer</td>
+          <td class="legacy">Unencrypted FTP / secure FTP (TIFF payloads)</td>
+          <td class="modern">REST APIs (OpenAPI 3.1) + event-driven (SNS/SQS or Kafka)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+              <span class="app-tag iacra">IACRA</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>DB-level coupling</td>
+          <td class="legacy">SQL Server linked-server (Atlas Aviation)</td>
+          <td class="modern">API gateway + OAuth 2.0 client credentials</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag iacra">IACRA</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Batch sync</td>
+          <td class="legacy">Nightly batch refresh (24hr data staleness)</td>
+          <td class="modern">Event-driven CDC (Change Data Capture) + streaming</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+              <span class="app-tag mss">MSS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Integration bus</td>
+          <td class="legacy">None — all point-to-point (15+ bilateral connections)</td>
+          <td class="modern">API gateway (Kong / AWS API Gateway) + service mesh</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 5: INFRASTRUCTURE & HOSTING ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">☁</span>
+            Infrastructure &amp; Hosting
+            <span class="cat-counter">4</span>
+          </td>
+        </tr>
+
+        <tr data-risk="high">
+          <td>Hosting</td>
+          <td class="legacy">Single on-prem mainframe at MMAC (no DR)</td>
+          <td class="modern">FedRAMP cloud (AWS GovCloud / Azure Gov), multi-AZ</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge high"><span class="risk-dot"></span>High</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Web hosting</td>
+          <td class="legacy">On-prem IIS servers at MMAC</td>
+          <td class="modern">Containers (ECS/EKS) or serverless (Lambda + API Gateway)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag mss">MSS</span>
+              <span class="app-tag iacra">IACRA</span>
+              <span class="app-tag dms">DMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>CI/CD</td>
+          <td class="legacy">Manual deployment (implied)</td>
+          <td class="modern">GitHub Actions / GitLab CI + Terraform IaC + blue-green deploys</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Monitoring</td>
+          <td class="legacy">Not documented</td>
+          <td class="modern">OpenTelemetry + CloudWatch / Datadog + PagerDuty</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 6: DATA FORMATS & DIGITAL SERVICES ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">📄</span>
+            Data Formats &amp; Digital Services
+            <span class="cat-counter">5</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Legal record format</td>
+          <td class="legacy">TIFF (non-searchable, non-OCR)</td>
+          <td class="modern">PDF/A-3 (archival, searchable, OCR'd)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+              <span class="app-tag iacra">IACRA</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Data exchange</td>
+          <td class="legacy">CSV, fixed-width, encrypted comparison files</td>
+          <td class="modern">JSON (REST) + Avro/Parquet (analytics) + FHIR (medical)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Signatures</td>
+          <td class="legacy">Wet ink / notarized paper</td>
+          <td class="modern">DocuSign (21 CFR Part 11 compliant)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+              <span class="app-tag cares">CARES</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Payments</td>
+          <td class="legacy">Pay.gov (transaction-ID-only, no receipt callback)</td>
+          <td class="modern">Pay.gov v2 API with receipt callbacks + reconciliation</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag rms">RMS</span>
+              <span class="app-tag dms">DMS</span>
+              <span class="app-tag cares">CARES</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>LMS / training</td>
+          <td class="legacy">Blackboard (DRS legacy)</td>
+          <td class="modern">FAA eLMS / SCORM-compliant cloud LMS</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag dms">DMS</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <!-- ══ CATEGORY 7: SECURITY & COMPLIANCE ══ -->
+        <tr class="table-category-header" aria-hidden="true">
+          <td colspan="5">
+            <span class="cat-icon">🛡</span>
+            Security &amp; Compliance
+            <span class="cat-counter">3</span>
+          </td>
+        </tr>
+
+        <tr data-risk="medium">
+          <td>Security baseline</td>
+          <td class="legacy">NIST 800-53 Rev 5 (applied inconsistently)</td>
+          <td class="modern">NIST 800-53 Rev 5 HIGH + FedRAMP + zero-trust (EO 14028)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge medium"><span class="risk-dot"></span>Medium</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Encryption</td>
+          <td class="legacy">FIPS 140 (validated, but FTP is unencrypted)</td>
+          <td class="modern">TLS 1.3 everywhere + AES-256 at rest + KMS key management</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+        <tr data-risk="low">
+          <td>Audit logging</td>
+          <td class="legacy">Per-system, non-standardized</td>
+          <td class="modern">Centralized tamper-evident audit (CloudTrail + SIEM)</td>
+          <td>
+            <div class="app-tags">
+              <span class="app-tag all">All 5 Apps</span>
+            </div>
+          </td>
+          <td class="risk-cell">
+            <span class="risk-badge low"><span class="risk-dot"></span>Low</span>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend-section" role="region" aria-label="Legend">
+    <div>
+      <h3>Migration Risk Legend</h3>
+      <div class="legend-items">
+        <div class="legend-item">
+          <span class="legend-badge"><span class="risk-badge high"><span class="risk-dot"></span>High</span></span>
+          <span>Requires architectural redesign, data migration, or replacement of core runtime. High coordination overhead; plan for 12–24 month runway.</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-badge"><span class="risk-badge medium"><span class="risk-dot"></span>Medium</span></span>
+          <span>Parallel-run or adapter pattern is feasible. Integration testing required. Typical 6–12 month effort.</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-badge"><span class="risk-badge low"><span class="risk-dot"></span>Low</span></span>
+          <span>Configuration change or vendor swap with minimal code impact. Often achievable within a single sprint cycle.</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Application Key</h3>
+      <div class="apps-legend">
+        <div class="app-legend-item"><span class="app-tag rms">RMS</span> Aircraft Registration &amp; CAIS</div>
+        <div class="app-legend-item"><span class="app-tag mss">MSS</span> MedXPress / Medical Safety System</div>
+        <div class="app-legend-item"><span class="app-tag iacra">IACRA</span> Integrated Airmen Cert &amp; Rating App</div>
+        <div class="app-legend-item"><span class="app-tag dms">DMS</span> Designee Management System</div>
+        <div class="app-legend-item"><span class="app-tag cares">CARES</span> Certificate &amp; Airmen Regulatory Exchange System</div>
+        <div class="app-legend-item"><span class="app-tag all">All 5 Apps</span> Affects entire AVS portfolio</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer class="faa-footer" role="contentinfo">
+  <nav class="footer-nav" aria-label="Footer navigation">
+    <a href="../index.html">ATLAS Home</a>
+    <a href="../mockups/unified-portal/index.html">Unified Portal Mockup</a>
+    <a href="../mockups/rms/index.html">RMS Mockup</a>
+    <a href="../mockups/medxpress/index.html">MedXPress Mockup</a>
+    <a href="../mockups/iacra/index.html">IACRA Mockup</a>
+    <a href="../mockups/dms/index.html">DMS Mockup</a>
+  </nav>
+  <div>
+    Federal Aviation Administration · Aviation Safety (AVS) · ATLAS Modernization Program<br>
+    DRAFT — For internal planning purposes only · FY 2025–2030
+  </div>
+</footer>
+
+<script>
+  function filterRows(risk, btn) {
+    // Update button states
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.className = 'filter-btn';
+    });
+    if (risk === 'all') btn.className = 'filter-btn active';
+    else if (risk === 'high') btn.className = 'filter-btn active-high';
+    else if (risk === 'medium') btn.className = 'filter-btn active-medium';
+    else if (risk === 'low') btn.className = 'filter-btn active-low';
+
+    // Show/hide rows
+    document.querySelectorAll('table.tech-table tbody tr[data-risk]').forEach(row => {
+      if (risk === 'all' || row.dataset.risk === risk) {
+        row.classList.remove('hidden');
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+
+    // Show/hide category headers based on visible rows
+    document.querySelectorAll('.table-category-header').forEach(header => {
+      let nextSibling = header.nextElementSibling;
+      let hasVisible = false;
+      while (nextSibling && !nextSibling.classList.contains('table-category-header')) {
+        if (!nextSibling.classList.contains('hidden')) hasVisible = true;
+        nextSibling = nextSibling.nextElementSibling;
+      }
+      header.style.display = hasVisible ? '' : 'none';
+    });
+  }
+</script>
+
+</body>
+</html>

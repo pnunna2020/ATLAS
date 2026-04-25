@@ -1,395 +1,596 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAA AVS Portfolio — ATLAS</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uswds/3.8.0/css/uswds.min.css" />
-  <style>
-    :root {
-      --faa-blue: #003366;
-      --faa-gold: #c8a951;
-      --faa-light-blue: #0071bc;
-      --card-border: #dfe1e2;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATLAS — FAA Aviation Safety Modernization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --usa-blue:         #162e51;
+    --usa-blue-dark:    #0b1f3f;
+    --usa-blue-deep:    #071532;
+    --usa-blue-light:   #1a4480;
+    --usa-blue-hover:   #2672de;
+    --usa-gold:         #ffbe2e;
+    --usa-gold-dark:    #c68a00;
+    --usa-green:        #00a91c;
+    --usa-red:          #b50909;
+    --usa-orange:       #c05500;
+    --usa-base:         #1b1b1b;
+    --usa-base-darker:  #3d4551;
+    --usa-base-dark:    #565c65;
+    --usa-base-lighter: #dfe1e2;
+    --usa-base-lightest:#f0f0f0;
+    --usa-white:        #ffffff;
+    --usa-ink:          #1b1b1b;
+    --shadow-sm: 0 1px 3px rgba(22,46,81,0.08);
+    --shadow-md: 0 2px 8px rgba(22,46,81,0.12);
+    --shadow-lg: 0 4px 20px rgba(22,46,81,0.16);
+    --grad-hero: linear-gradient(135deg, #071532 0%, #162e51 55%, #1a4480 100%);
+    --radius: 4px;
+  }
 
-    body {
-      font-family: Source Sans Pro Web, Helvetica Neue, Helvetica, Roboto, Arial, sans-serif;
-      background: #f0f0f0;
-      margin: 0;
-    }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Public Sans", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--usa-ink);
+    background: var(--usa-base-lightest);
+    line-height: 1.5;
+  }
+  a { color: var(--usa-blue-light); }
+  a:hover { color: var(--usa-blue-hover); }
+  h1, h2, h3 { font-family: "Public Sans", sans-serif; color: var(--usa-blue); margin-top: 0; }
 
-    /* ── Banner ── */
-    .gov-banner {
-      background: #1b1b1b;
-      color: #f0f0f0;
-      font-size: 0.75rem;
-      padding: 0.25rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .gov-banner img { height: 14px; }
+  /* GOV BANNER */
+  .usa-banner {
+    background: #f0f0f0;
+    border-bottom: 1px solid #dfe1e2;
+    font-size: 0.775rem;
+    padding: 0.3rem 1.5rem;
+    color: #1b1b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .usa-banner .flag { font-weight: 600; color: var(--usa-blue); display: flex; align-items: center; gap: 0.35rem; }
 
-    /* ── Header ── */
-    .site-header {
-      background: var(--faa-blue);
-      color: #fff;
-      padding: 2rem 1.5rem 1.5rem;
-      border-bottom: 4px solid var(--faa-gold);
-    }
-    .site-header .inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .site-header .agency-line {
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #b3c6e0;
-      margin: 0 0 0.4rem;
-    }
-    .site-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0 0 0.35rem;
-      line-height: 1.1;
-    }
-    .site-header .subtitle {
-      font-size: 1rem;
-      color: #b3c6e0;
-      margin: 0 0 1rem;
-    }
-    .site-header .badge {
-      display: inline-block;
-      background: var(--faa-gold);
-      color: #1b1b1b;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.55rem;
-      border-radius: 2px;
-    }
+  /* HEADER */
+  header.faa-header {
+    background: var(--grad-hero);
+    color: white;
+    padding: 2rem 2.5rem 1.75rem;
+    border-bottom: 4px solid var(--usa-gold);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header.faa-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(38,114,222,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,190,46,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .faa-seal {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--usa-gold) 0%, var(--usa-gold-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--usa-blue-dark);
+    font-size: 0.85rem;
+    border: 3px solid rgba(255,255,255,0.5);
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    line-height: 1.2;
+    text-align: center;
+  }
+  header.faa-header h1 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.01em;
+  }
+  header.faa-header .tagline {
+    font-size: 1rem;
+    opacity: 0.85;
+    font-weight: 400;
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+  .header-chips {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.1rem;
+  }
+  .chip {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.03em;
+  }
 
-    /* ── Main ── */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-    }
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 2rem 3.5rem;
+  }
 
-    /* ── Section headings ── */
-    .section-heading {
-      font-size: 1.1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--faa-blue);
-      border-bottom: 2px solid var(--faa-gold);
-      padding-bottom: 0.4rem;
-      margin: 2.5rem 0 1.25rem;
-    }
+  /* SECTION HEADING */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2.25rem 0 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--usa-blue);
+  }
+  .section-heading h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--usa-blue);
+  }
+  .section-heading .section-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--usa-blue);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .section-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--usa-base-dark);
+  }
 
-    /* ── Card grid ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.25rem;
-    }
-    .card {
-      background: #fff;
-      border: 1px solid var(--card-border);
-      border-top: 4px solid var(--faa-blue);
-      border-radius: 4px;
-      padding: 1.25rem 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow 0.15s, border-top-color 0.15s;
-    }
-    .card:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      border-top-color: var(--faa-light-blue);
-      text-decoration: none;
-    }
-    .card.future-state {
-      border-top-color: #2e8540;
-    }
-    .card.future-state:hover {
-      border-top-color: #1a5c2a;
-    }
-    .card-tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #71767a;
-      margin-bottom: 0.4rem;
-    }
-    .card-tag.future { color: #2e8540; }
-    .card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--faa-blue);
-      margin: 0 0 0.5rem;
-      line-height: 1.25;
-    }
-    .card p {
-      font-size: 0.875rem;
-      color: #3d4551;
-      margin: 0 0 1rem;
-      flex: 1;
-      line-height: 1.5;
-    }
-    .card-link-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--faa-light-blue);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .card:hover .card-link-label {
-      text-decoration: underline;
-    }
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .card-grid.single-col { grid-template-columns: 1fr; }
 
-    /* ── Research / data-model rows ── */
-    .resource-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .resource-list li a {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      background: #fff;
-      border: 1px solid var(--card-border);
-      border-radius: 4px;
-      padding: 0.75rem 1rem;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.12s;
-    }
-    .resource-list li a:hover { background: #f5f5f5; }
-    .resource-list .icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-    .resource-list .label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--faa-blue);
-    }
-    .resource-list .desc {
-      font-size: 0.8rem;
-      color: #71767a;
-      margin-top: 0.1rem;
-    }
+  /* LINK CARD */
+  .link-card {
+    background: white;
+    border: 1px solid var(--usa-base-lighter);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--usa-ink);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .link-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: #bfd0ea;
+    color: var(--usa-ink);
+    text-decoration: none;
+  }
+  .link-card:focus-visible {
+    outline: 3px solid var(--usa-blue-hover);
+    outline-offset: 2px;
+  }
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .icon-blue    { background: #e8eef8; }
+  .icon-green   { background: #e8f3ec; }
+  .icon-purple  { background: #f0e8f5; }
+  .icon-amber   { background: #fdf5e1; }
+  .icon-teal    { background: #e0f0f5; }
+  .icon-red     { background: #fce8e8; }
+  .icon-navy    { background: #e4e8f0; }
 
-    /* ── Footer ── */
-    footer {
-      background: var(--faa-blue);
-      color: #b3c6e0;
-      text-align: center;
-      font-size: 0.8rem;
-      padding: 1.25rem 1rem;
-      border-top: 3px solid var(--faa-gold);
-    }
-    footer a { color: #b3c6e0; }
-  </style>
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--usa-blue);
+    margin: 0 0 0.2rem;
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--usa-base-darker);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .card-tags {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    margin-top: 0.55rem;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.67rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+  .tag-blue   { background: #e8eef8; color: #1a4480; border-color: #c0cfea; }
+  .tag-green  { background: #e8f3ec; color: #1a5c2a; border-color: #b0d4bb; }
+  .tag-amber  { background: #fdf5e1; color: #7a4a00; border-color: #f0d78a; }
+  .tag-purple { background: #f0e8f5; color: #5a1a80; border-color: #d0b0e8; }
+  .tag-teal   { background: #e0f0f5; color: #006080; border-color: #a0d4e8; }
+  .tag-red    { background: #fce8e8; color: #7a0000; border-color: #f0b0b0; }
+  .tag-grey   { background: #f0f0f0; color: #3d4551; border-color: #c0c5ca; }
+
+  .card-arrow {
+    color: var(--usa-base-lighter);
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .link-card:hover .card-arrow { color: var(--usa-blue-hover); transform: translateX(3px); }
+
+  /* NEW BADGE */
+  .new-badge {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    background: var(--usa-gold);
+    color: var(--usa-blue-dark);
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  /* HIGHLIGHT CARD (for featured item) */
+  .link-card.featured {
+    border-left: 4px solid var(--usa-blue);
+    background: linear-gradient(135deg, #f5f8ff 0%, white 100%);
+  }
+
+  /* FOOTER */
+  footer.faa-footer {
+    background: var(--usa-blue-dark);
+    color: rgba(255,255,255,0.7);
+    border-top: 4px solid var(--usa-gold);
+    padding: 1.25rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.7;
+  }
+  footer.faa-footer .footer-meta { color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-top: 0.3rem; }
+
+  @media (max-width: 700px) {
+    header.faa-header { padding: 1.5rem 1rem 1.25rem; }
+    header.faa-header h1 { font-size: 1.5rem; }
+    main { padding: 1rem 1rem 2rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .section-heading { margin-top: 1.75rem; }
+  }
+</style>
 </head>
 <body>
 
-<!-- Official gov banner -->
-<div class="gov-banner">
-  <span>🇺🇸</span>
-  <span>An official website of the United States government &nbsp;·&nbsp; Federal Aviation Administration</span>
+<!-- GOV BANNER -->
+<div class="usa-banner" role="banner">
+  <span class="flag">
+    <span aria-hidden="true">🇺🇸</span>
+    An official website of the United States government
+  </span>
+  <span aria-hidden="true" style="color:#dfe1e2">|</span>
+  <span style="color:#3d4551">
+    <strong>Official website</strong> — HTTPS is used for all connections
+  </span>
 </div>
 
-<!-- Header -->
-<header class="site-header">
-  <div class="inner">
-    <p class="agency-line">FAA · Aviation Safety (AVS) · AFS / AIR / AAMCE</p>
-    <h1>FAA AVS Portfolio — ATLAS</h1>
-    <p class="subtitle">Application Transformation &amp; Legacy Architecture Study</p>
-    <span class="badge">Research Artifact · Not for Official Use</span>
+<!-- HEADER -->
+<header class="faa-header">
+  <div class="header-inner">
+    <div class="faa-seal" aria-hidden="true">FAA<br>ATLAS</div>
+    <h1>ATLAS</h1>
+    <p class="tagline">
+      FAA Aviation Safety (AVS) — Technology Legacy Assessment &amp; System Modernization<br>
+      Research, mockups, and data models for the AVS portfolio modernization program
+    </p>
+    <div class="header-chips">
+      <span class="chip">5 Applications</span>
+      <span class="chip">FY 2025–2030</span>
+      <span class="chip">DRAFT</span>
+      <span class="chip">Internal Use Only</span>
+    </div>
   </div>
 </header>
 
-<main>
+<main id="main-content">
 
-  <!-- ── About ── -->
-  <section aria-label="About ATLAS">
-    <p style="max-width:720px;color:#3d4551;line-height:1.65;margin-top:1.5rem;">
-      ATLAS is a structured analysis of the FAA Aviation Safety division's major legacy IT systems — covering current-state architecture, data models, user workflows, and a future-state rationalization vision.
-      Each mockup below is an interactive prototype built to explore UX, data flows, and integration opportunities.
-    </p>
-  </section>
-
-  <!-- ── Current-State Mockups ── -->
-  <h2 class="section-heading">Current-State System Mockups</h2>
+  <!-- ── MOCKUPS ── -->
+  <div class="section-heading">
+    <div class="section-icon" aria-hidden="true">🖥</div>
+    <h2>Interactive Mockups</h2>
+    <span class="section-count">6 mockups</span>
+  </div>
   <div class="card-grid">
 
-    <a class="card" href="mockups/iacra/index.html">
-      <div class="card-tag">Airman Certification · Current State</div>
-      <h3>IACRA</h3>
-      <p>Integrated Airman Certification and Rating Application — manages airman certificate applications, examiner workflows, and FAA registry submissions across all certificate types.</p>
-      <span class="card-link-label">View Mockup →</span>
+    <a href="mockups/unified-portal/index.html" class="link-card featured">
+      <div class="card-icon icon-blue" aria-hidden="true">🏛</div>
+      <div class="card-body">
+        <div class="card-title">Unified FAA Portal</div>
+        <p class="card-desc">Future-state vision consolidating all five AVS applications into a single authenticated portal with role-based dashboards.</p>
+        <div class="card-tags">
+          <span class="tag tag-blue">RMS</span>
+          <span class="tag tag-green">MSS</span>
+          <span class="tag tag-purple">IACRA</span>
+          <span class="tag tag-amber">DMS</span>
+          <span class="tag tag-teal">CARES</span>
+          <span class="tag tag-grey">Future State</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
     </a>
 
-    <a class="card" href="mockups/medxpress/index.html">
-      <div class="card-tag">Medical Certification · Current State</div>
-      <h3>MedXPress / AMCS</h3>
-      <p>Airman Medical Certification System — online medical application portal (MedXPress) paired with the Aviation Medical Examiner decision-support and FAA adjudication backend (AMCS/MSS).</p>
-      <span class="card-link-label">View Mockup →</span>
+    <a href="mockups/rms/index.html" class="link-card">
+      <div class="card-icon icon-blue" aria-hidden="true">✈</div>
+      <div class="card-body">
+        <div class="card-title">RMS — Registry Management System</div>
+        <p class="card-desc">Aircraft registration, inquiry, and renewal workflows. Current-state ADABAS/NATURAL stack mockup.</p>
+        <div class="card-tags">
+          <span class="tag tag-blue">RMS</span>
+          <span class="tag tag-grey">Current State</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
     </a>
 
-    <a class="card" href="mockups/dms/index.html">
-      <div class="card-tag">Designee Management · Current State</div>
-      <h3>DMS</h3>
-      <p>Designee Management System — tracks FAA-appointed designees (DPEs, DAMEs, DAHs, ODA holders) through selection, appointment, activity monitoring, and termination workflows.</p>
-      <span class="card-link-label">View Mockup →</span>
+    <a href="mockups/medxpress/index.html" class="link-card">
+      <div class="card-icon icon-green" aria-hidden="true">🏥</div>
+      <div class="card-body">
+        <div class="card-title">MedXPress / MSS</div>
+        <p class="card-desc">Medical certification application and examiner workflows for airmen medical certificates.</p>
+        <div class="card-tags">
+          <span class="tag tag-green">MSS</span>
+          <span class="tag tag-grey">Current State</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
     </a>
 
-    <a class="card" href="mockups/rms/index.html">
-      <div class="card-tag">Aircraft Registration · Current State</div>
-      <h3>RMS / CAIS</h3>
-      <p>Registry Management System and Civil Aviation Information System — handles N-number assignment, aircraft registration applications, ownership transfers, renewals, and deregistration.</p>
-      <span class="card-link-label">View Mockup →</span>
+    <a href="mockups/iacra/index.html" class="link-card">
+      <div class="card-icon icon-purple" aria-hidden="true">📋</div>
+      <div class="card-body">
+        <div class="card-title">IACRA — Integrated Airmen Certification</div>
+        <p class="card-desc">Airmen certification and rating application process for pilots, mechanics, and designees.</p>
+        <div class="card-tags">
+          <span class="tag tag-purple">IACRA</span>
+          <span class="tag tag-grey">Current State</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="mockups/dms/index.html" class="link-card">
+      <div class="card-icon icon-amber" aria-hidden="true">👤</div>
+      <div class="card-body">
+        <div class="card-title">DMS — Designee Management System</div>
+        <p class="card-desc">Management of FAA designees (DPEs, DAMEs, DMEs) including authorization, oversight, and activity tracking.</p>
+        <div class="card-tags">
+          <span class="tag tag-amber">DMS</span>
+          <span class="tag tag-grey">Current State</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
     </a>
 
   </div>
 
-  <!-- ── Future-State ── -->
-  <h2 class="section-heading">Future-State Vision</h2>
+  <!-- ── MODERNIZATION ── -->
+  <div class="section-heading">
+    <div class="section-icon" aria-hidden="true">⚡</div>
+    <h2>Modernization</h2>
+    <span class="section-count">1 document</span>
+  </div>
   <div class="card-grid">
 
-    <a class="card future-state" href="mockups/unified-portal/index.html">
-      <div class="card-tag future">Rationalization · Future State</div>
-      <h3>Unified Rationalized Portal</h3>
-      <p>A consolidated FAA AVS portal concept that merges IACRA, MedXPress, DMS, and RMS into a single authenticated experience — shared identity, unified case management, and a common data layer.</p>
-      <span class="card-link-label">View Mockup →</span>
+    <a href="modernization/tech-modernization-mapping.html" class="link-card featured">
+      <span class="new-badge">New</span>
+      <div class="card-icon icon-navy" aria-hidden="true">🗺</div>
+      <div class="card-body">
+        <div class="card-title">Legacy-to-Modern Technology Mapping</div>
+        <p class="card-desc">
+          27-entry reference table mapping current-state technologies to modern counterparts across all 5 AVS applications.
+          Covers languages, databases, auth, integration, infrastructure, data formats, and security — with migration risk ratings.
+        </p>
+        <div class="card-tags">
+          <span class="tag tag-blue">RMS</span>
+          <span class="tag tag-green">MSS</span>
+          <span class="tag tag-purple">IACRA</span>
+          <span class="tag tag-amber">DMS</span>
+          <span class="tag tag-teal">CARES</span>
+          <span class="tag tag-red">7 High Risk</span>
+          <span class="tag tag-grey">27 Mappings</span>
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
     </a>
 
   </div>
 
-  <!-- ── Data Models ── -->
-  <h2 class="section-heading">Data Models</h2>
-  <ul class="resource-list">
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/data-models/current-state" target="_blank" rel="noopener">
-        <span class="icon">🗄️</span>
-        <div>
-          <div class="label">Current-State Schema Comparisons</div>
-          <div class="desc">PostgreSQL schemas for IACRA, MedXPress/MSS, DMS, and RMS — side-by-side entity analysis and cross-system linkage points.</div>
-        </div>
-      </a>
-    </li>
-  </ul>
+  <!-- ── DATA MODELS ── -->
+  <div class="section-heading">
+    <div class="section-icon" aria-hidden="true">🗄</div>
+    <h2>Data Models</h2>
+    <span class="section-count">2 schemas</span>
+  </div>
+  <div class="card-grid">
 
-  <!-- ── Research ── -->
-  <h2 class="section-heading">Research</h2>
-  <ul class="resource-list">
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/blob/main/research/portfolio-overview/overview.md" target="_blank" rel="noopener">
-        <span class="icon">📋</span>
-        <div>
-          <div class="label">Portfolio Overview</div>
-          <div class="desc">High-level summary of all AVS systems, their missions, user bases, and transformation priorities.</div>
+    <a href="data-models/current-state/rms-schema.sql" class="link-card">
+      <div class="card-icon icon-blue" aria-hidden="true">📐</div>
+      <div class="card-body">
+        <div class="card-title">RMS Current-State PostgreSQL Schema</div>
+        <p class="card-desc">Aircraft registration, CAIS, inquiry, and renewal data model translated from ADABAS to normalized PostgreSQL.</p>
+        <div class="card-tags">
+          <span class="tag tag-blue">RMS</span>
+          <span class="tag tag-grey">PostgreSQL</span>
+          <span class="tag tag-grey">Current State</span>
         </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/blob/main/research/portfolio-overview/rationalization-research-pack.md" target="_blank" rel="noopener">
-        <span class="icon">🔬</span>
-        <div>
-          <div class="label">Rationalization Research Pack</div>
-          <div class="desc">Deep-dive analysis of consolidation opportunities, shared data entities, and recommended integration patterns.</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="data-models/current-state/medxpress-mss-schema.sql" class="link-card">
+      <div class="card-icon icon-green" aria-hidden="true">📐</div>
+      <div class="card-body">
+        <div class="card-title">MedXPress / MSS Current-State PostgreSQL Schema</div>
+        <p class="card-desc">Medical certification, DIWS document imaging, examiner, and audit trail data model in PostgreSQL.</p>
+        <div class="card-tags">
+          <span class="tag tag-green">MSS</span>
+          <span class="tag tag-grey">PostgreSQL</span>
+          <span class="tag tag-grey">Current State</span>
         </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/blob/main/research/portfolio-overview/deep-research-report.md" target="_blank" rel="noopener">
-        <span class="icon">📑</span>
-        <div>
-          <div class="label">Deep Research Report</div>
-          <div class="desc">Comprehensive findings on legacy system architecture, pain points, and modernization pathways.</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+  </div>
+
+  <!-- ── RESEARCH ── -->
+  <div class="section-heading">
+    <div class="section-icon" aria-hidden="true">🔍</div>
+    <h2>Research &amp; Analysis</h2>
+    <span class="section-count">Portfolio &amp; cross-cutting</span>
+  </div>
+  <div class="card-grid">
+
+    <a href="research/portfolio-overview/" class="link-card">
+      <div class="card-icon icon-navy" aria-hidden="true">📊</div>
+      <div class="card-body">
+        <div class="card-title">Portfolio Overview</div>
+        <p class="card-desc">Cross-portfolio analysis of the five AVS applications — user populations, transaction volumes, and modernization priorities.</p>
+        <div class="card-tags">
+          <span class="tag tag-grey">All 5 Apps</span>
+          <span class="tag tag-grey">Analysis</span>
         </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/cross-cutting" target="_blank" rel="noopener">
-        <span class="icon">🔗</span>
-        <div>
-          <div class="label">Cross-Cutting Analysis</div>
-          <div class="desc">Shared concerns across systems: identity, notifications, document management, and audit logging.</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/cross-cutting/" class="link-card">
+      <div class="card-icon icon-teal" aria-hidden="true">🔗</div>
+      <div class="card-body">
+        <div class="card-title">Cross-Cutting Concerns</div>
+        <p class="card-desc">Shared infrastructure, authentication, identity, and integration patterns applicable across all five systems.</p>
+        <div class="card-tags">
+          <span class="tag tag-grey">All 5 Apps</span>
+          <span class="tag tag-grey">Architecture</span>
         </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/iacra" target="_blank" rel="noopener">
-        <span class="icon">✈️</span>
-        <div>
-          <div class="label">IACRA Research</div>
-          <div class="desc">Airman certification workflow analysis and IACRA system deep-dive.</div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/medxpress-mss" target="_blank" rel="noopener">
-        <span class="icon">🩺</span>
-        <div>
-          <div class="label">MedXPress / MSS Research</div>
-          <div class="desc">Medical certification process analysis, AME workflows, and adjudication logic.</div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/dms" target="_blank" rel="noopener">
-        <span class="icon">👤</span>
-        <div>
-          <div class="label">DMS Research</div>
-          <div class="desc">Designee appointment lifecycle, ODA unit management, and compliance monitoring.</div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/rms" target="_blank" rel="noopener">
-        <span class="icon">🛩️</span>
-        <div>
-          <div class="label">RMS / CAIS Research</div>
-          <div class="desc">Aircraft registration workflows, N-number management, and CAIS integration points.</div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/pnunna2020/ATLAS/tree/main/research/cares" target="_blank" rel="noopener">
-        <span class="icon">📁</span>
-        <div>
-          <div class="label">CARES Research</div>
-          <div class="desc">Certificate management and enforcement system analysis.</div>
-        </div>
-      </a>
-    </li>
-  </ul>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/rms/" class="link-card">
+      <div class="card-icon icon-blue" aria-hidden="true">📁</div>
+      <div class="card-body">
+        <div class="card-title">RMS Research</div>
+        <p class="card-desc">Deep-dive research on the Registry Management System — ADABAS, NATURAL, IMS image store, and CAIS integration.</p>
+        <div class="card-tags"><span class="tag tag-blue">RMS</span><span class="tag tag-grey">Research</span></div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/medxpress-mss/" class="link-card">
+      <div class="card-icon icon-green" aria-hidden="true">📁</div>
+      <div class="card-body">
+        <div class="card-title">MedXPress / MSS Research</div>
+        <p class="card-desc">Medical certification system research — DIWS imaging, AME workflows, and NIST AAL compliance gaps.</p>
+        <div class="card-tags"><span class="tag tag-green">MSS</span><span class="tag tag-grey">Research</span></div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/iacra/" class="link-card">
+      <div class="card-icon icon-purple" aria-hidden="true">📁</div>
+      <div class="card-body">
+        <div class="card-title">IACRA Research</div>
+        <p class="card-desc">Airmen certification system research — ASP.NET Web Forms, linked-server coupling, and email MFA issues.</p>
+        <div class="card-tags"><span class="tag tag-purple">IACRA</span><span class="tag tag-grey">Research</span></div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/dms/" class="link-card">
+      <div class="card-icon icon-amber" aria-hidden="true">📁</div>
+      <div class="card-body">
+        <div class="card-title">DMS Research</div>
+        <p class="card-desc">Designee management research — IWA auth, Blackboard LMS, and cross-system designee identity challenges.</p>
+        <div class="card-tags"><span class="tag tag-amber">DMS</span><span class="tag tag-grey">Research</span></div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+    <a href="research/cares/" class="link-card">
+      <div class="card-icon icon-teal" aria-hidden="true">📁</div>
+      <div class="card-body">
+        <div class="card-title">CARES Research</div>
+        <p class="card-desc">Certificate and Airmen Regulatory Exchange System research — wet-ink signatures and Pay.gov integration gaps.</p>
+        <div class="card-tags"><span class="tag tag-teal">CARES</span><span class="tag tag-grey">Research</span></div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">›</div>
+    </a>
+
+  </div>
 
 </main>
 
-<footer>
-  <p>FAA AVS · ATLAS Research Artifact &nbsp;|&nbsp;
-    <a href="https://github.com/pnunna2020/ATLAS">github.com/pnunna2020/ATLAS</a>
-  </p>
-  <p style="margin-top:0.25rem;font-size:0.72rem;color:#788692;">
-    Not an official FAA publication. For research and design exploration purposes only.
-  </p>
+<footer class="faa-footer" role="contentinfo">
+  <div>Federal Aviation Administration · Aviation Safety (AVS) · ATLAS Modernization Program</div>
+  <div class="footer-meta">DRAFT — For internal planning and research purposes only · FY 2025–2030</div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uswds/3.8.0/js/uswds.min.js"></script>
 </body>
 </html>
